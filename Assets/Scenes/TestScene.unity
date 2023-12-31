@@ -171,7 +171,7 @@ GameObject:
   - component: {fileID: 367739970}
   - component: {fileID: 367739969}
   m_Layer: 0
-  m_Name: Course
+  m_Name: Test Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -556,7 +556,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -634,7 +634,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 40
+  field of view: 50
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -660,8 +660,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.024458867, y: 0.9687348, z: -0.10634017, w: -0.22281472}
-  m_LocalPosition: {x: 0.39320883, y: 0.4213337, z: 0.80955964}
+  m_LocalRotation: {x: 0.10911676, y: -0.00000001700586, z: 0.0000000018667712, w: 0.994029}
+  m_LocalPosition: {x: 0, y: 0.4213337, z: -0.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -875,7 +875,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1287985020}
         m_TargetAssemblyTypeName: MiniGolf.Controls.BallController, Assembly-CSharp
-        m_MethodName: ToggleSwing
+        m_MethodName: ToggleBackswing
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -891,7 +891,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1287985020}
         m_TargetAssemblyTypeName: MiniGolf.Controls.BallController, Assembly-CSharp
-        m_MethodName: Swinging
+        m_MethodName: Backswinging
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -924,39 +924,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1def31dbf708b94598c22977d0b5da4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxInputSwingDelta: 100
+  swingInputSensitivity: 0.008
   maxStrokeStrength: 1
   camTransform: {fileID: 963194228}
-  ChargingSwing:
+  OnBackswing:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2089121321}
-        m_TargetAssemblyTypeName: MiniGolf.Overlay.PowerBar, Assembly-CSharp
-        m_MethodName: UpdateSliderValue
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEndSwing:
+      m_Calls: []
+  OnBackswingChange:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2089121321}
-        m_TargetAssemblyTypeName: MiniGolf.Overlay.PowerBar, Assembly-CSharp
-        m_MethodName: UpdateSliderValue
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  OnSwing:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &1287985021
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -995,6 +974,7 @@ GameObject:
   - component: {fileID: 1415378939}
   - component: {fileID: 1415378941}
   - component: {fileID: 1415378940}
+  - component: {fileID: 1415378942}
   m_Layer: 0
   m_Name: FreeLook Camera
   m_TagString: Untagged
@@ -1058,7 +1038,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1287985018}
   m_CommonLens: 1
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -1118,7 +1098,7 @@ MonoBehaviour:
       m_LegacyHeadingDefinition: -1
       m_LegacyVelocityFilterStrength: -1
   m_Heading:
-    m_Definition: 2
+    m_Definition: 1
     m_VelocityFilterStrength: 4
     m_Bias: 0
   m_RecenterToTargetHeading:
@@ -1127,8 +1107,8 @@ MonoBehaviour:
     m_RecenteringTime: 2
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
-  m_BindingMode: 5
-  m_SplineCurvature: 0
+  m_BindingMode: 1
+  m_SplineCurvature: 0.5
   m_Orbits:
   - m_Height: 1.6
     m_Radius: 1
@@ -1141,6 +1121,19 @@ MonoBehaviour:
   - {fileID: 2139590601}
   - {fileID: 906144471}
   - {fileID: 1459281732}
+--- !u!114 &1415378942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415378938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f70c1f5dfa0a6e4d987147b9fca7c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ball: {fileID: 1287985020}
 --- !u!1 &1459281730
 GameObject:
   m_ObjectHideFlags: 3
@@ -1202,7 +1195,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -1474,18 +1467,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 5
+  m_BindingMode: 1
   m_FollowOffset: {x: 0, y: 0.4, z: -0.9}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 2
+  m_YDamping: 2
+  m_ZDamping: 2
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
   m_RollDamping: 0
   m_AngularDamping: 0
   m_Heading:
-    m_Definition: 2
+    m_Definition: 1
     m_VelocityFilterStrength: 4
     m_Bias: 0
   m_RecenterToTargetHeading:
@@ -1630,6 +1623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2caf1e46cae3b994193a00c11ccb3349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 1287985020}
 --- !u!1 &2102056778
 GameObject:
   m_ObjectHideFlags: 3
@@ -1703,18 +1697,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 5
+  m_BindingMode: 1
   m_FollowOffset: {x: 0, y: 0.4, z: -0.9}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
   m_RollDamping: 0
   m_AngularDamping: 0
   m_Heading:
-    m_Definition: 2
+    m_Definition: 1
     m_VelocityFilterStrength: 4
     m_Bias: 0
   m_RecenterToTargetHeading:
@@ -1830,18 +1824,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 5
+  m_BindingMode: 1
   m_FollowOffset: {x: 0, y: 0.4, z: -0.9}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
   m_RollDamping: 0
   m_AngularDamping: 0
   m_Heading:
-    m_Definition: 2
+    m_Definition: 1
     m_VelocityFilterStrength: 4
     m_Bias: 0
   m_RecenterToTargetHeading:
@@ -1909,7 +1903,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2139590599}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0863815, y: 0.91189754, z: -0.31151092, w: 0.25286785}
+  m_LocalRotation: {x: 0.0863815, y: 0.91189754, z: -0.31151092, w: 0.25286782}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1945,7 +1939,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 50
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000

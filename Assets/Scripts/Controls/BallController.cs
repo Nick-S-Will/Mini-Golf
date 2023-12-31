@@ -7,22 +7,20 @@ namespace MiniGolf.Controls
     [RequireComponent(typeof(Rigidbody))]
     public class BallController : MonoBehaviour
     {
-        [SerializeField][Min(0f)] private float maxInputSwingDelta = 100f, maxStrokeStrength = 5f;
+        [SerializeField][Min(0f)] private float swingInputSensitivity = 0.1f, maxStrokeStrength = 1f;
         [Space]
         [SerializeField] private Transform camTransform;
-        /// <summary>Invoked every time the swing delta changes during swing and passes the <see cref="SwingScaler"/></summary>
-        [Space]
-        [SerializeField] private UnityEvent<float> ChargingSwing;
-        /// <summary>Invoked when swing action is canceled and passes the <see cref="SwingScaler"/></summary>
-        [SerializeField] private UnityEvent<float> OnEndSwing;
 
         private new Rigidbody rigidbody;
-        private float inputSwingDelta;
-        private bool isSwinging;
 
-        /// <summary>Calculates the swing scale [0, 1] from input while <see cref="IsSwinging"/></summary>
-        public float SwingScaler => Mathf.Clamp(inputSwingDelta, 0f, maxInputSwingDelta) / maxInputSwingDelta;
-        public bool IsSwinging => isSwinging;
+        /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is started</summary>
+        [HideInInspector] public UnityEvent OnBackswing;
+        /// <summary>Invoked when <see cref="BackswingScaler"/> changes during <see cref="Backswinging"/></summary>
+        [HideInInspector] public UnityEvent OnBackswingChange;
+        /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is canceled</summary>
+        [HideInInspector] public UnityEvent OnSwing;
+        public float BackswingScaler { get; private set; }
+        public bool IsBackswinging { get; private set; }
 
         private void Start()
         {
@@ -30,35 +28,36 @@ namespace MiniGolf.Controls
 
             rigidbody = GetComponent<Rigidbody>();
             
-            OnEndSwing.AddListener(StrokeBall);
+            OnSwing.AddListener(Swing);
         }
 
-        public void ToggleSwing(InputAction.CallbackContext context)
+        public void ToggleBackswing(InputAction.CallbackContext context)
         {
             if (context.started)
             {
-                isSwinging = true;
+                OnBackswing.Invoke();
+                IsBackswinging = true;
             }
             else if (context.canceled)
             {
-                OnEndSwing?.Invoke(SwingScaler);
-                inputSwingDelta = 0f;
-                isSwinging = false;
+                OnSwing.Invoke();
+                BackswingScaler = 0f;
+                IsBackswinging = false;
             }
         }
 
-        public void Swinging(InputAction.CallbackContext context)
+        public void Backswinging(InputAction.CallbackContext context)
         {
-            if (!isSwinging) return;
+            if (!IsBackswinging) return;
 
-            inputSwingDelta -= context.ReadValue<float>();
+            BackswingScaler = Mathf.Clamp(BackswingScaler - swingInputSensitivity * context.ReadValue<float>(), 0f, 1f);
 
-            ChargingSwing?.Invoke(SwingScaler);
+            OnBackswingChange.Invoke();
         }
 
-        private void StrokeBall(float scale)
+        private void Swing()
         {
-            var strokeStrength = scale * maxStrokeStrength;
+            var strokeStrength = BackswingScaler * maxStrokeStrength;
             var strokeDirection = Vector3.ProjectOnPlane(camTransform.forward, Vector3.up);
 
             rigidbody.AddForce(strokeStrength * strokeDirection, ForceMode.Impulse);

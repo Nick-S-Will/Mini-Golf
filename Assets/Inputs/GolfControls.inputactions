@@ -6,7 +6,7 @@
             "id": "f796ab32-a74c-4452-aeb9-d9fb87b0e468",
             "actions": [
                 {
-                    "name": "Toggle Swinging",
+                    "name": "Toggle Backswing",
                     "type": "Button",
                     "id": "fb231cca-8858-4734-9caa-6e24466bb854",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Swinging",
+                    "name": "Backswinging",
                     "type": "Value",
                     "id": "cbaed72e-8d7b-4186-a18c-01c8997fcaa3",
                     "expectedControlType": "Axis",
@@ -41,7 +41,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Swinging",
+                    "action": "Backswinging",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -85,7 +85,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Toggle Swinging",
+                    "action": "Toggle Backswing",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

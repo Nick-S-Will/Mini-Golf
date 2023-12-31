@@ -28,7 +28,7 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
             ""id"": ""f796ab32-a74c-4452-aeb9-d9fb87b0e468"",
             ""actions"": [
                 {
-                    ""name"": ""Toggle Swinging"",
+                    ""name"": ""Toggle Backswing"",
                     ""type"": ""Button"",
                     ""id"": ""fb231cca-8858-4734-9caa-6e24466bb854"",
                     ""expectedControlType"": ""Button"",
@@ -37,7 +37,7 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Swinging"",
+                    ""name"": ""Backswinging"",
                     ""type"": ""Value"",
                     ""id"": ""cbaed72e-8d7b-4186-a18c-01c8997fcaa3"",
                     ""expectedControlType"": ""Axis"",
@@ -63,7 +63,7 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Swinging"",
+                    ""action"": ""Backswinging"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -107,7 +107,7 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Toggle Swinging"",
+                    ""action"": ""Toggle Backswing"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -118,8 +118,8 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
 }");
         // Golf
         m_Golf = asset.FindActionMap("Golf", throwIfNotFound: true);
-        m_Golf_ToggleSwinging = m_Golf.FindAction("Toggle Swinging", throwIfNotFound: true);
-        m_Golf_Swinging = m_Golf.FindAction("Swinging", throwIfNotFound: true);
+        m_Golf_ToggleBackswing = m_Golf.FindAction("Toggle Backswing", throwIfNotFound: true);
+        m_Golf_Backswinging = m_Golf.FindAction("Backswinging", throwIfNotFound: true);
         m_Golf_Look = m_Golf.FindAction("Look", throwIfNotFound: true);
     }
 
@@ -182,15 +182,15 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
     // Golf
     private readonly InputActionMap m_Golf;
     private List<IGolfActions> m_GolfActionsCallbackInterfaces = new List<IGolfActions>();
-    private readonly InputAction m_Golf_ToggleSwinging;
-    private readonly InputAction m_Golf_Swinging;
+    private readonly InputAction m_Golf_ToggleBackswing;
+    private readonly InputAction m_Golf_Backswinging;
     private readonly InputAction m_Golf_Look;
     public struct GolfActions
     {
         private @GolfControls m_Wrapper;
         public GolfActions(@GolfControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @ToggleSwinging => m_Wrapper.m_Golf_ToggleSwinging;
-        public InputAction @Swinging => m_Wrapper.m_Golf_Swinging;
+        public InputAction @ToggleBackswing => m_Wrapper.m_Golf_ToggleBackswing;
+        public InputAction @Backswinging => m_Wrapper.m_Golf_Backswinging;
         public InputAction @Look => m_Wrapper.m_Golf_Look;
         public InputActionMap Get() { return m_Wrapper.m_Golf; }
         public void Enable() { Get().Enable(); }
@@ -201,12 +201,12 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_GolfActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_GolfActionsCallbackInterfaces.Add(instance);
-            @ToggleSwinging.started += instance.OnToggleSwinging;
-            @ToggleSwinging.performed += instance.OnToggleSwinging;
-            @ToggleSwinging.canceled += instance.OnToggleSwinging;
-            @Swinging.started += instance.OnSwinging;
-            @Swinging.performed += instance.OnSwinging;
-            @Swinging.canceled += instance.OnSwinging;
+            @ToggleBackswing.started += instance.OnToggleBackswing;
+            @ToggleBackswing.performed += instance.OnToggleBackswing;
+            @ToggleBackswing.canceled += instance.OnToggleBackswing;
+            @Backswinging.started += instance.OnBackswinging;
+            @Backswinging.performed += instance.OnBackswinging;
+            @Backswinging.canceled += instance.OnBackswinging;
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
@@ -214,12 +214,12 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
 
         private void UnregisterCallbacks(IGolfActions instance)
         {
-            @ToggleSwinging.started -= instance.OnToggleSwinging;
-            @ToggleSwinging.performed -= instance.OnToggleSwinging;
-            @ToggleSwinging.canceled -= instance.OnToggleSwinging;
-            @Swinging.started -= instance.OnSwinging;
-            @Swinging.performed -= instance.OnSwinging;
-            @Swinging.canceled -= instance.OnSwinging;
+            @ToggleBackswing.started -= instance.OnToggleBackswing;
+            @ToggleBackswing.performed -= instance.OnToggleBackswing;
+            @ToggleBackswing.canceled -= instance.OnToggleBackswing;
+            @Backswinging.started -= instance.OnBackswinging;
+            @Backswinging.performed -= instance.OnBackswinging;
+            @Backswinging.canceled -= instance.OnBackswinging;
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
@@ -242,8 +242,8 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
     public GolfActions @Golf => new GolfActions(this);
     public interface IGolfActions
     {
-        void OnToggleSwinging(InputAction.CallbackContext context);
-        void OnSwinging(InputAction.CallbackContext context);
+        void OnToggleBackswing(InputAction.CallbackContext context);
+        void OnBackswinging(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
     }
 }
