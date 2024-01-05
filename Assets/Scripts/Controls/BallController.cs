@@ -1,66 +1,41 @@
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 namespace MiniGolf.Controls
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class BallController : MonoBehaviour
+    public class BallController : SwingController
     {
-        [SerializeField][Min(0f)] private float swingInputSensitivity = 0.1f, maxStrokeStrength = 1f;
         [Space]
-        [SerializeField] private Transform camTransform;
+        [SerializeField][Min(0f)] private float ballVelocityTolerance = 0.01f;
+        [Space]
+        public UnityEvent OnStopMoving; // TODO: Make controls unavailable while ball is moving
 
-        private new Rigidbody rigidbody;
+        private Vector3 lastVelocity;
 
-        /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is started</summary>
-        [HideInInspector] public UnityEvent OnBackswing;
-        /// <summary>Invoked when <see cref="BackswingScaler"/> changes during <see cref="Backswinging"/></summary>
-        [HideInInspector] public UnityEvent OnBackswingChange;
-        /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is canceled</summary>
-        [HideInInspector] public UnityEvent OnSwing;
-        public float BackswingScaler { get; private set; }
-        public bool IsBackswinging { get; private set; }
+        public bool IsMoving => Rigidbody.velocity.magnitude > ballVelocityTolerance;
 
-        private void Start()
+        protected override void Start()
         {
-            if (camTransform == null) Debug.LogError($"{nameof(camTransform)} not assigned");
-
-            rigidbody = GetComponent<Rigidbody>();
-            
-            OnSwing.AddListener(Swing);
+            base.Start();
         }
 
-        public void ToggleBackswing(InputAction.CallbackContext context)
+        private void FixedUpdate()
         {
-            if (context.started)
-            {
-                OnBackswing.Invoke();
-                IsBackswinging = true;
-            }
-            else if (context.canceled)
-            {
-                OnSwing.Invoke();
-                BackswingScaler = 0f;
-                IsBackswinging = false;
-            }
+            var wasMoving = lastVelocity.magnitude > ballVelocityTolerance;
+            if (wasMoving && !IsMoving) OnStopMoving.Invoke();
+
+            lastVelocity = Rigidbody.velocity;
         }
 
-        public void Backswinging(InputAction.CallbackContext context)
+        protected override void Swing()
         {
-            if (!IsBackswinging) return;
+            if (BackswingScaler == 0f) return;
 
-            BackswingScaler = Mathf.Clamp(BackswingScaler - swingInputSensitivity * context.ReadValue<float>(), 0f, 1f);
+            var strokeStrength = BackswingScaler * MaxStrokeStrength;
+            var strokeDirection = Vector3.ProjectOnPlane(CamTransform.forward, Vector3.up);
 
-            OnBackswingChange.Invoke();
-        }
-
-        private void Swing()
-        {
-            var strokeStrength = BackswingScaler * maxStrokeStrength;
-            var strokeDirection = Vector3.ProjectOnPlane(camTransform.forward, Vector3.up);
-
-            rigidbody.AddForce(strokeStrength * strokeDirection, ForceMode.Impulse);
+            Rigidbody.AddForce(strokeStrength * strokeDirection, ForceMode.Impulse);
         }
     }
 }

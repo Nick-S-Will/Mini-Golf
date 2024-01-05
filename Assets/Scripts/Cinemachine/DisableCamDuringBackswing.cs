@@ -5,17 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(CinemachineVirtualCameraBase))]
 public class DisableCamDuringBackswing : CinemachineExtension
 {
-    [SerializeField] private BallController ball;
+    [SerializeField] private SwingController swingController;
 
     private CinemachineVirtualCameraBase virtualCamera;
 
     private void Start()
     {
-        if (ball == null) Debug.LogError($"{nameof(ball)} not assigned");
+        if (swingController == null) Debug.LogError($"{nameof(swingController)} not assigned");
         else
         {
-            ball.OnBackswing.AddListener(DisableVCam);
-            ball.OnSwing.AddListener(EnableVCam);
+            swingController.OnBackswing.AddListener(DisableVCam);
+            swingController.OnSwing.AddListener(EnableVCam);
         }
 
         virtualCamera = GetComponent<CinemachineVirtualCameraBase>();

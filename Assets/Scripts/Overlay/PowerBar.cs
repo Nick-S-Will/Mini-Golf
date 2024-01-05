@@ -7,24 +7,20 @@ namespace MiniGolf.Overlay
     [RequireComponent(typeof(Slider))]
     public class PowerBar : MonoBehaviour
     {
-        [SerializeField] private BallController ball;
+        [SerializeField] private SwingController swingController;
         private Slider slider;
 
         private void Start()
         {
-            if (ball == null) Debug.LogError($"{nameof(ball)} not assigned");
-            else
-            {
-                ball.OnBackswingChange.AddListener(UpdateSliderValue);
-                ball.OnSwing.AddListener(ClearSliderValue);
-            }
-
+            if (swingController == null) Debug.LogError($"{nameof(swingController)} not assigned");
+            else swingController.OnBackswingChange.AddListener(UpdateSliderValue);
+            
             slider = GetComponent<Slider>();
         }
 
         public void UpdateSliderValue()
         {
-            slider.value = ball.BackswingScaler;
+            slider.value = swingController.BackswingScaler;
         }
 
         public void ClearSliderValue()
@@ -34,10 +30,9 @@ namespace MiniGolf.Overlay
 
         private void OnDestroy()
         {
-            if (ball == null) return;
+            if (swingController == null) return;
 
-            ball.OnBackswingChange.RemoveListener(UpdateSliderValue);
-            ball.OnSwing.RemoveListener(ClearSliderValue);
+            swingController.OnBackswingChange.RemoveListener(UpdateSliderValue);
         }
     }
 }
