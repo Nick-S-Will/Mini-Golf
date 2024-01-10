@@ -2,36 +2,39 @@ using Cinemachine;
 using MiniGolf.Controls;
 using UnityEngine;
 
-[RequireComponent(typeof(CinemachineVirtualCameraBase))]
-public class DisableCamDuringBackswing : CinemachineExtension
+namespace MiniGolf.Cinemachine
 {
-    [SerializeField] private SwingController swingController;
-
-    private CinemachineVirtualCameraBase virtualCamera;
-
-    private void Start()
+    [RequireComponent(typeof(CinemachineVirtualCameraBase))]
+    public class DisableCamDuringBackswing : CinemachineExtension
     {
-        if (swingController == null) Debug.LogError($"{nameof(swingController)} not assigned");
-        else
+        [SerializeField] private SwingController swingController;
+
+        private CinemachineVirtualCameraBase virtualCamera;
+
+        private void Start()
         {
-            swingController.OnBackswing.AddListener(DisableVCam);
-            swingController.OnSwing.AddListener(EnableVCam);
+            if (swingController == null) Debug.LogError($"{nameof(swingController)} not assigned");
+            else
+            {
+                swingController.OnBackswing.AddListener(DisableVCam);
+                swingController.OnSwing.AddListener(EnableVCam);
+            }
+
+            virtualCamera = GetComponent<CinemachineVirtualCameraBase>();
         }
 
-        virtualCamera = GetComponent<CinemachineVirtualCameraBase>();
-    }
+        private void EnableVCam()
+        {
+            virtualCamera.enabled = true;
+        }
 
-    private void EnableVCam()
-    {
-        virtualCamera.enabled = true;
-    }
+        private void DisableVCam()
+        {
+            virtualCamera.enabled = false;
+        }
 
-    private void DisableVCam()
-    {
-        virtualCamera.enabled = false;
-    }
-
-    protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
-    {
+        protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
+        {
+        }
     }
 }

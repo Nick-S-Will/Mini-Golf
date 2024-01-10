@@ -9,11 +9,12 @@ namespace MiniGolf.Controls
         [Space]
         [SerializeField][Min(0f)] private float ballVelocityTolerance = 0.01f;
         [Space]
-        public UnityEvent OnStopMoving; // TODO: Make controls unavailable while ball is moving
+        public UnityEvent OnStopMoving;
 
         private Vector3 lastVelocity;
 
         public bool IsMoving => Rigidbody.velocity.magnitude > ballVelocityTolerance;
+        public override bool CanBackswing => !IsMoving;
 
         protected override void Start()
         {
@@ -22,8 +23,18 @@ namespace MiniGolf.Controls
 
         private void FixedUpdate()
         {
+            UpdateMovingStatus();
+        }
+
+        private void UpdateMovingStatus()
+        {
             var wasMoving = lastVelocity.magnitude > ballVelocityTolerance;
-            if (wasMoving && !IsMoving) OnStopMoving.Invoke();
+            if (wasMoving && !IsMoving)
+            {
+                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.angularVelocity = Vector3.zero;
+                OnStopMoving.Invoke();
+            }
 
             lastVelocity = Rigidbody.velocity;
         }

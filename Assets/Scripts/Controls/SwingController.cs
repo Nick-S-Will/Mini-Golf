@@ -25,6 +25,7 @@ namespace MiniGolf.Controls
 
         public float BackswingScaler { get; private set; }
         public bool IsBackswinging { get; private set; }
+        public abstract bool CanBackswing { get; }
 
         protected virtual void Start()
         {
@@ -37,7 +38,7 @@ namespace MiniGolf.Controls
 
         public void ToggleBackswing(InputAction.CallbackContext context)
         {
-            if (!enabled) return;
+            if (!enabled || !CanBackswing) return;
 
             if (context.started)
             {
