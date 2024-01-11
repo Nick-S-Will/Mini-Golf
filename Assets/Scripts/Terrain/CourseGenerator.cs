@@ -18,8 +18,7 @@ namespace MiniGolf.Terrain
         [SerializeField] private bool showGrid;
 
         private List<CourseTile> tileInstances = new();
-        private HashSet<Vector3Int> usedCells = new();
-        private Vector3Int lastCell, nextCell;
+        private List<Vector3Int> usedCells = new();
 
         public void Generate() // TODO: Create collision mesh
         {
@@ -39,8 +38,12 @@ namespace MiniGolf.Terrain
                 else tilePrefabs = courseTilePrefabs;
                 var randomIndex = UnityEngine.Random.Range(0, tilePrefabs.Length);
 
-                AddTile(tilePrefabs[randomIndex]);
-                if (tileIndex < courseLength - 1) UpdateNextCellPosition();
+                try { AddTile(tilePrefabs[randomIndex]); }
+                catch (NoNextCellException e)
+                {
+                    Debug.LogError(e.Message);
+                    break;
+                }
             }
         }
 
@@ -49,46 +52,47 @@ namespace MiniGolf.Terrain
             foreach (var tileInstance in tileInstances) ContextDestroy(tileInstance.gameObject);
             tileInstances.Clear();
             usedCells.Clear();
-            lastCell = Vector3Int.back;
-            nextCell = Vector3Int.zero;
         }
 
         private void AddTile(CourseTile tilePrefab)
         {
-            var position = CellToPosition(nextCell);
-            var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(nextCell - lastCell, Vector3.up));
-            var newTile = Instantiate(tilePrefab, position, rotation, transform);
+            var cell = GetCellFor(tilePrefab);
+            var lastCell = usedCells.Count == 0 ? Vector3Int.back : usedCells.Last();
+            var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(cell - lastCell, Vector3.up));
+            var newTile = Instantiate(tilePrefab, CellToPosition(cell), rotation, transform);
             tileInstances.Add(newTile);
 
-            var cell = nextCell;
-            for (var i = 0; i <= newTile.Height; i++)
+            usedCells.Add(cell);
+            for (var i = 1; i <= newTile.Height; i++)
             {
-                usedCells.Add(cell);
                 cell += Vector3Int.up;
+                usedCells.Add(cell);
             }
         }
 
-        private Vector3 CellToPosition(Vector3Int cell) => transform.rotation * Vector3.Scale(TILE_SCALE, cell);
-
-        private void UpdateNextCellPosition()
+        private Vector3Int GetCellFor(CourseTile tilePrefab)
         {
+            if (tileInstances.Count == 0) return Vector3Int.zero;
+
             var lastTile = tileInstances.Last();
-            var shuffledDirections = lastTile.AvailableDirections.Select(cell => (cell, UnityEngine.Random.value)).OrderBy(tuple => tuple.value).Select(tuple => tuple.cell).ToArray();
-            var nextCellChanged = false;
+            var shuffledDirections = lastTile.AvailableDirections
+                .Select(cell => (cell, UnityEngine.Random.value))
+                .OrderBy(tuple => tuple.value)
+                .Select(tuple => tuple.cell).ToArray();
+
 
             foreach (var direction in shuffledDirections)
             {
-                var cell = Vector3Int.RoundToInt(nextCell + lastTile.transform.rotation * direction) + lastTile.Height * Vector3Int.up;
+                var cell = Vector3Int.RoundToInt(usedCells.Last() + lastTile.transform.rotation * direction);
                 if (usedCells.Contains(cell)) continue;
 
-                lastCell = nextCell;
-                nextCell = cell;
-                nextCellChanged = true;
-                break;
+                return cell;
             }
 
-            if (!nextCellChanged) Debug.LogWarning("No next cell found");
+            throw new NoNextCellException(usedCells.Last(), tilePrefab);
         }
+
+        private Vector3 CellToPosition(Vector3Int cell) => transform.rotation * Vector3.Scale(TILE_SCALE, cell);
 
         private void OnDrawGizmos()
         {
@@ -100,6 +104,16 @@ namespace MiniGolf.Terrain
             {
                 Gizmos.DrawWireCube(CellToPosition(cell) + offsetToCenter, TILE_SCALE);
             }
+        }
+
+        private class NoNextCellException : Exception
+        {
+            private Vector3Int lastCell;
+            private CourseTile nextTile;
+
+            public NoNextCellException(Vector3Int lastCell, CourseTile nextTile) => (this.lastCell, this.nextTile) = (lastCell, nextTile);
+
+            public override string Message => $"No cell found from {lastCell} for {nextTile.name}";
         }
     }
 }
