@@ -48,7 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   availableDirections:
   - {x: 0, y: 0, z: 1}
-  height: 1
+  cells:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 1, z: 0}
+  gizmoColor: {r: 1, g: 1, b: 1, a: 1}
+  hideCellUsage: 0
 --- !u!33 &6209430435810695472
 MeshFilter:
   m_ObjectHideFlags: 0

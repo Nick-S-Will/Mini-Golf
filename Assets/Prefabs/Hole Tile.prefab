@@ -46,7 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26fd7a751688bd74cb03137dc0495ebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 0
+  availableDirections: []
+  cellUsage:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 1, z: 0}
+  gizmoColor: {r: 1, g: 1, b: 1, a: 1}
+  hideCellUsage: 0
 --- !u!33 &5322431695382299758
 MeshFilter:
   m_ObjectHideFlags: 0

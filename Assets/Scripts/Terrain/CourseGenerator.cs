@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,16 +10,20 @@ namespace MiniGolf.Terrain
     public class CourseGenerator : MonoBehaviour
     {
         private static Action<UnityEngine.Object> ContextDestroy => Application.isPlaying ? Destroy : DestroyImmediate;
-        public static readonly Vector3 TILE_SCALE = new(2f, 1f, 2f);
 
         [SerializeField] private CourseTile[] startTilePrefabs, courseTilePrefabs, holeTilePrefabs;
         [SerializeField][Min(2f)] private int courseLength = 3;
+        [SerializeField][Min(0f)] private float tileGenerationInterval = 1f;
         [Space]
-        [SerializeField] private Color gizmoColor = Color.white;
-        [SerializeField] private bool showGrid;
+        [SerializeField] private Gradient gizmoColorGradient;
+        [SerializeField] private bool showUsedCells;
 
         private List<CourseTile> tileInstances = new();
         private List<Vector3Int> usedCells = new();
+        private Coroutine generateRoutine;
+
+        private CourseTile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
+        private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
 
         public void Generate() // TODO: Create collision mesh
         {
@@ -27,11 +32,20 @@ namespace MiniGolf.Terrain
                 Debug.LogError($"{nameof(startTilePrefabs)}, {nameof(courseTilePrefabs)}, or {nameof(holeTilePrefabs)} is empty");
                 return;
             }
+            if (generateRoutine != null)
+            {
+                Debug.Log("Already generating...");
+                return;
+            }
 
             Clear();
-
+            generateRoutine = StartCoroutine(GenerateRoutine());
+        }
+        private IEnumerator GenerateRoutine()
+        {
             for (int tileIndex = 0; tileIndex < courseLength; tileIndex++)
             {
+                print($"New Tile ({Time.time})"); // TODO: Review timing. Seems to have longer interval than set
                 CourseTile[] tilePrefabs;
                 if (tileIndex == 0) tilePrefabs = startTilePrefabs;
                 else if (tileIndex == courseLength - 1) tilePrefabs = holeTilePrefabs;
@@ -44,7 +58,11 @@ namespace MiniGolf.Terrain
                     Debug.LogError(e.Message);
                     break;
                 }
+
+                yield return new WaitForSeconds(tileGenerationInterval);
             }
+
+            generateRoutine = null;
         }
 
         public void Clear()
@@ -56,53 +74,60 @@ namespace MiniGolf.Terrain
 
         private void AddTile(CourseTile tilePrefab)
         {
-            var cell = GetCellFor(tilePrefab);
-            var lastCell = usedCells.Count == 0 ? Vector3Int.back : usedCells.Last();
-            var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(cell - lastCell, Vector3.up));
-            var newTile = Instantiate(tilePrefab, CellToPosition(cell), rotation, transform);
+            print($"Type: {tilePrefab.name} ({Time.time})");
+            var newCell = GetCellFor(tilePrefab);
+            var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(newCell - LastCell, Vector3.up));
+            var newTile = Instantiate(tilePrefab, CellToPosition(newCell), rotation, transform);
             tileInstances.Add(newTile);
 
-            usedCells.Add(cell);
-            for (var i = 1; i <= newTile.Height; i++)
+            print($"Cell: {newCell} ({Time.time})");
+            foreach (var localCell in newTile.LocalCells)
             {
-                cell += Vector3Int.up;
+                var cell = LocalCellToCell(newCell, rotation, localCell);
                 usedCells.Add(cell);
             }
         }
 
         private Vector3Int GetCellFor(CourseTile tilePrefab)
         {
-            if (tileInstances.Count == 0) return Vector3Int.zero;
+            if (usedCells.Count == 0) return Vector3Int.zero;
 
-            var lastTile = tileInstances.Last();
-            var shuffledDirections = lastTile.AvailableDirections
-                .Select(cell => (cell, UnityEngine.Random.value))
-                .OrderBy(tuple => tuple.value)
-                .Select(tuple => tuple.cell).ToArray();
-
-
-            foreach (var direction in shuffledDirections)
+            foreach (var direction in LastTile.ShuffledDirections)
             {
-                var cell = Vector3Int.RoundToInt(usedCells.Last() + lastTile.transform.rotation * direction);
-                if (usedCells.Contains(cell)) continue;
+                var startCell = LocalCellToCell(LastCell, LastTile, direction);
+                var rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(startCell - LastCell, Vector3.up));
+                var availableCellCount = 0;
+                foreach (var cell in tilePrefab.LocalCells)
+                {
+                    var endCell = LocalCellToCell(startCell, rotation, cell);
+                    if (!usedCells.Contains(endCell)) availableCellCount++;
+                    else break;
+                }
 
-                return cell;
+                if (availableCellCount == tilePrefab.LocalCells.Length) return startCell;
             }
 
-            throw new NoNextCellException(usedCells.Last(), tilePrefab);
+            throw new NoNextCellException(LastCell, tilePrefab);
         }
 
-        private Vector3 CellToPosition(Vector3Int cell) => transform.rotation * Vector3.Scale(TILE_SCALE, cell);
+        private Vector3Int LocalCellToCell(Vector3Int baseCell, CourseTile baseTile, Vector3Int localCell) => LocalCellToCell(baseCell, baseTile.transform.localRotation, localCell);
+        private Vector3Int LocalCellToCell(Vector3Int baseCell, Quaternion baseRotation, Vector3Int localCell) => baseCell + Vector3Int.RoundToInt(baseRotation * localCell);
+        private Vector3 CellToPosition(Vector3Int cell) => transform.position + transform.rotation * Vector3.Scale(CourseTile.SCALE, cell);
 
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
-            if (!showGrid) return;
-
-            Gizmos.color = gizmoColor;
-            var offsetToCenter = TILE_SCALE.y / 2f * Vector3.up;
-            foreach (var cell in usedCells)
+            if (gizmoColorGradient == null)
             {
-                Gizmos.DrawWireCube(CellToPosition(cell) + offsetToCenter, TILE_SCALE);
+                Debug.LogWarning($"{gizmoColorGradient} not set");
+                return;
+            }
+            if (!showUsedCells || generateRoutine != null) return;
+
+            var offsetToCenter = CourseTile.SCALE.y / 2f * Vector3.up;
+            for (int i = 0; i < usedCells.Count; i++)
+            {
+                Gizmos.color = gizmoColorGradient.Evaluate(i / (usedCells.Count - 1f));
+                Gizmos.DrawWireCube(CellToPosition(usedCells[i]) + offsetToCenter, CourseTile.SCALE);
             }
         }
 
