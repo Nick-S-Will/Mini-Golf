@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3434952584275146352
+--- !u!1 &6764239392915611682
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,66 +8,67 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7887240740511720548}
-  - component: {fileID: 3483026065000080780}
-  - component: {fileID: 6209430435810695472}
-  - component: {fileID: 1596299837082704051}
+  - component: {fileID: 6604880003355506783}
+  - component: {fileID: 6220431792190485081}
+  - component: {fileID: 7624296930403036111}
+  - component: {fileID: 8905377569479293222}
   m_Layer: 0
-  m_Name: Incline Tile
+  m_Name: Inclined Bridge Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7887240740511720548
+--- !u!4 &6604880003355506783
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3434952584275146352}
+  m_GameObject: {fileID: 6764239392915611682}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 0.25, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3483026065000080780
+--- !u!114 &6220431792190485081
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3434952584275146352}
+  m_GameObject: {fileID: 6764239392915611682}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26fd7a751688bd74cb03137dc0495ebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableDirections:
-  - {x: 0, y: 0, z: 1}
   cells:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 1, z: 0}
-  gizmoColor: {r: 1, g: 1, b: 1, a: 1}
-  hideCellUsage: 0
---- !u!33 &6209430435810695472
+  availableDirections:
+  - {x: 0, y: 0, z: 1}
+  cellColor: {r: 1, g: 1, b: 1, a: 1}
+  directionColor: {r: 0, g: 0, b: 1, a: 1}
+  showCells: 0
+--- !u!33 &7624296930403036111
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3434952584275146352}
-  m_Mesh: {fileID: -6823948801224068301, guid: d3bbddbc9ea73d240a0577c56eed5d99, type: 3}
---- !u!23 &1596299837082704051
+  m_GameObject: {fileID: 6764239392915611682}
+  m_Mesh: {fileID: 481483259000492209, guid: a4f83557ad85c2840a121180d514b6f5, type: 3}
+--- !u!23 &8905377569479293222
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3434952584275146352}
+  m_GameObject: {fileID: 6764239392915611682}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1

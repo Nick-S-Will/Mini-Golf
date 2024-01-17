@@ -829,8 +829,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.46554866, y: 0, z: 0, w: 0.8850223}
-  m_LocalPosition: {x: 0, y: 1.6213337, z: -1.1}
+  m_LocalRotation: {x: 0.46531934, y: -0.02777827, z: 0.0146122165, w: 0.8845862}
+  m_LocalPosition: {x: 0.06901757, y: 1.6213337, z: -1.0978327}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1009,7 +1009,7 @@ Transform:
   m_GameObject: {fileID: 1287985014}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.021333694, z: 0}
+  m_LocalPosition: {x: 0, y: 0.02133369, z: 0}
   m_LocalScale: {x: 0.042670004, y: 0.04267, z: 0.04267}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1180,7 +1180,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1415378938}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
   m_Name: 
@@ -1751,11 +1751,12 @@ MonoBehaviour:
   courseTilePrefabs:
   - {fileID: -372694278852461617, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
   - {fileID: 3483026065000080780, guid: 8f5cc9cc160726842bbee6f2752f6ab1, type: 3}
-  - {fileID: 74845698787092239, guid: 54be7177105ec094381a7dbecc5370ce, type: 3}
+  - {fileID: 8669192486944295857, guid: 34c3f7f4b10abfd488d4fac0ce9f4200, type: 3}
+  - {fileID: 6220431792190485081, guid: eae8615792ea3bd46aeacf9ade98fe4d, type: 3}
   holeTilePrefabs:
   - {fileID: 3685637358348386917, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
-  courseLength: 10
-  tileGenerationInterval: 1
+  courseLength: 7
+  tileGenerationInterval: 0
   gizmoColorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
