@@ -1136,6 +1136,50 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1310466847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1310466849}
+  - component: {fileID: 1310466848}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1310466848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310466847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e402421632ba1a43b1bc5419849ed0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1310466849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310466847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1415378938
 GameObject:
   m_ObjectHideFlags: 0
@@ -1754,9 +1798,9 @@ MonoBehaviour:
   - {fileID: 8669192486944295857, guid: 34c3f7f4b10abfd488d4fac0ce9f4200, type: 3}
   - {fileID: 6220431792190485081, guid: eae8615792ea3bd46aeacf9ade98fe4d, type: 3}
   holeTilePrefabs:
-  - {fileID: 3685637358348386917, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
-  courseLength: 7
-  tileGenerationInterval: 0
+  - {fileID: 4458691756320286204, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
+  courseLength: 2
+  tileGenerationInterval: 1
   gizmoColorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
@@ -1787,7 +1831,22 @@ MonoBehaviour:
     m_ColorSpace: 0
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
-  showUsedCells: 1
+  showUsedCells: 0
+  OnGenerate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1310466848}
+        m_TargetAssemblyTypeName: MiniGolf.Managers.GameManager, Assembly-CSharp
+        m_MethodName: UpdateHole
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2089121318
 GameObject:
   m_ObjectHideFlags: 0
@@ -2204,3 +2263,4 @@ SceneRoots:
   - {fileID: 1901708455}
   - {fileID: 860058778}
   - {fileID: 1287985018}
+  - {fileID: 1310466849}

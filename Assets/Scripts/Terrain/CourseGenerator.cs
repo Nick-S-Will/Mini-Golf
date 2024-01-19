@@ -3,20 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace MiniGolf.Terrain
 {
     [RequireComponent(typeof(MeshCollider))]
     public class CourseGenerator : MonoBehaviour
     {
-        private static Action<UnityEngine.Object> ContextDestroy => Application.isPlaying ? Destroy : DestroyImmediate;
-
-        [SerializeField] private CourseTile[] startTilePrefabs, courseTilePrefabs, holeTilePrefabs;
+        [SerializeField] private CourseTile[] startTilePrefabs, courseTilePrefabs;
+        [SerializeField] private HoleTile[] holeTilePrefabs;
         [SerializeField][Min(2f)] private int courseLength = 3;
         [SerializeField][Min(0f)] private float tileGenerationInterval = 1f;
         [Space]
         [SerializeField] private Gradient gizmoColorGradient;
         [SerializeField] private bool showUsedCells;
+        [Space]
+        [SerializeField] private UnityEvent<HoleTile> OnGenerate;
 
         private List<CourseTile> tileInstances = new();
         private List<Vector3Int> usedCells = new();
@@ -25,7 +27,12 @@ namespace MiniGolf.Terrain
         private CourseTile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
 
-        public void Generate() // TODO: Create collision mesh
+        private void Start()
+        {
+            Generate();
+        }
+
+        public void Generate()
         {
             if (startTilePrefabs.Length == 0 || courseTilePrefabs.Length == 0 || holeTilePrefabs.Length == 0)
             {
@@ -62,12 +69,16 @@ namespace MiniGolf.Terrain
                 yield return new WaitForSeconds(tileGenerationInterval);
             }
 
+            if (Application.isPlaying) OnGenerate.Invoke((HoleTile)LastTile);
             generateRoutine = null;
         }
 
         public void Clear()
         {
-            foreach (var tileInstance in tileInstances) ContextDestroy(tileInstance.gameObject);
+            if (transform.childCount == 0) return;
+
+            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
+            while (transform.childCount > 0) contextDestroy(transform.GetChild(0).gameObject);
             tileInstances.Clear();
             usedCells.Clear();
         }
