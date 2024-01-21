@@ -22,15 +22,10 @@ namespace MiniGolf.Terrain
 
         private List<CourseTile> tileInstances = new();
         private List<Vector3Int> usedCells = new();
-        private Coroutine generateRoutine;
+        private Coroutine generationRoutine;
 
         private CourseTile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
-
-        private void Start()
-        {
-            Generate();
-        }
 
         public void Generate()
         {
@@ -39,14 +34,14 @@ namespace MiniGolf.Terrain
                 Debug.LogError($"{nameof(startTilePrefabs)}, {nameof(courseTilePrefabs)}, or {nameof(holeTilePrefabs)} is empty");
                 return;
             }
-            if (generateRoutine != null)
+            if (generationRoutine != null)
             {
                 Debug.Log("Already generating...");
                 return;
             }
 
             Clear();
-            generateRoutine = StartCoroutine(GenerationRoutine());
+            generationRoutine = StartCoroutine(GenerationRoutine());
         }
         private IEnumerator GenerationRoutine()
         {
@@ -68,14 +63,15 @@ namespace MiniGolf.Terrain
                 if (tileGenerationInterval > 0f) yield return new WaitForSeconds(tileGenerationInterval);
             }
 
-            if (Application.isPlaying) OnGenerate.Invoke((HoleTile)LastTile);
-            generateRoutine = null;
+            OnGenerate.Invoke((HoleTile)LastTile);
+            generationRoutine = null;
         }
 
         public void Clear()
         {
             Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
-            while (transform.childCount > 0) contextDestroy(transform.GetChild(0).gameObject);
+            var tiles = transform.Cast<Transform>().ToArray();
+            foreach (var tile in tiles) contextDestroy(tile.gameObject);
             tileInstances.Clear();
             usedCells.Clear();
         }
@@ -127,7 +123,7 @@ namespace MiniGolf.Terrain
                 Debug.LogWarning($"{gizmoColorGradient} not set");
                 return;
             }
-            if (!showUsedCells || generateRoutine != null) return;
+            if (!showUsedCells || generationRoutine != null) return;
 
             var offsetToCenter = CourseTile.SCALE.y / 2f * Vector3.up;
             for (int i = 0; i < usedCells.Count; i++)
