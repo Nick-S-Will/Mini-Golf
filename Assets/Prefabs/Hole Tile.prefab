@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5322431695382299758}
   - component: {fileID: 6700543682895832449}
   - component: {fileID: -7104088583658142104}
-  - component: {fileID: 1392055675302319069}
+  - component: {fileID: 5725129085765682461}
   m_Layer: 0
   m_Name: Hole Tile
   m_TagString: Untagged
@@ -54,7 +54,9 @@ MonoBehaviour:
   cellColor: {r: 1, g: 1, b: 1, a: 1}
   directionColor: {r: 0, g: 0, b: 1, a: 1}
   showCells: 0
-  ballTag: Player
+  OnBallEnter:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &5322431695382299758
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -112,7 +114,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4949283373310472328}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: aa3240c550b641b4cb4811d874b01b24, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -127,8 +129,8 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5864311242745975977, guid: cda3ad5c8a71a6a4da82e22e49c27723, type: 3}
---- !u!136 &1392055675302319069
-CapsuleCollider:
+--- !u!65 &5725129085765682461
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -145,8 +147,6 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.029
-  m_Height: 0
-  m_Direction: 1
+  serializedVersion: 3
+  m_Size: {x: 0.08, y: 0.05, z: 0.08}
   m_Center: {x: 0, y: -0.04, z: 0}
