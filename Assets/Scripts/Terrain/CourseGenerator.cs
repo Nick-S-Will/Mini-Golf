@@ -46,13 +46,12 @@ namespace MiniGolf.Terrain
             }
 
             Clear();
-            generateRoutine = StartCoroutine(GenerateRoutine());
+            generateRoutine = StartCoroutine(GenerationRoutine());
         }
-        private IEnumerator GenerateRoutine()
+        private IEnumerator GenerationRoutine()
         {
             for (int tileIndex = 0; tileIndex < courseLength; tileIndex++)
             {
-                print($"New Tile ({Time.time})"); // TODO: Review timing. Seems to have longer interval than set
                 CourseTile[] tilePrefabs;
                 if (tileIndex == 0) tilePrefabs = startTilePrefabs;
                 else if (tileIndex == courseLength - 1) tilePrefabs = holeTilePrefabs;
@@ -66,7 +65,7 @@ namespace MiniGolf.Terrain
                     break;
                 }
 
-                yield return new WaitForSeconds(tileGenerationInterval);
+                if (tileGenerationInterval > 0f) yield return new WaitForSeconds(tileGenerationInterval);
             }
 
             if (Application.isPlaying) OnGenerate.Invoke((HoleTile)LastTile);
@@ -75,8 +74,6 @@ namespace MiniGolf.Terrain
 
         public void Clear()
         {
-            if (transform.childCount == 0) return;
-
             Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
             while (transform.childCount > 0) contextDestroy(transform.GetChild(0).gameObject);
             tileInstances.Clear();
@@ -85,13 +82,11 @@ namespace MiniGolf.Terrain
 
         private void AddTile(CourseTile tilePrefab)
         {
-            print($"Type: {tilePrefab.name} ({Time.time})");
             var newCell = GetCellFor(tilePrefab);
             var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(newCell - LastCell, Vector3.up));
             var newTile = Instantiate(tilePrefab, CellToPosition(newCell), rotation, transform);
             tileInstances.Add(newTile);
 
-            print($"Cell: {newCell} ({Time.time})");
             foreach (var localCell in newTile.LocalCells)
             {
                 var cell = LocalCellToCell(newCell, rotation, localCell);
