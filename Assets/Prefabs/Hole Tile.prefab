@@ -54,9 +54,6 @@ MonoBehaviour:
   cellColor: {r: 1, g: 1, b: 1, a: 1}
   directionColor: {r: 0, g: 0, b: 1, a: 1}
   showCells: 0
-  OnBallEnter:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!33 &5322431695382299758
 MeshFilter:
   m_ObjectHideFlags: 0
