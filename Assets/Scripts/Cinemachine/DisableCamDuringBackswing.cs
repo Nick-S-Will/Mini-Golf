@@ -17,6 +17,7 @@ namespace MiniGolf.Cinemachine
             else
             {
                 swingController.OnBackswing.AddListener(DisableVCam);
+                swingController.OnBackswingCancel.AddListener(EnableVCam);
                 swingController.OnSwing.AddListener(EnableVCam);
             }
 

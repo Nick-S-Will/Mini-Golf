@@ -18,7 +18,7 @@ namespace MiniGolf.Terrain
         [SerializeField] private Gradient gizmoColorGradient;
         [SerializeField] private bool showUsedCells;
         [Space]
-        [SerializeField] private UnityEvent<HoleTile> OnGenerate;
+        [SerializeField] private UnityEvent OnGenerate;
 
         private List<CourseTile> tileInstances = new();
         private List<Vector3Int> usedCells = new();
@@ -63,7 +63,7 @@ namespace MiniGolf.Terrain
                 if (tileGenerationInterval > 0f) yield return new WaitForSeconds(tileGenerationInterval);
             }
 
-            OnGenerate.Invoke((HoleTile)LastTile);
+            OnGenerate.Invoke();
             generationRoutine = null;
         }
 

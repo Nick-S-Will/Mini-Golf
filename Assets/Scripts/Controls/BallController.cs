@@ -4,6 +4,7 @@ using UnityEngine.Events;
 namespace MiniGolf.Controls
 {
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Collider))]
     public class BallController : SwingController
     {
         [Space]
@@ -41,8 +42,6 @@ namespace MiniGolf.Controls
 
         protected override void Swing()
         {
-            if (BackswingScaler == 0f) return;
-
             var strokeStrength = BackswingScaler * MaxStrokeStrength;
             var strokeDirection = Vector3.ProjectOnPlane(CamTransform.forward, Vector3.up);
 

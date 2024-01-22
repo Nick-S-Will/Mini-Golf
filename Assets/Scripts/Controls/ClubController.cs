@@ -49,17 +49,16 @@ namespace MiniGolf.Controls
             transform.localEulerAngles = new Vector3(BackswingScaler * maxBackswingAngle, angles.y, angles.z);
         }
 
+        protected override void CancelBackswing()
+        {
+            graphicsParent.SetActive(false);
+        }
+
         protected override void Swing()
         {
-            if (BackswingScaler == 0f)
-            {
-                graphicsParent.SetActive(false);
-                return;
-            }
-
             swingRoutine ??= StartCoroutine(SwingRoutine());
         }
-        private IEnumerator SwingRoutine()
+        private IEnumerator SwingRoutine() // TODO: Improve visual
         {
             while (transform.eulerAngles.x <= maxBackswingAngle)
             {

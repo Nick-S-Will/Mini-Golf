@@ -15,7 +15,9 @@ namespace MiniGolf.Controls
         public UnityEvent OnBackswing;
         /// <summary>Invoked when <see cref="BackswingScaler"/> changes during <see cref="Backswinging"/></summary>
         public UnityEvent OnBackswingChange;
-        /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is canceled</summary>
+        /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is canceled and <see cref="BackswingScaler"/> = 0</summary>
+        public UnityEvent OnBackswingCancel;
+        /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is canceled and <see cref="BackswingScaler"/> > 0</summary>
         public UnityEvent OnSwing;
 
         protected Rigidbody Rigidbody { get; private set; }
@@ -34,6 +36,7 @@ namespace MiniGolf.Controls
             Rigidbody = GetComponent<Rigidbody>();
 
             OnSwing.AddListener(Swing);
+            OnBackswingCancel.AddListener(CancelBackswing);
         }
 
         public void ToggleBackswing(InputAction.CallbackContext context)
@@ -47,8 +50,12 @@ namespace MiniGolf.Controls
             }
             else if (context.canceled)
             {
-                OnSwing.Invoke();
-                BackswingScaler = 0f;
+                if (BackswingScaler > 0f)
+                {
+                    OnSwing.Invoke();
+                    BackswingScaler = 0f;
+                }
+                else OnBackswingCancel.Invoke();
                 IsBackswinging = false;
             }
         }
@@ -62,6 +69,7 @@ namespace MiniGolf.Controls
             OnBackswingChange.Invoke();
         }
 
+        protected virtual void CancelBackswing() { }
         protected abstract void Swing();
     }
 }
