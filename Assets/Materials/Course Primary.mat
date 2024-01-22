@@ -92,8 +92,8 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _minWallAngle: 45
-    - _tileScale: 2
+    - _minWallAngle: 60
+    - _tileScale: 3
     m_Colors:
     - _Color: {r: 0.15354209, g: 0.85660374, b: 0.3149005, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
