@@ -100,5 +100,5 @@ Material:
     - _accentColor: {r: 0.41699937, g: 0.7433963, b: 0.36889285, a: 1}
     - _mainColor: {r: 0.5113207, g: 1, b: 0.55696774, a: 1}
     - _upDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _wallColor: {r: 1, g: 1, b: 1, a: 1}
+    - _wallColor: {r: 0.7056604, g: 0.51912457, b: 0.28093266, a: 1}
   m_BuildTextureStacks: []
