@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -80,7 +83,7 @@ namespace MiniGolf.Terrain
         {
             var newCell = GetCellFor(tilePrefab);
             var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(newCell - LastCell, Vector3.up));
-            var newTile = Instantiate(tilePrefab, CellToPosition(newCell), rotation, transform);
+            var newTile = ContextInstantiate(tilePrefab, CellToPosition(newCell), rotation, transform);
             tileInstances.Add(newTile);
 
             foreach (var localCell in newTile.LocalCells)
@@ -110,6 +113,19 @@ namespace MiniGolf.Terrain
             }
 
             throw new NoNextCellException(LastCell, tilePrefab);
+        }
+
+        private CourseTile ContextInstantiate(CourseTile original, Vector3 position, Quaternion rotation, Transform parent)
+        {
+            Func<UnityEngine.Object, Transform, UnityEngine.Object> instantiate = Instantiate;
+#if UNITY_EDITOR
+            if (!Application.isPlaying) instantiate = PrefabUtility.InstantiatePrefab;
+#endif
+
+            var newTile = (CourseTile)instantiate(original, parent);
+            newTile.transform.SetPositionAndRotation(position, rotation);
+
+            return newTile;
         }
 
         private Vector3Int LocalCellToCell(Vector3Int baseCell, CourseTile baseTile, Vector3Int localCell) => LocalCellToCell(baseCell, baseTile.transform.localRotation, localCell);
