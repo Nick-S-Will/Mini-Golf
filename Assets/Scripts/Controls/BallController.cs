@@ -17,6 +17,8 @@ namespace MiniGolf.Controls
         public bool IsMoving => Rigidbody.velocity.magnitude > ballVelocityTolerance;
         public override bool CanBackswing => !IsMoving;
 
+        protected override void Awake() => base.Awake();
+        
         protected override void Start()
         {
             base.Start();

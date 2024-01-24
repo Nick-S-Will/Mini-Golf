@@ -20,12 +20,17 @@ namespace MiniGolf.Controls
         public bool IsSwinging => swingRoutine != null;
         public override bool CanBackswing => !ballController.IsMoving;
 
-        protected override void Start()
+        protected override void Awake()
         {
+            base.Awake();
+
             if (graphicsParent == null) Debug.LogError($"{nameof(graphicsParent)} not assigned");
             if (ballController == null) Debug.LogError($"{nameof(ballController)} not assigned");
             else positionFromBall = transform.position - ballController.transform.position;
-
+        }
+        
+        protected override void Start()
+        {
             base.Start();
 
             OnBackswing.AddListener(MoveToRelativePositionFromBall);

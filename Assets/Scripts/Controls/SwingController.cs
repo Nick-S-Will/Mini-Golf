@@ -29,12 +29,15 @@ namespace MiniGolf.Controls
         public bool IsBackswinging { get; private set; }
         public abstract bool CanBackswing { get; }
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             if (camTransform == null) Debug.LogError($"{nameof(camTransform)} not assigned");
 
             Rigidbody = GetComponent<Rigidbody>();
+        }
 
+        protected virtual void Start()
+        {
             OnSwing.AddListener(Swing);
             OnBackswingCancel.AddListener(CancelBackswing);
         }

@@ -8,6 +8,7 @@ namespace MiniGolf.Overlay
     public class PowerBar : MonoBehaviour
     {
         [SerializeField] private SwingController swingController;
+
         private Slider slider;
 
         private void Start()
@@ -21,11 +22,6 @@ namespace MiniGolf.Overlay
         public void UpdateSliderValue()
         {
             slider.value = swingController.BackswingScaler;
-        }
-
-        public void ClearSliderValue()
-        {
-            slider.value = 0f;
         }
 
         private void OnDestroy()
