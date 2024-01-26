@@ -13,8 +13,12 @@ namespace MiniGolf.Terrain
     [RequireComponent(typeof(MeshCollider))]
     public class CourseGenerator : MonoBehaviour
     {
-        [SerializeField] private CourseTile[] startTilePrefabs, courseTilePrefabs;
+        [Header("Tiles")]
+        [SerializeField] private CourseTile[] startTilePrefabs;
+        [SerializeField] private CourseTile[] courseTilePrefabs;
         [SerializeField] private HoleTile[] holeTilePrefabs;
+        [Space]
+        [SerializeField] private int generationSeed;
         [SerializeField][Min(2f)] private int courseLength = 3;
         [SerializeField][Min(0f)] private float tileGenerationInterval = 1f;
         [Space]
@@ -48,22 +52,24 @@ namespace MiniGolf.Terrain
         }
         private IEnumerator GenerationRoutine()
         {
+            System.Random rng = new(generationSeed);
+
             for (int tileIndex = 0; tileIndex < courseLength; tileIndex++)
             {
                 CourseTile[] tilePrefabs;
                 if (tileIndex == 0) tilePrefabs = startTilePrefabs;
                 else if (tileIndex == courseLength - 1) tilePrefabs = holeTilePrefabs;
                 else tilePrefabs = courseTilePrefabs;
-                var randomIndex = UnityEngine.Random.Range(0, tilePrefabs.Length);
+                var randomIndex = rng.Next(tilePrefabs.Length);
 
-                try { AddTile(tilePrefabs[randomIndex]); }
+                try { SpawnTile(tilePrefabs[randomIndex], rng); }
                 catch (NoNextCellException e)
                 {
                     Debug.LogError(e.Message);
                     break;
                 }
 
-                if (tileGenerationInterval > 0f) yield return new WaitForSeconds(tileGenerationInterval);
+                if (Application.isPlaying && tileGenerationInterval > 0f) yield return new WaitForSeconds(tileGenerationInterval);
             }
 
             OnGenerate.Invoke();
@@ -79,9 +85,9 @@ namespace MiniGolf.Terrain
             usedCells.Clear();
         }
 
-        private void AddTile(CourseTile tilePrefab)
+        private void SpawnTile(CourseTile tilePrefab, System.Random rng)
         {
-            var newCell = GetCellFor(tilePrefab);
+            var newCell = GetCellFor(tilePrefab, rng);
             var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(newCell - LastCell, Vector3.up));
             var newTile = ContextInstantiate(tilePrefab, CellToPosition(newCell), rotation, transform);
             tileInstances.Add(newTile);
@@ -93,11 +99,20 @@ namespace MiniGolf.Terrain
             }
         }
 
-        private Vector3Int GetCellFor(CourseTile tilePrefab)
+        private Vector3Int GetCellFor(CourseTile tilePrefab, System.Random rng)
         {
             if (usedCells.Count == 0) return Vector3Int.zero;
 
-            foreach (var direction in LastTile.ShuffledDirections)
+            var directions = LastTile.AvailableDirections;
+            int n = directions.Length;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                (directions[n], directions[k]) = (directions[k], directions[n]);
+            }
+
+            foreach (var direction in directions)
             {
                 var startCell = LocalCellToCell(LastCell, LastTile, direction);
                 var rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(startCell - LastCell, Vector3.up));

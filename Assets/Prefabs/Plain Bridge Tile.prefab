@@ -51,7 +51,6 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   availableDirections:
   - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: -1}
   cellColor: {r: 1, g: 1, b: 1, a: 1}
   directionColor: {r: 0, g: 0, b: 1, a: 1}
   showCells: 0
