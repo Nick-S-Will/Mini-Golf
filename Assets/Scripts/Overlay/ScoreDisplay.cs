@@ -1,4 +1,4 @@
-using MiniGolf.Score;
+using MiniGolf.Progress;
 using TMPro;
 using UnityEngine;
 
@@ -6,16 +6,18 @@ namespace MiniGolf.Overlay
 {
     public class ScoreDisplay : MonoBehaviour
     {
+        [SerializeField] private ProgressManager progressManager;
         [SerializeField] private TMP_Text scoreText;
 
         private void Start()
         {
-            ScoreManager.instance.OnStroke.AddListener(UpdateTextValue);
+            progressManager.OnStroke.AddListener(UpdateTextValue);
+            progressManager.OnCompleteCourse.AddListener(UpdateTextValue);
         }
 
         private void UpdateTextValue()
         {
-            scoreText.text = ScoreManager.instance.CurrentScore.ToString();
+            scoreText.text = progressManager.CurrentScore.ToString();
         }
     }
 }

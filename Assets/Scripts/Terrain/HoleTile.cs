@@ -6,12 +6,12 @@ namespace MiniGolf.Terrain
 {
     public class HoleTile : CourseTile
     {
-        public static UnityEvent<BallController> OnBallEnter = new();
+        public UnityEvent OnBallEnter;
 
         private void OnTriggerEnter(Collider other)
         {
             var ballController = other.GetComponent<BallController>();
-            if (ballController) OnBallEnter.Invoke(ballController);
+            if (ballController) OnBallEnter.Invoke();
         }
     }
 }

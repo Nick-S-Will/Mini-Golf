@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Course Primary
+  m_Name: Course Ground
   m_Shader: {fileID: -6465566751694194690, guid: 9d0f9bdd4290c8d4c8576bb96beeaaad, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -93,7 +93,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     - _minWallAngle: 60
-    - _tileScale: 3
+    - _tileScale: 4
     m_Colors:
     - _Color: {r: 0.15354209, g: 0.85660374, b: 0.3149005, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

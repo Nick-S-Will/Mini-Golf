@@ -25,7 +25,7 @@ namespace MiniGolf.Terrain
         [SerializeField] private Gradient gizmoColorGradient;
         [SerializeField] private bool showUsedCells;
         [Space]
-        [SerializeField] private UnityEvent OnGenerate;
+        public UnityEvent OnGenerate;
 
         private List<CourseTile> tileInstances = new();
         private List<Vector3Int> usedCells = new();
@@ -34,25 +34,25 @@ namespace MiniGolf.Terrain
         private CourseTile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
 
-        public void Generate()
+        public HoleTile HoleTile => generationRoutine == null ? (HoleTile)LastTile : null;
+
+        public void Generate() => Generate(generationSeed);
+        public void Generate(int seed)
         {
             if (startTilePrefabs.Length == 0 || courseTilePrefabs.Length == 0 || holeTilePrefabs.Length == 0)
             {
                 Debug.LogError($"{nameof(startTilePrefabs)}, {nameof(courseTilePrefabs)}, or {nameof(holeTilePrefabs)} is empty");
                 return;
             }
-            if (generationRoutine != null)
-            {
-                Debug.Log("Already generating...");
-                return;
-            }
 
+            if (generationRoutine != null) StopCoroutine(generationRoutine);
             Clear();
-            generationRoutine = StartCoroutine(GenerationRoutine());
+
+            generationRoutine = StartCoroutine(GenerationRoutine(seed));
         }
-        private IEnumerator GenerationRoutine()
+        private IEnumerator GenerationRoutine(int seed)
         {
-            System.Random rng = new(generationSeed);
+            System.Random rng = new(seed);
 
             for (int tileIndex = 0; tileIndex < courseLength; tileIndex++)
             {
@@ -72,8 +72,8 @@ namespace MiniGolf.Terrain
                 if (Application.isPlaying && tileGenerationInterval > 0f) yield return new WaitForSeconds(tileGenerationInterval);
             }
 
-            OnGenerate.Invoke();
             generationRoutine = null;
+            OnGenerate.Invoke();
         }
 
         public void Clear()
