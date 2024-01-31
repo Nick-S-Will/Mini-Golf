@@ -18,9 +18,8 @@ namespace MiniGolf.Terrain
         [SerializeField] private CourseTile[] courseTilePrefabs;
         [SerializeField] private HoleTile[] holeTilePrefabs;
         [Space]
-        [SerializeField] private int generationSeed;
-        [SerializeField][Min(2f)] private int courseLength = 3;
-        [SerializeField][Min(0f)] private float tileGenerationInterval = 1f;
+        [SerializeField] private GenerationSettings settings;
+        [SerializeField][Min(0f)] private float spawnInterval;
         [Space]
         [SerializeField] private Gradient gizmoColorGradient;
         [SerializeField] private bool showUsedCells;
@@ -36,8 +35,9 @@ namespace MiniGolf.Terrain
 
         public HoleTile HoleTile => generationRoutine == null ? (HoleTile)LastTile : null;
 
-        public void Generate() => Generate(generationSeed);
-        public void Generate(int seed)
+        #region Generate
+        public void Generate() => Generate(settings);
+        public void Generate(GenerationSettings settings)
         {
             if (startTilePrefabs.Length == 0 || courseTilePrefabs.Length == 0 || holeTilePrefabs.Length == 0)
             {
@@ -48,33 +48,29 @@ namespace MiniGolf.Terrain
             if (generationRoutine != null) StopCoroutine(generationRoutine);
             Clear();
 
-            generationRoutine = StartCoroutine(GenerationRoutine(seed));
+            generationRoutine = StartCoroutine(GenerationRoutine(settings));
         }
-        private IEnumerator GenerationRoutine(int seed)
+        private IEnumerator GenerationRoutine(GenerationSettings settings)
         {
-            System.Random rng = new(seed);
+            System.Random rng = new(settings.Seed);
 
-            for (int tileIndex = 0; tileIndex < courseLength; tileIndex++)
+            for (int tileIndex = 0; tileIndex < settings.CourseLength; tileIndex++)
             {
                 CourseTile[] tilePrefabs;
                 if (tileIndex == 0) tilePrefabs = startTilePrefabs;
-                else if (tileIndex == courseLength - 1) tilePrefabs = holeTilePrefabs;
+                else if (tileIndex == settings.CourseLength - 1) tilePrefabs = holeTilePrefabs;
                 else tilePrefabs = courseTilePrefabs;
                 var randomIndex = rng.Next(tilePrefabs.Length);
 
-                try { SpawnTile(tilePrefabs[randomIndex], rng); }
-                catch (NoNextCellException e)
-                {
-                    Debug.LogError(e.Message);
-                    break;
-                }
+                SpawnTile(tilePrefabs[randomIndex], rng);
 
-                if (Application.isPlaying && tileGenerationInterval > 0f) yield return new WaitForSeconds(tileGenerationInterval);
+                if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }
 
             generationRoutine = null;
             OnGenerate.Invoke();
         }
+        #endregion
 
         public void Clear()
         {
@@ -127,7 +123,7 @@ namespace MiniGolf.Terrain
                 if (availableCellCount == tilePrefab.LocalCells.Length) return startCell;
             }
 
-            throw new NoNextCellException(LastCell, tilePrefab);
+            throw new Exception($"No cell found from {LastCell} for {tilePrefab.name}");
         }
 
         private CourseTile ContextInstantiate(CourseTile original, Vector3 position, Quaternion rotation, Transform parent)
@@ -162,16 +158,6 @@ namespace MiniGolf.Terrain
                 Gizmos.color = gizmoColorGradient.Evaluate(i / (usedCells.Count - 1f));
                 Gizmos.DrawWireCube(CellToPosition(usedCells[i]) + offsetToCenter, CourseTile.SCALE);
             }
-        }
-
-        private class NoNextCellException : Exception
-        {
-            private Vector3Int lastCell;
-            private CourseTile nextTile;
-
-            public NoNextCellException(Vector3Int lastCell, CourseTile nextTile) => (this.lastCell, this.nextTile) = (lastCell, nextTile);
-
-            public override string Message => $"No cell found from {lastCell} for {nextTile.name}";
         }
     }
 }

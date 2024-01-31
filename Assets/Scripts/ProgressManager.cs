@@ -13,7 +13,7 @@ namespace MiniGolf.Progress
         [SerializeField] private float ballMinY = -10f;
         [Space]
         [SerializeField] private CourseGenerator courseGenerator;
-        [SerializeField] int[] courseSeeds = new int[] { 0 };
+        [SerializeField] GenerationSettings[] courseSettings = new GenerationSettings[] { GenerationSettings.Default };
         [Space]
         public UnityEvent OnStroke;
         public UnityEvent OnCompleteCourse;
@@ -31,10 +31,10 @@ namespace MiniGolf.Progress
         {
             if (ballController == null) Debug.LogError($"{nameof(ballController)} not assigned");
             if (courseGenerator == null) Debug.LogError($"{nameof(courseGenerator)} not assigned");
-            if (courseSeeds.Length == 0) Debug.LogError($"{nameof(courseSeeds)} is empty");
+            if (courseSettings.Length == 0) Debug.LogError($"{nameof(courseSettings)} is empty");
             
             ballRigidbody = ballController.GetComponent<Rigidbody>();
-            coursePositions = new List<Vector3>[courseSeeds.Length];
+            coursePositions = new List<Vector3>[courseSettings.Length];
             for (int i = 0; i < coursePositions.Length; i++) coursePositions[i] = new List<Vector3>();
         }
 
@@ -48,9 +48,9 @@ namespace MiniGolf.Progress
 
         private bool TryBeginCourse()
         {
-            if (courseIndex >= courseSeeds.Length) return false;
+            if (courseIndex >= courseSettings.Length) return false;
 
-            courseGenerator.Generate(courseSeeds[courseIndex]);
+            courseGenerator.Generate(courseSettings[courseIndex]);
             if (courseIndex > 0) ballController.transform.SetPositionAndRotation(coursePositions[0][0], Quaternion.identity);
 
             return true;
