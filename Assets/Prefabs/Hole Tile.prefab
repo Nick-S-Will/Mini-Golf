@@ -54,6 +54,9 @@ MonoBehaviour:
   cellColor: {r: 1, g: 1, b: 1, a: 1}
   directionColor: {r: 0, g: 0, b: 1, a: 1}
   showCells: 0
+  OnBallEnter:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &5322431695382299758
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -145,5 +148,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.08, y: 0.05, z: 0.08}
-  m_Center: {x: 0, y: 0.46, z: 0}
+  m_Size: {x: 0.09, y: 0.01, z: 0.09}
+  m_Center: {x: 0, y: -0.065, z: 0}

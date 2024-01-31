@@ -23,16 +23,13 @@ namespace MiniGolf.Terrain
             if (!showCells) return;
 
             Gizmos.color = cellColor;
-            var offset = transform.position + SCALE.y / 2f * Vector3.up;
             foreach (var cell in cells)
             {
-                Gizmos.DrawWireCube(offset + transform.rotation * Vector3.Scale(SCALE, cell), SCALE);
+                Gizmos.DrawWireCube(transform.position + transform.rotation * Vector3.Scale(SCALE, cell), SCALE);
             }
 
-            if (cells.Length == 0) return;
-
             Gizmos.color = directionColor;
-            offset += transform.rotation * Vector3.Scale(SCALE, cells.Last());
+            var offset = transform.position + transform.rotation * Vector3.Scale(SCALE, cells.Last());
             foreach (var cell in availableDirections)
             {
                 Gizmos.DrawWireCube(offset + transform.rotation * Vector3.Scale(SCALE, cell), SCALE);

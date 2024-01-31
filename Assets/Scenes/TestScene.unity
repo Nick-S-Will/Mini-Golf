@@ -966,8 +966,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.46531934, y: -0.027778272, z: 0.014612219, w: 0.8845862}
-  m_LocalPosition: {x: 0.06901757, y: 2.1213336, z: -1.0978327}
+  m_LocalRotation: {x: 0.46531934, y: -0.02777827, z: 0.0146122165, w: 0.8845862}
+  m_LocalPosition: {x: 0.06901757, y: 1.6213337, z: -1.0978327}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1156,7 +1156,7 @@ Transform:
   m_GameObject: {fileID: 1287985014}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5213337, z: 0}
+  m_LocalPosition: {x: 0, y: 0.0213337, z: 0}
   m_LocalScale: {x: 0.042670004, y: 0.04267, z: 0.04267}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2026,7 +2026,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1901708455}
   - component: {fileID: 1901708457}
-  - component: {fileID: 1901708456}
   m_Layer: 0
   m_Name: Course
   m_TagString: Untagged
@@ -2049,28 +2048,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &1901708456
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1901708454}
-  m_Material: {fileID: 13400000, guid: aa3240c550b641b4cb4811d874b01b24, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!114 &1901708457
 MonoBehaviour:
   m_ObjectHideFlags: 0

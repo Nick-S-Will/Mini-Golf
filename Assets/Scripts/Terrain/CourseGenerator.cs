@@ -10,7 +10,6 @@ using UnityEngine.Events;
 
 namespace MiniGolf.Terrain
 {
-    [RequireComponent(typeof(MeshCollider))]
     public class CourseGenerator : MonoBehaviour
     {
         [Header("Tiles")]
@@ -152,11 +151,10 @@ namespace MiniGolf.Terrain
             }
             if (!showUsedCells || generationRoutine != null) return;
 
-            var offsetToCenter = CourseTile.SCALE.y / 2f * Vector3.up;
             for (int i = 0; i < usedCells.Count; i++)
             {
                 Gizmos.color = gizmoColorGradient.Evaluate(i / (usedCells.Count - 1f));
-                Gizmos.DrawWireCube(CellToPosition(usedCells[i]) + offsetToCenter, CourseTile.SCALE);
+                Gizmos.DrawWireCube(CellToPosition(usedCells[i]), CourseTile.SCALE);
             }
         }
     }
