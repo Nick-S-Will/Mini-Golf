@@ -1333,7 +1333,11 @@ MonoBehaviour:
   ballController: {fileID: 1287985020}
   ballMinY: -10
   courseGenerator: {fileID: 1901708457}
-  courseSeeds: 0100000000000000
+  courseSettings:
+  - seed: 1
+    courseLength: 3
+  - seed: 0
+    courseLength: 3
   OnStroke:
     m_PersistentCalls:
       m_Calls: []
@@ -2088,9 +2092,10 @@ MonoBehaviour:
   - {fileID: 6220431792190485081, guid: eae8615792ea3bd46aeacf9ade98fe4d, type: 3}
   holeTilePrefabs:
   - {fileID: 4458691756320286204, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
-  generationSeed: 0
-  courseLength: 3
-  tileGenerationInterval: 0.4
+  settings:
+    seed: 0
+    courseLength: 3
+  spawnInterval: 0
   gizmoColorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
