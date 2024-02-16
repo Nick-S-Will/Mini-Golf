@@ -72,16 +72,28 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _accentNormal:
+        m_Texture: {fileID: 2800000, guid: a877ce1d4a2d16943a5e2ccd7fbb9ae4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _accentTexture:
         m_Texture: {fileID: 2800000, guid: 46ecf9d9f4fc24b41986d281c82fdc51, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _mainNormal:
+        m_Texture: {fileID: 2800000, guid: 18ed094109550844291e0fdd806c72cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _mainTexture:
         m_Texture: {fileID: 2800000, guid: f74cd5080530b874cb24214f64269b54, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _wallNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _wallTexture:
-        m_Texture: {fileID: 2800000, guid: e7f361898a28e384aa1ecbeba7c4038a, type: 3}
+        m_Texture: {fileID: 2800000, guid: baafccfd9ad98cd4cb5413ab09acaf3f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
