@@ -2,7 +2,7 @@ using MiniGolf.Controls;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MiniGolf.Overlay
+namespace MiniGolf.Overlay.HUD
 {
     [RequireComponent(typeof(Slider))]
     public class PowerBar : MonoBehaviour

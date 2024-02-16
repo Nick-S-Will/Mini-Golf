@@ -2,7 +2,7 @@ using MiniGolf.Progress;
 using TMPro;
 using UnityEngine;
 
-namespace MiniGolf.Overlay
+namespace MiniGolf.Overlay.HUD
 {
     public class ScoreDisplay : MonoBehaviour
     {
