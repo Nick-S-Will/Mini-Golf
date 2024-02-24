@@ -23,11 +23,12 @@ namespace MiniGolf.Camera
 
         private void Awake()
         {
-            if (camera == null) Debug.LogError($"{nameof(camera)} not assigned");
             if (instance == null) instance = this;
             else Debug.LogError($"Multiple {nameof(TransitionManager)}s loaded");
 
-            if (startingTarget != null) GoToTarget(startingTarget);
+            if (camera == null) Debug.LogError($"{nameof(camera)} not assigned");
+
+            if (startingTarget) GoToTarget(startingTarget);
         }
 
         private IEnumerator GoToTargetRoutine(TransitionTarget target)
@@ -47,8 +48,10 @@ namespace MiniGolf.Camera
             {
                 var maxDistance = moveSpeed * Time.deltaTime;
                 var position = Vector3.MoveTowards(camera.transform.position, target.Position, maxDistance);
+
                 var maxAngle = angularSpeed * Time.deltaTime;
                 var rotation = Quaternion.RotateTowards(camera.transform.rotation, target.Rotation, maxAngle);
+
                 camera.transform.SetPositionAndRotation(position, rotation);
 
                 yield return null;
@@ -64,6 +67,12 @@ namespace MiniGolf.Camera
             if (transitionRoutine != null) StopCoroutine(transitionRoutine);
 
             transitionRoutine = StartCoroutine(GoToTargetRoutine(target));
+        }
+
+        [ContextMenu("Go To Starting Target")]
+        private void GoToStartingTarget()
+        {
+            camera.transform.SetPositionAndRotation(startingTarget.Position, startingTarget.Rotation);
         }
 
         public void Exit() => Application.Quit();
