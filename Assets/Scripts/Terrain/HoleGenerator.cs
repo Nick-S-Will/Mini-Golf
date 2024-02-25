@@ -8,16 +8,18 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
+using MiniGolf.Terrain.Data;
+
 namespace MiniGolf.Terrain
 {
-    public class CourseGenerator : MonoBehaviour
+    public class HoleGenerator : MonoBehaviour
     {
         [Header("Tiles")]
-        [SerializeField] private CourseTile[] startTilePrefabs;
-        [SerializeField] private CourseTile[] courseTilePrefabs;
+        [SerializeField] private Tile[] startTilePrefabs;
+        [SerializeField] private Tile[] tilePrefabs;
         [SerializeField] private HoleTile[] holeTilePrefabs;
         [Space]
-        [SerializeField] private GenerationSettings settings;
+        [SerializeField] private HoleData settings;
         [SerializeField][Min(0f)] private float spawnInterval;
         [Space]
         [SerializeField] private Gradient gizmoColorGradient;
@@ -25,22 +27,22 @@ namespace MiniGolf.Terrain
         [Space]
         public UnityEvent OnGenerate;
 
-        private List<CourseTile> tileInstances = new();
-        private List<Vector3Int> usedCells = new();
+        private readonly List<Tile> tileInstances = new();
+        private readonly List<Vector3Int> usedCells = new();
         private Coroutine generationRoutine;
 
-        private CourseTile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
+        private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
 
         public HoleTile HoleTile => generationRoutine == null ? (HoleTile)LastTile : null;
 
         #region Generate
         public void Generate() => Generate(settings);
-        public void Generate(GenerationSettings settings)
+        public void Generate(HoleData settings)
         {
-            if (startTilePrefabs.Length == 0 || courseTilePrefabs.Length == 0 || holeTilePrefabs.Length == 0)
+            if (startTilePrefabs.Length == 0 || tilePrefabs.Length == 0 || holeTilePrefabs.Length == 0)
             {
-                Debug.LogError($"{nameof(startTilePrefabs)}, {nameof(courseTilePrefabs)}, or {nameof(holeTilePrefabs)} is empty");
+                Debug.LogError($"{nameof(startTilePrefabs)}, {nameof(tilePrefabs)}, or {nameof(holeTilePrefabs)} is empty");
                 return;
             }
 
@@ -49,16 +51,16 @@ namespace MiniGolf.Terrain
 
             generationRoutine = StartCoroutine(GenerationRoutine(settings));
         }
-        private IEnumerator GenerationRoutine(GenerationSettings settings)
+        private IEnumerator GenerationRoutine(HoleData settings)
         {
             System.Random rng = new(settings.Seed);
 
-            for (int tileIndex = 0; tileIndex < settings.CourseLength; tileIndex++)
+            for (int tileIndex = 0; tileIndex < settings.TileCount; tileIndex++)
             {
-                CourseTile[] tilePrefabs;
+                Tile[] tilePrefabs;
                 if (tileIndex == 0) tilePrefabs = startTilePrefabs;
-                else if (tileIndex == settings.CourseLength - 1) tilePrefabs = holeTilePrefabs;
-                else tilePrefabs = courseTilePrefabs;
+                else if (tileIndex == settings.TileCount - 1) tilePrefabs = holeTilePrefabs;
+                else tilePrefabs = this.tilePrefabs;
                 var randomIndex = rng.Next(tilePrefabs.Length);
 
                 SpawnTile(tilePrefabs[randomIndex], rng);
@@ -80,7 +82,7 @@ namespace MiniGolf.Terrain
             usedCells.Clear();
         }
 
-        private void SpawnTile(CourseTile tilePrefab, System.Random rng)
+        private void SpawnTile(Tile tilePrefab, System.Random rng)
         {
             var newCell = GetCellFor(tilePrefab, rng);
             var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(newCell - LastCell, Vector3.up));
@@ -94,7 +96,7 @@ namespace MiniGolf.Terrain
             }
         }
 
-        private Vector3Int GetCellFor(CourseTile tilePrefab, System.Random rng)
+        private Vector3Int GetCellFor(Tile tilePrefab, System.Random rng)
         {
             if (usedCells.Count == 0) return Vector3Int.zero;
 
@@ -125,22 +127,22 @@ namespace MiniGolf.Terrain
             throw new Exception($"No cell found from {LastCell} for {tilePrefab.name}");
         }
 
-        private CourseTile ContextInstantiate(CourseTile original, Vector3 position, Quaternion rotation, Transform parent)
+        private Tile ContextInstantiate(Tile original, Vector3 position, Quaternion rotation, Transform parent)
         {
             Func<UnityEngine.Object, Transform, UnityEngine.Object> instantiate = Instantiate;
 #if UNITY_EDITOR
             if (!Application.isPlaying) instantiate = PrefabUtility.InstantiatePrefab;
 #endif
 
-            var newTile = (CourseTile)instantiate(original, parent);
+            var newTile = (Tile)instantiate(original, parent);
             newTile.transform.SetPositionAndRotation(position, rotation);
 
             return newTile;
         }
 
-        private Vector3Int LocalCellToCell(Vector3Int baseCell, CourseTile baseTile, Vector3Int localCell) => LocalCellToCell(baseCell, baseTile.transform.localRotation, localCell);
+        private Vector3Int LocalCellToCell(Vector3Int baseCell, Tile baseTile, Vector3Int localCell) => LocalCellToCell(baseCell, baseTile.transform.localRotation, localCell);
         private Vector3Int LocalCellToCell(Vector3Int baseCell, Quaternion baseRotation, Vector3Int localCell) => baseCell + Vector3Int.RoundToInt(baseRotation * localCell);
-        private Vector3 CellToPosition(Vector3Int cell) => transform.position + transform.rotation * Vector3.Scale(CourseTile.SCALE, cell);
+        private Vector3 CellToPosition(Vector3Int cell) => transform.position + transform.rotation * Vector3.Scale(Tile.SCALE, cell);
 
         private void OnDrawGizmosSelected()
         {
@@ -154,7 +156,7 @@ namespace MiniGolf.Terrain
             for (int i = 0; i < usedCells.Count; i++)
             {
                 Gizmos.color = gizmoColorGradient.Evaluate(i / (usedCells.Count - 1f));
-                Gizmos.DrawWireCube(CellToPosition(usedCells[i]), CourseTile.SCALE);
+                Gizmos.DrawWireCube(CellToPosition(usedCells[i]), Tile.SCALE);
             }
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace MiniGolf.Terrain
 {
-    public class HoleTile : CourseTile
+    public class HoleTile : Tile
     {
         public UnityEvent OnBallEnter;
 

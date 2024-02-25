@@ -1,4 +1,4 @@
-using MiniGolf.Progress;
+using MiniGolf.Managers.Progress;
 using TMPro;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ namespace MiniGolf.Overlay.HUD
         private void Start()
         {
             progressManager.OnStroke.AddListener(UpdateTextValue);
-            progressManager.OnCompleteCourse.AddListener(UpdateTextValue);
+            progressManager.OnCompleteHole.AddListener(UpdateTextValue);
         }
 
         private void UpdateTextValue()

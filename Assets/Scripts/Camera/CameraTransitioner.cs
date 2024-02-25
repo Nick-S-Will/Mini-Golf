@@ -3,15 +3,14 @@ using UnityEngine;
 
 namespace MiniGolf.Camera
 {
-    public class TransitionManager : MonoBehaviour
+    [RequireComponent(typeof(UnityEngine.Camera))]
+    public class CameraTransitioner : MonoBehaviour
     {
-        public static TransitionManager instance;
-
-        [SerializeField] private new UnityEngine.Camera camera;
         [SerializeField][Min(0f)] private float transitionTime = 1.0f;
         [Space]
         [SerializeField] private TransitionTarget startingTarget;
 
+        private new UnityEngine.Camera camera;
         private TransitionTarget currentTarget;
         private Coroutine transitionRoutine;
 
@@ -23,10 +22,12 @@ namespace MiniGolf.Camera
 
         private void Awake()
         {
-            if (instance == null) instance = this;
-            else Debug.LogError($"Multiple {nameof(TransitionManager)}s loaded");
-
-            if (camera == null) Debug.LogError($"{nameof(camera)} not assigned");
+            camera = GetComponent<UnityEngine.Camera>();
+            if (camera == null)
+            {
+                Debug.LogError($"{nameof(CameraTransitioner)} must be placed on object with a {nameof(UnityEngine.Camera)}");
+                return;
+            }
 
             if (startingTarget) GoToTarget(startingTarget);
         }
@@ -72,14 +73,9 @@ namespace MiniGolf.Camera
         [ContextMenu("Go To Starting Target")]
         private void GoToStartingTarget()
         {
-            camera.transform.SetPositionAndRotation(startingTarget.Position, startingTarget.Rotation);
+            GetComponent<UnityEngine.Camera>().transform.SetPositionAndRotation(startingTarget.Position, startingTarget.Rotation);
         }
 
         public void Exit() => Application.Quit();
-
-        private void OnDestroy()
-        {
-            if (instance == this) instance = null;
-        }
     }
 }

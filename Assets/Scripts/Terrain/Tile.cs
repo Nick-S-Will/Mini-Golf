@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MiniGolf.Terrain
 {
-    public class CourseTile : MonoBehaviour
+    public class Tile : MonoBehaviour
     {
         public static readonly Vector3 SCALE = new(2f, 1f, 2f);
 
