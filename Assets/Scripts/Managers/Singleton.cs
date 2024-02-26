@@ -6,12 +6,15 @@ namespace MiniGolf.Managers
     {
         public static T instance;
 
+        [SerializeField] private bool logIfMultiple;
+
         protected virtual void Awake()
         {
             if (instance == null) instance = this as T;
             else
             {
-                Debug.LogError($"Multiple {typeof(T).Name}s loaded");
+                if (logIfMultiple) Debug.LogError($"Multiple {typeof(T).Name}s loaded");
+                Destroy(gameObject);
                 return;
             }
 

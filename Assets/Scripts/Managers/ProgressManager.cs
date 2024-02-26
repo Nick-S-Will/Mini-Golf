@@ -1,9 +1,9 @@
 using MiniGolf.Controls;
 using MiniGolf.Managers.Game;
+using MiniGolf.Managers.SceneTransition;
 using MiniGolf.Terrain;
 using MiniGolf.Terrain.Data;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -33,18 +33,22 @@ namespace MiniGolf.Managers.Progress
         {
             if (ballController == null) Debug.LogError($"{nameof(ballController)} not assigned");
             if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
-            if (course.HoleData.Length == 0 && GameManager.instance == null) Debug.LogError($"{nameof(course)} is empty");
+            if ((course == null || course.HoleData.Length == 0) && GameManager.instance == null) Debug.LogError($"{nameof(course)} is empty");
             
             ballRigidbody = ballController.GetComponent<Rigidbody>();
-            holePositions = new List<Vector3>[course.Length];
-            for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new List<Vector3>();
         }
 
         private void Start()
         {
             ballController.OnSwing.AddListener(Stroke);
             holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
+
             if (GameManager.instance) course = GameManager.instance.SelectedCourse;
+            holePositions = new List<Vector3>[course.Length];
+            for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
 
             _ = TryBeginHole();
         }
@@ -83,9 +87,10 @@ namespace MiniGolf.Managers.Progress
 
             if (!TryBeginHole())
             {
-                var scores = new StringBuilder("Scores: ");
-                foreach (var positions in holePositions) scores.Append($"{positions.Count}, ");
-                Debug.Log(scores); // TODO: Course end actions
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+
+                SceneTransitionManager.instance.ChangeScene(Scene.Title);
             }
         }
 
