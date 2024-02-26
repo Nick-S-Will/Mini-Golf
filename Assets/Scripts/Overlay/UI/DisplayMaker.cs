@@ -7,17 +7,20 @@ namespace MiniGolf.Overlay.UI
 {
     public abstract class DisplayMaker<T> : MonoBehaviour
     {
-        [SerializeField] protected Display<T> displayPrefab;
         [SerializeField] protected Transform displayParent;
+        [SerializeField] protected Display<T> displayPrefab;
 
         protected readonly List<Display<T>> displayInstances = new();
 
-        public virtual void MakeDisplay(T element)
+        public Display<T>[] Displays => displayInstances.ToArray();
+
+        public virtual Display<T> MakeDisplay(T displayObject)
         {
             var buttonDisplay = Instantiate(displayPrefab, displayParent);
+            buttonDisplay.SetObject(displayObject);
             displayInstances.Add(buttonDisplay);
 
-            buttonDisplay.UpdateText(element);
+            return buttonDisplay;
         }
 
         public virtual void DestroyDisplays()

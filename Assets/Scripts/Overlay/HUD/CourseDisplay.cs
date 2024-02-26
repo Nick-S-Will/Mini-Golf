@@ -1,7 +1,7 @@
 using MiniGolf.Terrain.Data;
+using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace MiniGolf.Overlay.HUD
 {
@@ -11,11 +11,14 @@ namespace MiniGolf.Overlay.HUD
 
         protected override void Awake() => base.Awake();
         
-        public override void UpdateText(Course course)
+        public override void SetObject(Course course)
         {
-            if (courseName) courseName.text = course.Name;
-            if (par) par.text = course.Par.ToString();
-            if (holeCount) holeCount.text = course.Length.ToString();
+            base.SetObject(course);
+
+            bool isCourse = course != null;
+            if (courseName) courseName.text = isCourse ? course.Name : string.Empty;
+            if (par) par.text = isCourse ? course.Par.ToString(): string.Empty;
+            if (holeCount) holeCount.text = isCourse ? course.Length.ToString() : string.Empty;
         }
     }
 }

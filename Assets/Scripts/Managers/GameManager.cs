@@ -1,4 +1,5 @@
 using MiniGolf.Terrain.Data;
+using System.Linq;
 using UnityEngine;
 
 namespace MiniGolf.Managers.Game
@@ -7,21 +8,29 @@ namespace MiniGolf.Managers.Game
     {
         [SerializeField] private Course[] courseOptions;
 
-        private int selectedIndex;
+        private Course selectedCourse;
 
         public Course[] Courses => courseOptions;
-        public Course SelectedCourse => courseOptions[selectedIndex];
-        public int SelectedIndex
+        public Course SelectedCourse
         {
-            get => selectedIndex;
-            set => selectedIndex = (value % courseOptions.Length + courseOptions.Length) % courseOptions.Length;
+            get => selectedCourse;
+            set
+            {
+                if (courseOptions.Contains(value)) selectedCourse = value;
+                else Debug.LogWarning($"Course '{value.Name}' not in {nameof(courseOptions)} array");
+            }
         }
 
         protected override void Awake()
         {
             base.Awake();
 
-            if (courseOptions.Length == 0) Debug.LogError($"{nameof(courseOptions)} is empty");
+            if (courseOptions.Length == 0)
+            {
+                Debug.LogError($"{nameof(courseOptions)} is empty");
+                return;
+            }
+            selectedCourse = courseOptions[0];
 
             DontDestroyOnLoad(instance.gameObject);
         }

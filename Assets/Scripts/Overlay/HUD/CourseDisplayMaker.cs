@@ -7,6 +7,8 @@ namespace MiniGolf.Overlay.HUD
 {
     public class CourseDisplayMaker : DisplayMaker<Course>
     {
+        [SerializeField] private CourseDisplay selectedCourseDisplay;
+
         private void Start()
         {
             if (GameManager.instance == null)
@@ -15,7 +17,18 @@ namespace MiniGolf.Overlay.HUD
                 return;
             }
 
-            foreach (var course in GameManager.instance.Courses) MakeDisplay(course);
+            foreach (var course in GameManager.instance.Courses)
+            {
+                var display = MakeDisplay(course);
+                _ = display.TryAddOnClick(() => UpdateSelected(course));
+            }
+            UpdateSelected(displayInstances[0].DisplayObject);
+        }
+
+        private void UpdateSelected(Course course)
+        {
+            selectedCourseDisplay.SetObject(course);
+            GameManager.instance.SelectedCourse = course;
         }
     }
 }

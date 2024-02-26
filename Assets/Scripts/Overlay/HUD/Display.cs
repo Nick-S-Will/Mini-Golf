@@ -6,8 +6,10 @@ namespace MiniGolf.Overlay.HUD
 {
     public abstract class Display<T> : MonoBehaviour
     {
+        protected T displayObject;
         protected Button button;
 
+        public T DisplayObject => displayObject;
         public Button Button => button;
 
         protected virtual void Awake()
@@ -15,7 +17,10 @@ namespace MiniGolf.Overlay.HUD
             button = GetComponent<Button>();
         }
 
-        public abstract void UpdateText(T element);
+        public virtual void SetObject(T element)
+        {
+            displayObject = element;
+        }
 
         public virtual bool TryAddOnClick(UnityAction action)
         {
