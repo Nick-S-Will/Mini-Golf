@@ -18,7 +18,7 @@ namespace MiniGolf.Managers.Progress
         [SerializeField] private Course course;
         [Space]
         public UnityEvent OnStroke;
-        public UnityEvent OnCompleteHole;
+        public UnityEvent OnFallOff, OnCompleteHole;
 
         private Rigidbody ballRigidbody;
         private HoleTile holeTile;
@@ -63,12 +63,12 @@ namespace MiniGolf.Managers.Progress
             return true;
         }
 
-        private void UpdateHoleTile()
+        private void UpdateHoleTile(HoleTile holeTile)
         {
-            if (holeTile) holeTile.OnBallEnter.RemoveListener(CompleteHole);
+            if (this.holeTile) holeTile.OnBallEnter.RemoveListener(CompleteHole);
 
-            holeTile = holeGenerator.HoleTile;
-            holeTile.OnBallEnter.AddListener(CompleteHole);
+            this.holeTile = holeTile;
+            this.holeTile.OnBallEnter.AddListener(CompleteHole);
         }
 
         private void Stroke()
@@ -90,7 +90,8 @@ namespace MiniGolf.Managers.Progress
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
 
-                SceneTransitionManager.instance.ChangeScene(Scene.Title);
+                if (SceneTransitionManager.instance) SceneTransitionManager.instance.ChangeScene(Scene.Title);
+                else Debug.LogWarning($"No {nameof(SceneTransitionManager)} loaded");
             }
         }
 
@@ -103,10 +104,11 @@ namespace MiniGolf.Managers.Progress
         {
             if (ballController.transform.position.y < ballMinY)
             {
-                var lastPosition = CurrentPositions[^1];
-                ballController.transform.position = lastPosition;
+                ballController.transform.position = CurrentPositions[^1];
                 ballRigidbody.velocity = Vector3.zero;
                 ballRigidbody.angularVelocity = Vector3.zero;
+
+                OnFallOff.Invoke();
             }
         }
 

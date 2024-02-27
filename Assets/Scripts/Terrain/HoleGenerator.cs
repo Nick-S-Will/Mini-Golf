@@ -25,7 +25,7 @@ namespace MiniGolf.Terrain
         [SerializeField] private Gradient gizmoColorGradient;
         [SerializeField] private bool showUsedCells;
         [Space]
-        public UnityEvent OnGenerate;
+        public UnityEvent<HoleTile> OnGenerate;
 
         private readonly List<Tile> tileInstances = new();
         private readonly List<Vector3Int> usedCells = new();
@@ -33,8 +33,6 @@ namespace MiniGolf.Terrain
 
         private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
-
-        public HoleTile HoleTile => generationRoutine == null ? (HoleTile)LastTile : null;
 
         #region Generate
         public void Generate() => Generate(settings);
@@ -57,19 +55,25 @@ namespace MiniGolf.Terrain
 
             for (int tileIndex = 0; tileIndex < settings.TileCount; tileIndex++)
             {
-                Tile[] tilePrefabs;
-                if (tileIndex == 0) tilePrefabs = startTilePrefabs;
-                else if (tileIndex == settings.TileCount - 1) tilePrefabs = holeTilePrefabs;
-                else tilePrefabs = this.tilePrefabs;
-                var randomIndex = rng.Next(tilePrefabs.Length);
+                Tile[] tilePrefabOptions = GetTileOptionsFor(settings, tileIndex);
+                var randomIndex = rng.Next(tilePrefabOptions.Length);
 
-                SpawnTile(tilePrefabs[randomIndex], rng);
+                SpawnTile(tilePrefabOptions[randomIndex], rng);
 
                 if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }
 
             generationRoutine = null;
-            OnGenerate.Invoke();
+            OnGenerate.Invoke((HoleTile)LastTile);
+        }
+
+        private Tile[] GetTileOptionsFor(HoleData settings, int index)
+        {
+            if (index < 0 || index >= settings.TileCount) throw new ArgumentOutOfRangeException($"Index '{index}' out of range [0, {settings.TileCount - 1}]");
+
+            if (index == 0) return startTilePrefabs;
+            else if (index == settings.TileCount - 1) return holeTilePrefabs;
+            else return tilePrefabs;
         }
         #endregion
 

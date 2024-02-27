@@ -35,7 +35,6 @@ namespace MiniGolf.Cinemachine
         }
 
         protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
-        {
-        }
+        {}
     }
 }
