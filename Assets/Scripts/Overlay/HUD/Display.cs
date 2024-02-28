@@ -20,7 +20,11 @@ namespace MiniGolf.Overlay.HUD
         public virtual void SetObject(T element)
         {
             displayObject = element;
+            UpdateText();
         }
+
+        /// <summary>Updates the <see cref="Display"/>'s overlay to reflect any changes in <see cref="DisplayObject"/></summary>
+        public abstract void UpdateText();
 
         public virtual bool TryAddOnClick(UnityAction action)
         {

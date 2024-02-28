@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace MiniGolf.Terrain.Data
@@ -10,16 +11,9 @@ namespace MiniGolf.Terrain.Data
         [SerializeField] private HoleData[] holeData;
 
         public string Name => name;
-        public int Par
-        { 
-            get
-            {
-                int totalPar = 0;
-                foreach (var hole in holeData) totalPar += hole.TileCount;
-                return totalPar;
-            }
-        }
         public HoleData[] HoleData => holeData;
         public int Length => holeData.Length;
+        public int Par => holeData.Sum(hole => hole.TileCount);
+        public int[] Pars => holeData.Select(hole => hole.TileCount).ToArray();
     }
 }

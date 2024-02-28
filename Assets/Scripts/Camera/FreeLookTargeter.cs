@@ -1,8 +1,6 @@
 using Cinemachine;
 using MiniGolf.Terrain;
-using System.Collections;
 using UnityEngine;
-using static Cinemachine.CinemachineOrbitalTransposer;
 
 namespace MiniGolf.Cinemachine
 {
