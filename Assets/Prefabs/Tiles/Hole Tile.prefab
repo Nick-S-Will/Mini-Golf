@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4458691756320286204}
   - component: {fileID: 5322431695382299758}
   - component: {fileID: 6700543682895832449}
-  - component: {fileID: -7104088583658142104}
   - component: {fileID: 5725129085765682461}
   m_Layer: 0
   m_Name: Hole Tile
@@ -108,28 +107,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &-7104088583658142104
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4949283373310472328}
-  m_Material: {fileID: 13400000, guid: aa3240c550b641b4cb4811d874b01b24, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 985780210288049382, guid: 4ebb10750cf699a47b22ea629e0c3c90, type: 3}
 --- !u!65 &5725129085765682461
 BoxCollider:
   m_ObjectHideFlags: 0

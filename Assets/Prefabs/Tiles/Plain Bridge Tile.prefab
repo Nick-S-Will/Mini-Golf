@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8669192486944295857}
   - component: {fileID: 3660215159085096013}
   - component: {fileID: 7444276526436690964}
-  - component: {fileID: 7519486397932096063}
   m_Layer: 0
   m_Name: Plain Bridge Tile
   m_TagString: Untagged
@@ -104,25 +103,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7519486397932096063
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4406460947216684588}
-  m_Material: {fileID: 13400000, guid: aa3240c550b641b4cb4811d874b01b24, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -875546362334060858, guid: 4ebb10750cf699a47b22ea629e0c3c90, type: 3}

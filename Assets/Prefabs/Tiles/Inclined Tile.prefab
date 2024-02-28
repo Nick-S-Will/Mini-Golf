@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3483026065000080780}
   - component: {fileID: 6209430435810695472}
   - component: {fileID: 1596299837082704051}
-  - component: {fileID: -5013802604657836511}
   m_Layer: 0
   m_Name: Inclined Tile
   m_TagString: Untagged
@@ -105,25 +104,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &-5013802604657836511
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3434952584275146352}
-  m_Material: {fileID: 13400000, guid: aa3240c550b641b4cb4811d874b01b24, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7256360740032153986, guid: 4ebb10750cf699a47b22ea629e0c3c90, type: 3}

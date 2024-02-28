@@ -12,6 +12,7 @@ using MiniGolf.Terrain.Data;
 
 namespace MiniGolf.Terrain
 {
+    [RequireComponent(typeof(MeshCollider))]
     public class HoleGenerator : MonoBehaviour
     {
         [Header("Tiles")]
@@ -29,7 +30,15 @@ namespace MiniGolf.Terrain
 
         private readonly List<Tile> tileInstances = new();
         private readonly List<Vector3Int> usedCells = new();
+        private MeshCollider meshCollider;
         private Coroutine generationRoutine;
+
+        private MeshCollider MeshCollider => meshCollider != null ? meshCollider : GetComponent<MeshCollider>();
+
+        private void Awake()
+        {
+            meshCollider = GetComponent<MeshCollider>();
+        }
 
         private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
@@ -53,15 +62,22 @@ namespace MiniGolf.Terrain
         {
             System.Random rng = new(settings.Seed);
 
+            var combine = new CombineInstance[settings.TileCount];
             for (int tileIndex = 0; tileIndex < settings.TileCount; tileIndex++)
             {
                 Tile[] tilePrefabOptions = GetTileOptionsFor(settings, tileIndex);
                 var randomIndex = rng.Next(tilePrefabOptions.Length);
 
-                SpawnTile(tilePrefabOptions[randomIndex], rng);
+                var tile = SpawnTile(tilePrefabOptions[randomIndex], rng);
+                combine[tileIndex].transform = tile.transform.localToWorldMatrix;
+                combine[tileIndex].mesh = tile.GetComponent<MeshFilter>().sharedMesh;
 
                 if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }
+
+            var combinedMesh = new Mesh();
+            combinedMesh.CombineMeshes(combine);
+            MeshCollider.sharedMesh = combinedMesh;
 
             generationRoutine = null;
             OnGenerate.Invoke((HoleTile)LastTile);
@@ -84,9 +100,10 @@ namespace MiniGolf.Terrain
             foreach (var tile in tiles) contextDestroy(tile.gameObject);
             tileInstances.Clear();
             usedCells.Clear();
+            MeshCollider.sharedMesh = null;
         }
 
-        private void SpawnTile(Tile tilePrefab, System.Random rng)
+        private Tile SpawnTile(Tile tilePrefab, System.Random rng)
         {
             var newCell = GetCellFor(tilePrefab, rng);
             var rotation = transform.rotation * Quaternion.LookRotation(Vector3.ProjectOnPlane(newCell - LastCell, Vector3.up));
@@ -98,6 +115,8 @@ namespace MiniGolf.Terrain
                 var cell = LocalCellToCell(newCell, rotation, localCell);
                 usedCells.Add(cell);
             }
+
+            return newTile;
         }
 
         private Vector3Int GetCellFor(Tile tilePrefab, System.Random rng)

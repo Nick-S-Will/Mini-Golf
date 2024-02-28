@@ -10,7 +10,7 @@ namespace MiniGolf.Managers.SceneTransition
 
         protected override void Awake() => base.Awake();
 
-        public void ChangeScene(string sceneName) => SceneManager.LoadScene(sceneName);
+        public static void ChangeScene(string sceneName) => SceneManager.LoadScene(sceneName);
 
         public void ChangeScene(Scene scene) => ChangeScene(sceneNames[(int)scene]);
         
