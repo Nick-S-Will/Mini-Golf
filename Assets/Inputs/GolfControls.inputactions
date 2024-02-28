@@ -31,6 +31,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Toggle Scoreboard",
+                    "type": "Button",
+                    "id": "b8808c18-fa74-4693-b3ab-153b1fcb7db5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "49c6a49f-8bb2-4678-9647-6385ba260dc8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -47,17 +65,6 @@
                 },
                 {
                     "name": "",
-                    "id": "986ea948-70ed-412f-8c49-7ae96722d595",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "cc03f19d-f317-456b-b5f7-c0789e8fda14",
                     "path": "<Pointer>/delta",
                     "interactions": "",
@@ -69,8 +76,8 @@
                 },
                 {
                     "name": "",
-                    "id": "6e447378-6f62-4dd7-9837-30e895d0a0eb",
-                    "path": "<Joystick>/{Hatswitch}",
+                    "id": "986ea948-70ed-412f-8c49-7ae96722d595",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -86,6 +93,56 @@
                     "processors": "",
                     "groups": "",
                     "action": "Toggle Backswing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f2d82bff-e7d7-46af-b012-38e9b60717ba",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c2bc59a0-ffbc-4765-925d-cfc9c38600d2",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Scoreboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "c129ee99-1a39-432f-ada0-953162800e8c",
+            "actions": [
+                {
+                    "name": "Resume",
+                    "type": "Button",
+                    "id": "a79d7771-8d1c-4ffa-b249-d548423899a9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e075ac80-50f5-4616-a5a8-5f7498328da0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Resume",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

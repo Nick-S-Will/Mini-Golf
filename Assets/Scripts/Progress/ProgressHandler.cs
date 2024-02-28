@@ -3,13 +3,15 @@ using MiniGolf.Managers.Game;
 using MiniGolf.Managers.SceneTransition;
 using MiniGolf.Terrain;
 using MiniGolf.Terrain.Data;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace MiniGolf.Managers.Progress
+namespace MiniGolf.Progress
 {
-    public class ProgressManager : MonoBehaviour
+    public class ProgressHandler : MonoBehaviour
     {
         [SerializeField] private BallController ballController;
         [SerializeField] private float ballMinY = -10f;
@@ -17,8 +19,12 @@ namespace MiniGolf.Managers.Progress
         [SerializeField] private HoleGenerator holeGenerator;
         [SerializeField] private Course course;
         [Space]
-        public UnityEvent OnStroke;
-        public UnityEvent OnFallOff, OnCompleteHole;
+        [SerializeField][Min(0f)] private float courseEndTime = 5f;
+        [Space]
+        public UnityEvent OnStartCourse;
+        public UnityEvent OnStroke, OnFallOff, OnCompleteHole;
+        /// <summary>Passes amount of time before scene change</summary>
+        public UnityEvent<float> OnCompleteCourse;
 
         private Rigidbody ballRigidbody;
         private HoleTile holeTile;
@@ -27,6 +33,7 @@ namespace MiniGolf.Managers.Progress
         private int holeIndex;
 
         private List<Vector3> CurrentPositions => holePositions[holeIndex];
+        public int[] Scores => holePositions.Select(positions => positions.Count()).ToArray();
         public int CurrentScore => holeIndex < holePositions.Length ? CurrentPositions.Count : 0;
 
         private void Awake()
@@ -50,7 +57,7 @@ namespace MiniGolf.Managers.Progress
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
-            _ = TryBeginHole();
+            if (TryBeginHole()) OnStartCourse.Invoke();
         }
 
         private bool TryBeginHole()
@@ -85,14 +92,19 @@ namespace MiniGolf.Managers.Progress
             holeIndex++;
             OnCompleteHole.Invoke();
 
-            if (!TryBeginHole())
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
+            if (!TryBeginHole()) _ = StartCoroutine(CompleteCourse());
+        }
 
-                if (SceneTransitionManager.instance) SceneTransitionManager.instance.ChangeScene(Scene.Title);
-                else Debug.LogWarning($"No {nameof(SceneTransitionManager)} loaded");
-            }
+        private IEnumerator CompleteCourse()
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            OnCompleteCourse.Invoke(courseEndTime);
+            yield return new WaitForSeconds(courseEndTime);
+
+            if (SceneTransitionManager.instance) SceneTransitionManager.instance.ChangeScene(Scene.Title);
+            else Debug.LogWarning($"No {nameof(SceneTransitionManager)} loaded");
         }
 
         private void FixedUpdate()
