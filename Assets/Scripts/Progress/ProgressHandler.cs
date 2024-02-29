@@ -19,10 +19,13 @@ namespace MiniGolf.Progress
         [SerializeField] private HoleGenerator holeGenerator;
         [SerializeField] private Course course;
         [Space]
+        [SerializeField][Min(0f)] private float holeEndTime = 2f;
         [SerializeField][Min(0f)] private float courseEndTime = 5f;
         [Space]
         public UnityEvent OnStartCourse;
-        public UnityEvent OnStroke, OnFallOff, OnCompleteHole;
+        public UnityEvent OnStroke, OnFallOff;
+        /// <summary>Passes amount of time before hole change</summary>
+        public UnityEvent<float> OnCompleteHole;
         /// <summary>Passes amount of time before scene change</summary>
         public UnityEvent<float> OnCompleteCourse;
 
@@ -84,18 +87,20 @@ namespace MiniGolf.Progress
             OnStroke.Invoke();
         }
 
-        private void CompleteHole()
+        private void CompleteHole() => _ = StartCoroutine(CompleteHoleRoutine());
+        private IEnumerator CompleteHoleRoutine()
         {
             ballRigidbody.velocity = Vector3.zero;
             ballRigidbody.angularVelocity = Vector3.zero;
 
             holeIndex++;
-            OnCompleteHole.Invoke();
+            OnCompleteHole.Invoke(holeEndTime);
+            yield return new WaitForSeconds(holeEndTime);
 
-            if (!TryBeginHole()) _ = StartCoroutine(CompleteCourse());
+            if (!TryBeginHole()) _ = StartCoroutine(CompleteCourseRoutine());
         }
 
-        private IEnumerator CompleteCourse()
+        private IEnumerator CompleteCourseRoutine()
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;

@@ -15,6 +15,8 @@ namespace MiniGolf.Overlay.HUD
             progressHandler.OnCompleteHole.AddListener(UpdateTextValue);
         }
 
+        private void UpdateTextValue(float _) => UpdateTextValue();
+
         private void UpdateTextValue()
         {
             scoreText.text = progressHandler.CurrentScore.ToString();
