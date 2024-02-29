@@ -14,6 +14,7 @@ namespace MiniGolf.Overlay.UI
             onClick.AddListener(GoToScene);
         }
 
-        private void GoToScene() => SceneTransitionManager.instance.ChangeScene(scene);
+        private void GoToScene() => SceneTransitionManager.ChangeScene(scene);
+        
     }
 }

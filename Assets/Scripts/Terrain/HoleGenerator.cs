@@ -76,7 +76,7 @@ namespace MiniGolf.Terrain
             }
 
             var combinedMesh = new Mesh();
-            combinedMesh.CombineMeshes(combine);
+            combinedMesh.CombineMeshes(combine, true);
             MeshCollider.sharedMesh = combinedMesh;
 
             generationRoutine = null;

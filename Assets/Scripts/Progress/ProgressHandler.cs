@@ -103,8 +103,7 @@ namespace MiniGolf.Progress
             OnCompleteCourse.Invoke(courseEndTime);
             yield return new WaitForSeconds(courseEndTime);
 
-            if (SceneTransitionManager.instance) SceneTransitionManager.instance.ChangeScene(Scene.Title);
-            else Debug.LogWarning($"No {nameof(SceneTransitionManager)} loaded");
+            SceneTransitionManager.ChangeScene(Scene.Title);
         }
 
         private void FixedUpdate()

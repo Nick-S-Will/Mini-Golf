@@ -64,7 +64,7 @@ MonoBehaviour:
   OnSwing:
     m_PersistentCalls:
       m_Calls: []
-  ballVelocityTolerance: 0.01
+  ballVelocityTolerance: 0.05
   OnStopMoving:
     m_PersistentCalls:
       m_Calls: []

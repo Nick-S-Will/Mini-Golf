@@ -33,7 +33,7 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""id"": ""fb231cca-8858-4734-9caa-6e24466bb854"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
@@ -70,7 +70,7 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
