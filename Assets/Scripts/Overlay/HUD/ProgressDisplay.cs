@@ -10,8 +10,6 @@ namespace MiniGolf.Overlay.HUD
 
         private TMP_Text[] scoreTexts;
 
-        protected override void Awake() => base.Awake();
-        
         public override void SetObject(ProgressData progessData)
         {
             if (scoreTexts != null) foreach (var scoreText in scoreTexts) Destroy(scoreText.gameObject);

@@ -1,12 +1,13 @@
 using MiniGolf.Managers.Game;
-using MiniGolf.Overlay.UI;
+using MiniGolf.Overlay.HUD;
 using MiniGolf.Terrain.Data;
 using UnityEngine;
 
-namespace MiniGolf.Overlay.HUD
+namespace MiniGolf.Overlay.UI
 {
-    public class CourseDisplayMaker : DisplayMaker<Course>
+    public class CourseButtonDisplayMaker : DisplayMaker<ButtonDisplay<Course>, Course>
     {
+        [Space]
         [SerializeField] private CourseDisplay selectedCourseDisplay;
 
         private void Start()
@@ -20,7 +21,7 @@ namespace MiniGolf.Overlay.HUD
             foreach (var course in GameManager.instance.Courses)
             {
                 var display = MakeDisplay(course);
-                _ = display.TryAddOnClick(() => UpdateSelected(course));
+                display.Button.onClick.AddListener(() => UpdateSelected(course));
             }
             UpdateSelected(displayInstances[0].DisplayObject);
         }
@@ -29,6 +30,11 @@ namespace MiniGolf.Overlay.HUD
         {
             selectedCourseDisplay.SetObject(course);
             GameManager.instance.SelectedCourse = course;
+        }
+
+        private void OnDestroy()
+        {
+            
         }
     }
 }

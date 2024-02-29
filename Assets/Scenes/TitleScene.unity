@@ -1403,12 +1403,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 298589201}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c23e408b6ce6e143bece29e84a305d7, type: 3}
+  m_Script: {fileID: 11500000, guid: a7aaa5db4b9b9844c90e660e994f34cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   courseName: {fileID: 298589203}
-  par: {fileID: 0}
-  holeCount: {fileID: 0}
 --- !u!1 &363704274
 GameObject:
   m_ObjectHideFlags: 0
