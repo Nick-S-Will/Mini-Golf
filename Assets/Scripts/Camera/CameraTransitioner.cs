@@ -31,7 +31,12 @@ namespace MiniGolf.Camera
 
             if (startingTarget) GoToTarget(startingTarget);
         }
+        public void GoToTarget(TransitionTarget target)
+        {
+            if (transitionRoutine != null) StopCoroutine(transitionRoutine);
 
+            transitionRoutine = StartCoroutine(GoToTargetRoutine(target));
+        }
         private IEnumerator GoToTargetRoutine(TransitionTarget target)
         {
             if (currentTarget && currentTarget.HideOnTransitionAway)
@@ -61,13 +66,6 @@ namespace MiniGolf.Camera
             target.Target.SetActive(true);
             currentTarget = target;
             transitionRoutine = null;
-        }
-
-        public void GoToTarget(TransitionTarget target)
-        {
-            if (transitionRoutine != null) StopCoroutine(transitionRoutine);
-
-            transitionRoutine = StartCoroutine(GoToTargetRoutine(target));
         }
 
         [ContextMenu("Go To Starting Target")]

@@ -202,7 +202,7 @@ namespace MiniGolf.Terrain
                 for (int j = 0; j < 3; j++) newTriangles.Add(triangleMap[triangles[i + j]]);
             }
 
-            print($"Before: {vertices.Length}, After: {newVertices.Count}. Removed: {vertices.Length - newVertices.Count}");
+            //print($"Before: {vertices.Length}, After: {newVertices.Count}. Removed: {vertices.Length - newVertices.Count}");
             combinedMesh.triangles = newTriangles.ToArray();
             combinedMesh.vertices = newVertices.ToArray();
             combinedMesh.normals = newNormals.ToArray();
