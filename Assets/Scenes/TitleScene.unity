@@ -1402,16 +1402,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logIfMultiple: 0
   courseOptions:
-  - name: Course 1
-    holeData:
-    - seed: 0
-      tileCount: 3
-  - name: Course 2
+  - name: Beginner
     holeData:
     - seed: 1
-      tileCount: 4
+      tileCount: 3
     - seed: 2
+      tileCount: 3
+    - seed: 0
+      tileCount: 3
+  - name: Intermediate
+    holeData:
+    - seed: 1
+      tileCount: 3
+    - seed: 2
+      tileCount: 3
+    - seed: 0
+      tileCount: 3
+    - seed: 0
       tileCount: 5
+    - seed: 2
+      tileCount: 6
+    - seed: 3
+      tileCount: 6
+  - name: Advanced
+    holeData:
+    - seed: 1
+      tileCount: 3
+    - seed: 2
+      tileCount: 3
+    - seed: 0
+      tileCount: 3
+    - seed: 0
+      tileCount: 5
+    - seed: 2
+      tileCount: 6
+    - seed: 3
+      tileCount: 6
+    - seed: 4
+      tileCount: 8
+    - seed: 11
+      tileCount: 9
+    - seed: 6
+      tileCount: 9
 --- !u!114 &263799700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1435,7 +1467,7 @@ AudioSource:
   m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -3147770090849230524, guid: c7753a5eeeebe1e4b9efbff0486f396c, type: 2}
-  m_audioClip: {fileID: 8300000, guid: fe0b1f9aeb45b41b089175aeeabd5d95, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -2842,7 +2874,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &740802260
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2858,10 +2890,10 @@ RectTransform:
   - {fileID: 1638818533}
   m_Father: {fileID: 2122501016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -122}
+  m_SizeDelta: {x: 280, y: 44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &740802261
 MonoBehaviour:
@@ -2975,7 +3007,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &741681579
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2991,10 +3023,10 @@ RectTransform:
   - {fileID: 1462716712}
   m_Father: {fileID: 2122501016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -77}
+  m_SizeDelta: {x: 280, y: 44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &741681580
 MonoBehaviour:
@@ -5492,7 +5524,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1744847460
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5508,10 +5540,10 @@ RectTransform:
   - {fileID: 710851069}
   m_Father: {fileID: 2122501016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -212}
+  m_SizeDelta: {x: 280, y: 44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1744847461
 MonoBehaviour:

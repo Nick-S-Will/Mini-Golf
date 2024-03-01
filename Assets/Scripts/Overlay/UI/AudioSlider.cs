@@ -24,7 +24,7 @@ namespace MiniGolf.Overlay.UI
             else Debug.LogWarning($"'{audioChannel}' channel not found");
         }
 
-        private void SetVolumePercent(float volume) => GetChannel().SetVolumePercent(volume);
+        private void SetVolumePercent(float volume) => GetChannel().VolumePercent = volume;
         
         private Channel GetChannel()
         {

@@ -17,7 +17,6 @@ namespace MiniGolf.Progress
         [SerializeField] private float ballMinY = -10f;
         [Space]
         [SerializeField] private HoleGenerator holeGenerator;
-        [SerializeField] private Course course;
         [Space]
         [SerializeField][Min(0f)] private float holeEndTime = 2f;
         [SerializeField][Min(0f)] private float courseEndTime = 5f;
@@ -31,6 +30,7 @@ namespace MiniGolf.Progress
 
         private Rigidbody ballRigidbody;
         private HoleTile holeTile;
+        private Course course;
         /// <summary>Array of positions for each hole</summary>
         private List<Vector3>[] holePositions;
         private int holeIndex;
@@ -43,7 +43,7 @@ namespace MiniGolf.Progress
         {
             if (ballController == null) Debug.LogError($"{nameof(ballController)} not assigned");
             if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
-            if ((course == null || course.HoleData.Length == 0) && GameManager.instance == null) Debug.LogError($"{nameof(course)} is empty");
+            if (course == null && holeGenerator == null && GameManager.instance == null) Debug.LogError($"{nameof(course)} is empty");
             
             ballRigidbody = ballController.GetComponent<Rigidbody>();
         }
@@ -54,6 +54,7 @@ namespace MiniGolf.Progress
             holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
 
             if (GameManager.instance) course = GameManager.instance.SelectedCourse;
+            else if (holeGenerator) course = new Course("Test", new HoleData[] { holeGenerator.HoleData });
             holePositions = new List<Vector3>[course.Length];
             for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
 

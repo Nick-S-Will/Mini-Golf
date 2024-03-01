@@ -10,23 +10,22 @@ namespace MiniGolf.Audio
     {
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private string mixerVolumeFloatName = "MasterVolume";
-        [SerializeField] [Range(-80f, 20f)] private float minDecibel = -30f, maxDecibel = 10f;
+        [SerializeField][Range(-80f, 20f)] private float minDecibel = -30f, maxDecibel = 10f;
         [Space]
         public UnityEvent<float> OnVolumeChange;
 
         private float volumePercent = 0.8f;
 
         public string MixerVolumeFloatName => mixerVolumeFloatName;
-        public float VolumePercent => volumePercent;
-
-        public void SetVolumePercent(float volumePercent)
+        public float VolumePercent 
         {
-            this.volumePercent = volumePercent;
-
-            var decibel = volumePercent == 0f ? -80f : PercentToDecibel(volumePercent);
-            if (!audioMixer.SetFloat(mixerVolumeFloatName, decibel)) PrintMissingName();
-
-            OnVolumeChange.Invoke(volumePercent);
+            get => volumePercent;
+            set
+            {
+                volumePercent = value;
+                WriteToAudioMixer();
+                OnVolumeChange.Invoke(volumePercent);
+            }
         }
 
         public Channel(string mixerVolumeFloatName)
@@ -42,7 +41,17 @@ namespace MiniGolf.Audio
                 return;
             }
 
-            SetVolumePercent(DecibelToPercent(value));
+            VolumePercent = DecibelToPercent(value);
+        }
+
+        private void WriteToAudioMixer()
+        {
+            var decibel = volumePercent == 0f ? -80f : PercentToDecibel(volumePercent);
+            if (!audioMixer.SetFloat(mixerVolumeFloatName, decibel))
+            {
+                PrintMissingName();
+                return;
+            }
         }
 
         private float PercentToDecibel(float percent) => Mathf.Lerp(minDecibel, maxDecibel, percent);

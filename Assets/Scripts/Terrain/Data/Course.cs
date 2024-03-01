@@ -15,5 +15,11 @@ namespace MiniGolf.Terrain.Data
         public int Length => holeData.Length;
         public int Par => holeData.Sum(hole => hole.TileCount);
         public int[] Pars => holeData.Select(hole => hole.TileCount).ToArray();
+
+        public Course(string name, HoleData[] holeData)
+        {
+            this.name = name;
+            this.holeData = holeData;
+        }
     }
 }

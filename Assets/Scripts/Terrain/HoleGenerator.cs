@@ -33,17 +33,27 @@ namespace MiniGolf.Terrain
         private MeshCollider meshCollider;
         private Coroutine generationRoutine;
 
-        private MeshCollider MeshCollider => meshCollider != null ? meshCollider : GetComponent<MeshCollider>();
+        public HoleData HoleData => settings;
+
+        private MeshCollider MeshCollider => meshCollider ? meshCollider : GetComponent<MeshCollider>();
+        private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
+        private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
 
         private void Awake()
         {
             meshCollider = GetComponent<MeshCollider>();
         }
 
-        private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
-        private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
+        public void Clear()
+        {
+            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
+            var tiles = transform.Cast<Transform>().ToArray();
+            foreach (var tile in tiles) contextDestroy(tile.gameObject);
+            tileInstances.Clear();
+            usedCells.Clear();
+            MeshCollider.sharedMesh = null;
+        }
 
-        #region Generate
         public void Generate() => Generate(settings);
         public void Generate(HoleData settings)
         {
@@ -62,22 +72,16 @@ namespace MiniGolf.Terrain
         {
             System.Random rng = new(settings.Seed);
 
-            var combine = new CombineInstance[settings.TileCount];
             for (int tileIndex = 0; tileIndex < settings.TileCount; tileIndex++)
             {
                 Tile[] tilePrefabOptions = GetTileOptionsFor(settings, tileIndex);
                 var randomIndex = rng.Next(tilePrefabOptions.Length);
-
                 var tile = SpawnTile(tilePrefabOptions[randomIndex], rng);
-                combine[tileIndex].transform = tile.transform.localToWorldMatrix;
-                combine[tileIndex].mesh = tile.GetComponent<MeshFilter>().sharedMesh;
 
                 if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }
 
-            var combinedMesh = new Mesh();
-            combinedMesh.CombineMeshes(combine, true);
-            MeshCollider.sharedMesh = combinedMesh;
+            MeshCollider.sharedMesh = CalculateHoleMesh();
 
             generationRoutine = null;
             OnGenerate.Invoke((HoleTile)LastTile);
@@ -90,17 +94,6 @@ namespace MiniGolf.Terrain
             if (index == 0) return startTilePrefabs;
             else if (index == settings.TileCount - 1) return holeTilePrefabs;
             else return tilePrefabs;
-        }
-        #endregion
-
-        public void Clear()
-        {
-            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
-            var tiles = transform.Cast<Transform>().ToArray();
-            foreach (var tile in tiles) contextDestroy(tile.gameObject);
-            tileInstances.Clear();
-            usedCells.Clear();
-            MeshCollider.sharedMesh = null;
         }
 
         private Tile SpawnTile(Tile tilePrefab, System.Random rng)
@@ -134,7 +127,7 @@ namespace MiniGolf.Terrain
 
             foreach (var direction in directions)
             {
-                var startCell = LocalCellToCell(LastCell, LastTile, direction);
+                var startCell = LocalCellToCell(LastCell, LastTile.transform.localRotation, direction);
                 var rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(startCell - LastCell, Vector3.up));
                 var availableCellCount = 0;
                 foreach (var cell in tilePrefab.LocalCells)
@@ -163,9 +156,68 @@ namespace MiniGolf.Terrain
             return newTile;
         }
 
-        private Vector3Int LocalCellToCell(Vector3Int baseCell, Tile baseTile, Vector3Int localCell) => LocalCellToCell(baseCell, baseTile.transform.localRotation, localCell);
-        private Vector3Int LocalCellToCell(Vector3Int baseCell, Quaternion baseRotation, Vector3Int localCell) => baseCell + Vector3Int.RoundToInt(baseRotation * localCell);
-        private Vector3 CellToPosition(Vector3Int cell) => transform.position + transform.rotation * Vector3.Scale(Tile.SCALE, cell);
+        private Mesh CalculateHoleMesh(float threshold = 0.01f)
+        {
+            var combines = new CombineInstance[tileInstances.Count];
+            for (int tileIndex = 0; tileIndex < tileInstances.Count; tileIndex++)
+            {
+                combines[tileIndex].transform = tileInstances[tileIndex].transform.localToWorldMatrix;
+                combines[tileIndex].mesh = tileInstances[tileIndex].GetComponent<MeshFilter>().sharedMesh;
+            }
+
+            var combinedMesh = new Mesh();
+            combinedMesh.CombineMeshes(combines, true);
+            combinedMesh.RecalculateNormals();
+
+            Vector3[] vertices = combinedMesh.vertices, normals = combinedMesh.normals;
+            List<Vector3> newVertices = new(), newNormals = new();
+            Dictionary<int, int> triangleMap = new();
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                var canAdd = true;
+                for (int j = 0; j < vertices.Length; j++)
+                {
+                    if (i == j) continue;
+                    if (Vector3.Distance(vertices[i], vertices[j]) > threshold) continue;
+                    if ((normals[i] + normals[j]).magnitude > threshold) continue;
+
+                    canAdd = false;
+                    break;
+                }
+                if (!canAdd) continue;
+
+                triangleMap.Add(i, newVertices.Count);
+                newVertices.Add(vertices[i]);
+                newNormals.Add(normals[i]);
+            }
+
+            int[] triangles = combinedMesh.triangles;
+            List<int> newTriangles = new();
+            for (int i = 0; i < triangles.Length; i += 3)
+            {
+                if (!triangleMap.ContainsKey(triangles[i])) continue;
+                if (!triangleMap.ContainsKey(triangles[i + 1])) continue;
+                if (!triangleMap.ContainsKey(triangles[i + 2])) continue;
+
+                for (int j = 0; j < 3; j++) newTriangles.Add(triangleMap[triangles[i + j]]);
+            }
+
+            print($"Before: {vertices.Length}, After: {newVertices.Count}. Removed: {vertices.Length - newVertices.Count}");
+            combinedMesh.triangles = newTriangles.ToArray();
+            combinedMesh.vertices = newVertices.ToArray();
+            combinedMesh.normals = newNormals.ToArray();
+
+            return combinedMesh;
+        }
+
+        private Vector3Int LocalCellToCell(Vector3Int baseCell, Quaternion baseRotation, Vector3Int localCell)
+        {
+            return baseCell + Vector3Int.RoundToInt(baseRotation * localCell);
+        }
+        private Vector3 CellToPosition(Vector3Int cell)
+        {
+            return transform.position + transform.rotation * Vector3.Scale(Tile.SCALE, cell);
+        }
 
         private void OnDrawGizmosSelected()
         {
