@@ -156,57 +156,17 @@ namespace MiniGolf.Terrain
             return newTile;
         }
 
-        private Mesh CalculateHoleMesh(float threshold = 0.01f)
+        private Mesh CalculateHoleMesh()
         {
             var combines = new CombineInstance[tileInstances.Count];
             for (int tileIndex = 0; tileIndex < tileInstances.Count; tileIndex++)
             {
                 combines[tileIndex].transform = tileInstances[tileIndex].transform.localToWorldMatrix;
-                combines[tileIndex].mesh = tileInstances[tileIndex].GetComponent<MeshFilter>().sharedMesh;
+                combines[tileIndex].mesh = tileInstances[tileIndex].CollisionMesh;
             }
 
             var combinedMesh = new Mesh();
             combinedMesh.CombineMeshes(combines, true);
-            combinedMesh.RecalculateNormals();
-
-            Vector3[] vertices = combinedMesh.vertices, normals = combinedMesh.normals;
-            List<Vector3> newVertices = new(), newNormals = new();
-            Dictionary<int, int> triangleMap = new();
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                var canAdd = true;
-                for (int j = 0; j < vertices.Length; j++)
-                {
-                    if (i == j) continue;
-                    if (Vector3.Distance(vertices[i], vertices[j]) > threshold) continue;
-                    if ((normals[i] + normals[j]).magnitude > threshold) continue;
-
-                    canAdd = false;
-                    break;
-                }
-                if (!canAdd) continue;
-
-                triangleMap.Add(i, newVertices.Count);
-                newVertices.Add(vertices[i]);
-                newNormals.Add(normals[i]);
-            }
-
-            int[] triangles = combinedMesh.triangles;
-            List<int> newTriangles = new();
-            for (int i = 0; i < triangles.Length; i += 3)
-            {
-                if (!triangleMap.ContainsKey(triangles[i])) continue;
-                if (!triangleMap.ContainsKey(triangles[i + 1])) continue;
-                if (!triangleMap.ContainsKey(triangles[i + 2])) continue;
-
-                for (int j = 0; j < 3; j++) newTriangles.Add(triangleMap[triangles[i + j]]);
-            }
-
-            //print($"Before: {vertices.Length}, After: {newVertices.Count}. Removed: {vertices.Length - newVertices.Count}");
-            combinedMesh.triangles = newTriangles.ToArray();
-            combinedMesh.vertices = newVertices.ToArray();
-            combinedMesh.normals = newNormals.ToArray();
-
             return combinedMesh;
         }
 

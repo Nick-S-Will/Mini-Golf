@@ -1731,7 +1731,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 673249085}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.041734017, y: -0.0000000021489237, z: 8.976142e-11, w: 0.99912876}
+  m_LocalRotation: {x: 0.041734014, y: 0.0000000021489237, z: -8.9761414e-11, w: 0.99912876}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2367,7 +2367,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.041734017, y: 0.0000000021489237, z: -8.976142e-11, w: 0.99912876}
+  m_LocalRotation: {x: 0.041734014, y: -0.0000000021489237, z: 8.9761414e-11, w: 0.99912876}
   m_LocalPosition: {x: 0, y: 0.4213337, z: -1.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2660,7 +2660,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1171285131}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.041734017, y: -0.0000000021489237, z: 8.976142e-11, w: 0.99912876}
+  m_LocalRotation: {x: 0.041734014, y: 0.0000000021489237, z: -8.9761414e-11, w: 0.99912876}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4132,7 +4132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1607882794}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.041734017, y: 0.0000000021489237, z: -8.976142e-11, w: 0.99912876}
+  m_LocalRotation: {x: 0.041734014, y: -0.0000000021489237, z: 8.9761414e-11, w: 0.99912876}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4483,7 +4483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startTilePrefabs:
-  - {fileID: -372694278852461617, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
+  - {fileID: 8878881304746720016, guid: 9ba0b25a8c240ff41887066dacd579b3, type: 3}
   tilePrefabs:
   - {fileID: -372694278852461617, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
   - {fileID: 3483026065000080780, guid: 8f5cc9cc160726842bbee6f2752f6ab1, type: 3}

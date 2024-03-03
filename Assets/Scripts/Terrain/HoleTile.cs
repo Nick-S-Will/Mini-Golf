@@ -6,6 +6,7 @@ namespace MiniGolf.Terrain
 {
     public class HoleTile : Tile
     {
+        [Space]
         public UnityEvent OnBallEnter;
 
         private void OnTriggerEnter(Collider other)

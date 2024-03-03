@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace MiniGolf.Terrain
 {
-    [RequireComponent(typeof(MeshFilter))]
     public class Tile : MonoBehaviour
     {
         public static readonly Vector3 SCALE = new(2f, 1f, 2f);
 
+        [SerializeField] private Mesh collisionMesh;
         [SerializeField] private Vector3Int[] cells = new Vector3Int[] { Vector3Int.zero };
         [SerializeField] private List<Vector3Int> availableDirections;
         [Space]
@@ -16,6 +16,7 @@ namespace MiniGolf.Terrain
         [SerializeField] private Color directionColor = Color.blue;
         [SerializeField] private bool showCells;
 
+        public Mesh CollisionMesh => collisionMesh;
         public Vector3Int[] AvailableDirections => availableDirections.ToArray();
         public Vector3Int[] LocalCells => cells;
 
