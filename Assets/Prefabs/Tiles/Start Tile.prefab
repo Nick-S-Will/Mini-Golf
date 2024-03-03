@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26fd7a751688bd74cb03137dc0495ebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionMesh: {fileID: 2705624055439507960, guid: 4ebb10750cf699a47b22ea629e0c3c90, type: 3}
+  collisionMesh: {fileID: 7247382005180421828, guid: 4ebb10750cf699a47b22ea629e0c3c90, type: 3}
   cells:
   - {x: 0, y: 0, z: 0}
   availableDirections:
