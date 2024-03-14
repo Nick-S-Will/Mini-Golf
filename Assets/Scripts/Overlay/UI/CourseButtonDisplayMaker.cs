@@ -31,10 +31,5 @@ namespace MiniGolf.Overlay.UI
             selectedCourseDisplay.SetObject(course);
             GameManager.instance.SelectedCourse = course;
         }
-
-        private void OnDestroy()
-        {
-            
-        }
     }
 }

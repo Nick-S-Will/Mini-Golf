@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace MiniGolf.Camera
@@ -23,20 +24,21 @@ namespace MiniGolf.Camera
         private void Awake()
         {
             camera = GetComponent<UnityEngine.Camera>();
-            if (camera == null)
-            {
-                Debug.LogError($"{nameof(CameraTransitioner)} must be placed on object with a {nameof(UnityEngine.Camera)}");
-                return;
-            }
+            currentTarget = FindObjectsOfType<TransitionTarget>().First(target => target.Target.activeSelf);
+        }
 
+        private void Start()
+        {
             if (startingTarget) GoToTarget(startingTarget);
         }
+
         public void GoToTarget(TransitionTarget target)
         {
             if (transitionRoutine != null) StopCoroutine(transitionRoutine);
 
             transitionRoutine = StartCoroutine(GoToTargetRoutine(target));
         }
+
         private IEnumerator GoToTargetRoutine(TransitionTarget target)
         {
             if (currentTarget && currentTarget.HideOnTransitionAway)

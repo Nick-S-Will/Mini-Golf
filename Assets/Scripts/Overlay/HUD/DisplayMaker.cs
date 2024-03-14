@@ -22,6 +22,14 @@ namespace MiniGolf.Overlay.HUD
             return display;
         }
 
+        public virtual void UpdateDisplays()
+        {
+            foreach (var display in displayInstances)
+            {
+                display.UpdateText();
+            }
+        }
+
         public virtual void DestroyDisplays()
         {
             Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;

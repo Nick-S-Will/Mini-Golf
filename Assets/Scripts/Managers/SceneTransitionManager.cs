@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,11 +8,11 @@ namespace MiniGolf.Managers.SceneTransition
 
     public class SceneTransitionManager : Singleton<SceneTransitionManager>
     {
-        private static readonly string[] sceneNames = { "TitleScene", "GameScene" };
-
+        public static readonly Dictionary<Scene, string> sceneToName = new() { { Scene.Title, "TitleScene" }, { Scene.Game, "GameScene" } };
+        
         protected override void Awake() => base.Awake();
 
-        public static void ChangeScene(Scene scene) => ChangeScene(sceneNames[(int)scene]);
+        public static void ChangeScene(Scene scene) => ChangeScene(sceneToName[scene]);
             
         public static void ChangeScene(string sceneName)
         {
