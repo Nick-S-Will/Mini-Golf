@@ -637,7 +637,7 @@ namespace Mirror
             // doesn't think we need initialize anything.
             mode = NetworkManagerMode.Offline;
 
-            if (!string.IsNullOrWhiteSpace(offlineScene))
+            if (!string.IsNullOrWhiteSpace(offlineScene) && SceneManager.GetActiveScene().path != offlineScene)
             {
                 ServerChangeScene(offlineScene);
             }
