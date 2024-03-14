@@ -1,6 +1,9 @@
 using MiniGolf.Terrain.Data;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace MiniGolf.Managers.Game
 {
@@ -8,6 +11,7 @@ namespace MiniGolf.Managers.Game
     {
         [SerializeField] private Course[] courseOptions;
 
+        [HideInInspector] public UnityEvent OnSelectedCourseChange; 
         private Course selectedCourse;
 
         public Course[] Courses => courseOptions;
@@ -16,10 +20,17 @@ namespace MiniGolf.Managers.Game
             get => selectedCourse;
             set
             {
-                if (courseOptions.Contains(value)) selectedCourse = value;
-                else Debug.LogWarning($"Course '{value.Name}' not in {nameof(courseOptions)} array");
+                if (!courseOptions.Contains(value))
+                {
+                    Debug.LogWarning($"Course '{value.Name}' not in {nameof(courseOptions)} array");
+                    return;
+                }
+
+                selectedCourse = value;
+                OnSelectedCourseChange.Invoke();
             }
         }
+        public int SelectedIndex => Array.IndexOf(courseOptions, selectedCourse);
 
         protected override void Awake()
         {

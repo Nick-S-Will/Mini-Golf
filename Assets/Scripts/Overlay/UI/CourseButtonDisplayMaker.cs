@@ -29,7 +29,7 @@ namespace MiniGolf.Overlay.UI
         private void UpdateSelected(Course course)
         {
             selectedCourseDisplay.SetObject(course);
-            GameManager.instance.SelectedCourse = course;
+            if (GameManager.instance.SelectedCourse != course) GameManager.instance.SelectedCourse = course;
         }
     }
 }
