@@ -4492,7 +4492,7 @@ MonoBehaviour:
   holeTilePrefabs:
   - {fileID: 4458691756320286204, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
   settings:
-    seed: 1
+    seed: 0
     tileCount: 3
   spawnInterval: 0
   gizmoColorGradient:
@@ -4674,6 +4674,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 299302977001313400, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
+      propertyPath: sceneId
+      value: 4265558360
+      objectReference: {fileID: 0}
     - target: {fileID: 432416003497108364, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
       propertyPath: m_ActionEvents.Array.size
       value: 6
