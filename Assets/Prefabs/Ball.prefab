@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8196294606801974753}
   - component: {fileID: 4995670470205537362}
   - component: {fileID: 432416003497108364}
+  - component: {fileID: 299302977001313400}
   - component: {fileID: 1147630225485577951}
   - component: {fileID: 1663372517485318864}
   - component: {fileID: 561732399335120324}
@@ -65,6 +66,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   ballVelocityTolerance: 0.05
+  ballSurfaceAngleTolerance: 1
   OnStopMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -129,11 +131,41 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: a2e931ef-724e-4772-a1f7-09bee7a6ad0d
     m_ActionName: Golf/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b8808c18-fa74-4693-b3ab-153b1fcb7db5
+    m_ActionName: Golf/Toggle Scoreboard[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 49c6a49f-8bb2-4678-9647-6385ba260dc8
+    m_ActionName: Golf/Pause[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a79d7771-8d1c-4ffa-b249-d548423899a9
+    m_ActionName: UI/Resume[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Golf
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &299302977001313400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3108000758023829372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clientStarted: 0
+  sceneId: 0
+  _assetId: 1378278056
+  serverOnly: 0
+  visible: 0
+  hasSpawned: 0
 --- !u!54 &1147630225485577951
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -210,7 +242,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e847e0d42c57a7b41b8d89b6b51734d6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
