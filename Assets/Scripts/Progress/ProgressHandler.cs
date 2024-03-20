@@ -1,4 +1,4 @@
-using MiniGolf.Controls;
+using MiniGolf.Player;
 using MiniGolf.Managers.Game;
 using MiniGolf.Managers.SceneTransition;
 using MiniGolf.Terrain;

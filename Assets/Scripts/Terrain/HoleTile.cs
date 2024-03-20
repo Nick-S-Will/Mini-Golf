@@ -1,4 +1,4 @@
-using MiniGolf.Controls;
+using MiniGolf.Player;
 using UnityEngine;
 using UnityEngine.Events;
 

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace MiniGolf.Controls
+namespace MiniGolf.Player
 {
     public abstract class SwingController : MonoBehaviour
     {
