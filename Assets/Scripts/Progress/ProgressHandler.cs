@@ -13,10 +13,9 @@ namespace MiniGolf.Progress
 {
     public class ProgressHandler : MonoBehaviour
     {
-        [SerializeField] private BallController ballController;
-        [SerializeField] private float ballMinY = -10f;
-        [Space]
         [SerializeField] private HoleGenerator holeGenerator;
+        [Space]
+        [SerializeField] private float ballMinY = -10f;
         [Space]
         [SerializeField][Min(0f)] private float holeEndTime = 2f;
         [SerializeField][Min(0f)] private float courseEndTime = 5f;
@@ -41,17 +40,16 @@ namespace MiniGolf.Progress
 
         private void Awake()
         {
-            if (ballController == null) Debug.LogError($"{nameof(ballController)} not assigned");
             if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
             if (course == null && holeGenerator == null && GameManager.instance == null) Debug.LogError($"{nameof(course)} is empty");
-            
-            ballRigidbody = ballController.GetComponent<Rigidbody>();
         }
 
         private void Start()
         {
-            ballController.OnSwing.AddListener(Stroke);
+            ballRigidbody = PlayerHandler.Player.GetComponent<Rigidbody>();
             holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
+            PlayerHandler.Player.OnSwing.AddListener(Stroke);
+            OnCompleteCourse.AddListener(delay => PlayerHandler.Input.enabled = false);
 
             if (GameManager.instance) course = GameManager.instance.SelectedCourse;
             else if (holeGenerator) course = new Course("Test", new HoleData[] { holeGenerator.HoleData });
@@ -69,7 +67,7 @@ namespace MiniGolf.Progress
             if (holeIndex >= course.Length) return false;
 
             holeGenerator.Generate(course.HoleData[holeIndex]);
-            if (holeIndex > 0) ballController.transform.SetPositionAndRotation(holePositions[0][0], Quaternion.identity);
+            if (holeIndex > 0) PlayerHandler.Player.transform.SetPositionAndRotation(holePositions[0][0], Quaternion.identity);
 
             return true;
         }
@@ -84,7 +82,7 @@ namespace MiniGolf.Progress
 
         private void Stroke()
         {
-            holePositions[holeIndex].Add(ballController.transform.position);
+            holePositions[holeIndex].Add(PlayerHandler.Player.transform.position);
             OnStroke.Invoke();
         }
 
@@ -119,9 +117,9 @@ namespace MiniGolf.Progress
 
         private void CheckFall()
         {
-            if (ballController.transform.position.y < ballMinY)
+            if (PlayerHandler.Player.transform.position.y < ballMinY)
             {
-                ballController.transform.position = CurrentPositions[^1];
+                PlayerHandler.Player.transform.position = CurrentPositions[^1];
                 ballRigidbody.velocity = Vector3.zero;
                 ballRigidbody.angularVelocity = Vector3.zero;
 
@@ -131,8 +129,8 @@ namespace MiniGolf.Progress
 
         private void OnDestroy()
         {
-            if (ballController) ballController.OnSwing.AddListener(Stroke);
-            if (holeGenerator) holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
+            if (holeGenerator) holeGenerator.OnGenerate.RemoveListener(UpdateHoleTile);
+            if (PlayerHandler.Player) PlayerHandler.Player.OnSwing.RemoveListener(Stroke);
             if (holeTile) holeTile.OnBallEnter.RemoveListener(CompleteHole);
         }
     }

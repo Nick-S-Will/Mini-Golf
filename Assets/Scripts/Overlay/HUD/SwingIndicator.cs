@@ -6,8 +6,6 @@ namespace MiniGolf.Overlay.HUD
 {
     public class SwingIndicator : MonoBehaviour
     {
-        [SerializeField] private BallController ballController;
-        [SerializeField] private SwingController swingController;
         [SerializeField] private Image swingIndicator;
         [SerializeField] private Color canSwingColor = Color.green;
 
@@ -15,16 +13,6 @@ namespace MiniGolf.Overlay.HUD
 
         private void Start()
         {
-            if (ballController == null)
-            {
-                Debug.LogError($"{nameof(ballController)} not assigned");
-                return;
-            }
-            if (swingController == null)
-            {
-                Debug.LogError($"{nameof(swingController)} not assigned");
-                return;
-            }
             if (swingIndicator == null)
             {
                 Debug.LogError($"{nameof(swingIndicator)} not assigned");
@@ -33,10 +21,10 @@ namespace MiniGolf.Overlay.HUD
 
             startColor = swingIndicator.color;
 
-            ballController.OnStopMoving.AddListener(ShowCanSwing);
-            swingController.OnSwing.AddListener(ShowCannotSwing);
+            PlayerHandler.Player.OnStopMoving.AddListener(ShowCanSwing);
+            PlayerHandler.Player.OnSwing.AddListener(ShowCannotSwing);
 
-            if (!ballController.IsMoving) ShowCanSwing();
+            if (!PlayerHandler.Player.IsMoving) ShowCanSwing();
         }
 
         private void ShowCanSwing()
@@ -51,8 +39,10 @@ namespace MiniGolf.Overlay.HUD
 
         private void OnDestroy()
         {
-            if (ballController != null) ballController.OnStopMoving.RemoveListener(ShowCanSwing);
-            if (swingController != null) swingController.OnSwing.RemoveListener(ShowCannotSwing);
+            if (PlayerHandler.Player == null) return;
+            
+            PlayerHandler.Player.OnStopMoving.RemoveListener(ShowCanSwing);
+            PlayerHandler.Player.OnSwing.RemoveListener(ShowCannotSwing);
         }
     }
 }

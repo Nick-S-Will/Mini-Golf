@@ -6,7 +6,7 @@ namespace MiniGolf.Player
 {
     public abstract class SwingController : MonoBehaviour
     {
-        [SerializeField] private Transform camTransform;
+        public Transform camTransform;
         [Space]
         [SerializeField][Min(0f)] private float swingInputSensitivity = 0.1f;
         [SerializeField][Min(0f)] private float maxStrokeStrength = 1f;
@@ -21,7 +21,6 @@ namespace MiniGolf.Player
         public UnityEvent OnSwing;
 
         protected Rigidbody Rigidbody { get; private set; }
-        protected Transform CamTransform => camTransform;
         protected float SwingInputSensitivity => swingInputSensitivity;
         protected float MaxStrokeStrength => maxStrokeStrength;
 
@@ -31,13 +30,13 @@ namespace MiniGolf.Player
 
         protected virtual void Awake()
         {
-            if (camTransform == null) Debug.LogError($"{nameof(camTransform)} not assigned");
-
             Rigidbody = GetComponent<Rigidbody>();
         }
 
         protected virtual void Start()
         {
+            if (camTransform == null) Debug.LogError($"{nameof(camTransform)} not assigned");
+
             OnSwing.AddListener(Swing);
             OnBackswingCancel.AddListener(CancelBackswing);
         }

@@ -6,7 +6,7 @@ namespace MiniGolf.Managers
     {
         public static T instance;
 
-        [SerializeField] private bool logIfMultiple;
+        [SerializeField] private bool isPersistent = true, logIfMultiple;
 
         protected virtual void Awake()
         {
@@ -18,7 +18,7 @@ namespace MiniGolf.Managers
                 return;
             }
 
-            DontDestroyOnLoad(instance.gameObject);
+            if (isPersistent) DontDestroyOnLoad(instance.gameObject);
         }
 
         protected virtual void OnDestroy()

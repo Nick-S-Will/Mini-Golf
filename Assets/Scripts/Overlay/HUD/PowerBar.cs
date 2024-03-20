@@ -7,28 +7,25 @@ namespace MiniGolf.Overlay.HUD
     [RequireComponent(typeof(Slider))]
     public class PowerBar : MonoBehaviour
     {
-        [SerializeField] private SwingController swingController;
-
         private Slider slider;
 
         private void Start()
         {
-            if (swingController == null) Debug.LogError($"{nameof(swingController)} not assigned");
-            else swingController.OnBackswingChange.AddListener(UpdateSliderValue);
+            PlayerHandler.Player.OnBackswingChange.AddListener(UpdateSliderValue);
             
             slider = GetComponent<Slider>();
         }
 
         public void UpdateSliderValue()
         {
-            slider.value = swingController.BackswingScaler;
+            slider.value = PlayerHandler.Player.BackswingScaler;
         }
 
         private void OnDestroy()
         {
-            if (swingController == null) return;
+            if (PlayerHandler.Player == null) return;
 
-            swingController.OnBackswingChange.RemoveListener(UpdateSliderValue);
+            PlayerHandler.Player.OnBackswingChange.RemoveListener(UpdateSliderValue);
         }
     }
 }
