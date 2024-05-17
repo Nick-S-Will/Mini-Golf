@@ -8,10 +8,14 @@ namespace MiniGolf.Managers.Game
 {
     public class GameManager : Singleton<GameManager>
     {
+        public static bool IsMultiplayer => singleton ? singleton.isMultiplayer : false;
+
         [SerializeField] private Course[] courseOptions;
 
-        [HideInInspector] public UnityEvent OnSelectedCourseChange; 
+        [HideInInspector] public UnityEvent OnSelectedCourseChange;
         private Course selectedCourse;
+        [HideInInspector]
+        public bool isMultiplayer;
 
         public Course[] Courses => courseOptions;
         public Course SelectedCourse
@@ -21,7 +25,7 @@ namespace MiniGolf.Managers.Game
             {
                 if (!courseOptions.Contains(value))
                 {
-                    Debug.LogWarning($"Course '{value.Name}' not in {nameof(courseOptions)} array");
+                    Debug.LogError($"Course '{value.Name}' not in {nameof(courseOptions)} array");
                     return;
                 }
 
@@ -29,7 +33,20 @@ namespace MiniGolf.Managers.Game
                 OnSelectedCourseChange.Invoke();
             }
         }
-        public int SelectedIndex => Array.IndexOf(courseOptions, selectedCourse);
+        public int SelectedIndex
+        {
+            get => Array.IndexOf(courseOptions, selectedCourse);
+            set
+            {
+                if (value < 0 || value > courseOptions.Length)
+                {
+                    Debug.LogError($"Index '{value}' not in range of {nameof(courseOptions)} array of length '{courseOptions.Length}'.");
+                    return;
+                }
+
+                SelectedCourse = courseOptions[value];
+            }
+        }
 
         protected override void Awake()
         {
@@ -42,7 +59,7 @@ namespace MiniGolf.Managers.Game
             }
             selectedCourse = courseOptions[0];
 
-            DontDestroyOnLoad(instance.gameObject);
+            DontDestroyOnLoad(singleton.gameObject);
         }
 
         protected override void OnDestroy() => base.OnDestroy();

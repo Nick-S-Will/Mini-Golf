@@ -28,7 +28,7 @@ namespace MiniGolf.Overlay.UI
         
         private Channel GetChannel()
         {
-            if (OptionsManager.instance == null)
+            if (OptionsManager.singleton == null)
             {
                 Debug.LogWarning($"No {nameof(OptionsManager)} loaded");
                 return null;
@@ -36,9 +36,9 @@ namespace MiniGolf.Overlay.UI
 
             return audioChannel switch
             {
-                AudioChannel.Master => OptionsManager.instance.Master,
-                AudioChannel.Sound => OptionsManager.instance.Sound,
-                AudioChannel.Music => OptionsManager.instance.Music,
+                AudioChannel.Master => OptionsManager.singleton.Master,
+                AudioChannel.Sound => OptionsManager.singleton.Sound,
+                AudioChannel.Music => OptionsManager.singleton.Music,
                 _ => throw new NotImplementedException()
             };
         }

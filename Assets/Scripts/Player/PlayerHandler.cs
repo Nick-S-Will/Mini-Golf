@@ -1,5 +1,6 @@
-using MiniGolf.Managers;
-using Mirror;
+using MiniGolf.Managers.Game;
+using MiniGolf.Network;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -9,18 +10,28 @@ namespace MiniGolf.Player
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerHandler : Singleton<PlayerHandler>
     {
-        public static BallController Player => instance ? instance.player : null;
-        public static PlayerInput Input => instance ? instance.playerInput : null;
+        public static BallController Player
+        {
+            get => singleton ? singleton.player : null;
+            set
+            {
+                if (value) value.cameraTransform = singleton.cameraTransform;
+                singleton.SetInput(value);
+
+                OnChangePlayer.Invoke(Player, value);
+                singleton.player = value;
+            }
+        }
 
         [Space]
-        [SerializeField] private BallController playerPrefab;
-        [SerializeField] private Transform camTransform;
+        [SerializeField] private BallController offlinePlayerPrefab;
+        [SerializeField] private Transform cameraTransform;
+        [SerializeField] private MonoBehaviour cameraBehaviour;
 
         /// <summary>
         /// Passes old player and new player as <see cref="BallController"/>s
         /// </summary>
-        [HideInInspector]
-        public UnityEvent<BallController, BallController> OnPlayerUpdate;
+        public static UnityEvent<BallController, BallController> OnChangePlayer = new();
         private BallController player;
         private PlayerInput playerInput;
 
@@ -28,23 +39,27 @@ namespace MiniGolf.Player
         {
             base.Awake();
 
-            if (camTransform == null) Debug.LogError($"{nameof(camTransform)} not assigned");
+            if (offlinePlayerPrefab == null) Debug.LogError($"{nameof(offlinePlayerPrefab)} not assigned");
+            if (cameraTransform == null) Debug.LogError($"{nameof(cameraTransform)} not assigned");
+            if (cameraBehaviour == null) Debug.LogError($"{nameof(cameraBehaviour)} not assigned");
 
-            bool isMultiplayer = NetworkManager.singleton;
-            UpdatePlayer(isMultiplayer ? NetworkClient.localPlayer.GetComponent<BallController>() : Instantiate(playerPrefab));
             playerInput = GetComponent<PlayerInput>();
         }
 
-        private void UpdatePlayer(BallController newPlayer)
+        private void Start()
         {
-            OnPlayerUpdate.Invoke(Player, newPlayer);
-
-            player = newPlayer;
-            if (Player) Player.camTransform = camTransform;
+            if (GameManager.IsMultiplayer) Player = FindObjectsOfType<GolfPlayer>().First(player => player.index == GolfRoomManager.LocalRoomPlayer.index).GetComponent<BallController>();
+            else Player = Instantiate(offlinePlayerPrefab);
         }
 
         public void ToggleBackSwing(InputAction.CallbackContext context) => Player.ToggleBackswing(context);
         public void BackSwinging(InputAction.CallbackContext context) => Player.Backswinging(context);
+
+        public void SetInput(bool enabled)
+        {
+            playerInput.enabled = enabled;
+            cameraBehaviour.enabled = enabled;
+        }
 
         protected override void OnDestroy() => base.OnDestroy();
     }

@@ -76,7 +76,7 @@ namespace MiniGolf.Terrain
             {
                 Tile[] tilePrefabOptions = GetTileOptionsFor(settings, tileIndex);
                 var randomIndex = rng.Next(tilePrefabOptions.Length);
-                var tile = SpawnTile(tilePrefabOptions[randomIndex], rng);
+                _ = SpawnTile(tilePrefabOptions[randomIndex], rng);
 
                 if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }

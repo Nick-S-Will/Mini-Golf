@@ -8,11 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 namespace MiniGolf.Progress
 {
-    public class ProgressHandler : MonoBehaviour
+    public class ProgressHandler : Singleton<ProgressHandler>
     {
+        [Space]
         [SerializeField] private HoleGenerator holeGenerator;
         [Space]
         [SerializeField] private float ballMinY = -10f;
@@ -32,34 +34,40 @@ namespace MiniGolf.Progress
         private Course course;
         /// <summary>Array of positions for each hole</summary>
         private List<Vector3>[] holePositions;
-        private int holeIndex;
+        private int holeIndex, ballsInHole;
 
         private List<Vector3> CurrentPositions => holePositions[holeIndex];
         public int[] Scores => holePositions.Select(positions => positions.Count()).ToArray();
         public int CurrentScore => holeIndex < holePositions.Length ? CurrentPositions.Count : 0;
+        public Func<int, bool> CanChangeHoles { get; set; } = ballsInHole => ballsInHole > 0;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
-            if (course == null && holeGenerator == null && GameManager.instance == null) Debug.LogError($"{nameof(course)} is empty");
+            if (course == null && holeGenerator == null && GameManager.singleton == null) Debug.LogError($"{nameof(course)} is empty");
+
+            PlayerHandler.OnChangePlayer.AddListener(PlayerChanged);
+            holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
         }
 
         private void Start()
         {
-            ballRigidbody = PlayerHandler.Player.GetComponent<Rigidbody>();
-            holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
-            PlayerHandler.Player.OnSwing.AddListener(Stroke);
-            OnCompleteCourse.AddListener(delay => PlayerHandler.Input.enabled = false);
-
-            if (GameManager.instance) course = GameManager.instance.SelectedCourse;
+            if (GameManager.singleton) course = GameManager.singleton.SelectedCourse;
             else if (holeGenerator) course = new Course("Test", new HoleData[] { holeGenerator.HoleData });
             holePositions = new List<Vector3>[course.Length];
             for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
 
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-
             if (TryBeginHole()) OnStartCourse.Invoke();
+        }
+
+        private void PlayerChanged(BallController oldPlayer, BallController newPlayer)
+        {
+            ballRigidbody = newPlayer ? newPlayer.GetComponent<Rigidbody>() : null;
+
+            if (oldPlayer) oldPlayer.OnSwing.RemoveListener(AddStroke);
+            if (newPlayer) newPlayer.OnSwing.AddListener(AddStroke);
         }
 
         private bool TryBeginHole()
@@ -67,43 +75,54 @@ namespace MiniGolf.Progress
             if (holeIndex >= course.Length) return false;
 
             holeGenerator.Generate(course.HoleData[holeIndex]);
-            if (holeIndex > 0) PlayerHandler.Player.transform.SetPositionAndRotation(holePositions[0][0], Quaternion.identity);
+            if (holeIndex > 0)
+            {
+                ballRigidbody.transform.SetPositionAndRotation(PlayerHandler.singleton.transform.position, Quaternion.identity);
+                ballsInHole = 0;
+            }
 
             return true;
         }
 
         private void UpdateHoleTile(HoleTile holeTile)
         {
-            if (this.holeTile) holeTile.OnBallEnter.RemoveListener(CompleteHole);
+            if (this.holeTile) holeTile.OnBallEnter.RemoveListener(HoleBall);
 
             this.holeTile = holeTile;
-            this.holeTile.OnBallEnter.AddListener(CompleteHole);
+            this.holeTile.OnBallEnter.AddListener(HoleBall);
         }
 
-        private void Stroke()
+        private void AddStroke()
         {
-            holePositions[holeIndex].Add(PlayerHandler.Player.transform.position);
+            holePositions[holeIndex].Add(ballRigidbody.position);
             OnStroke.Invoke();
+        }
+
+        private void HoleBall(BallController ball)
+        {
+            if (ballRigidbody.gameObject == ball.gameObject)
+            {
+                ballRigidbody.velocity = Vector3.zero;
+                ballRigidbody.angularVelocity = Vector3.zero;
+            }
+
+            ballsInHole++;
+
+            if (CanChangeHoles(ballsInHole)) CompleteHole();
         }
 
         private void CompleteHole() => _ = StartCoroutine(CompleteHoleRoutine());
         private IEnumerator CompleteHoleRoutine()
         {
-            ballRigidbody.velocity = Vector3.zero;
-            ballRigidbody.angularVelocity = Vector3.zero;
-
             holeIndex++;
             OnCompleteHole.Invoke(holeEndTime);
             yield return new WaitForSeconds(holeEndTime);
 
-            if (!TryBeginHole()) _ = StartCoroutine(CompleteCourseRoutine());
+            if (!TryBeginHole()) yield return StartCoroutine(CompleteCourseRoutine());
         }
 
         private IEnumerator CompleteCourseRoutine()
         {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-
             OnCompleteCourse.Invoke(courseEndTime);
             yield return new WaitForSeconds(courseEndTime);
 
@@ -117,21 +136,23 @@ namespace MiniGolf.Progress
 
         private void CheckFall()
         {
-            if (PlayerHandler.Player.transform.position.y < ballMinY)
-            {
-                PlayerHandler.Player.transform.position = CurrentPositions[^1];
-                ballRigidbody.velocity = Vector3.zero;
-                ballRigidbody.angularVelocity = Vector3.zero;
+            if (ballRigidbody == null || ballRigidbody.transform.position.y > ballMinY) return;
 
-                OnFallOff.Invoke();
-            }
+            ballRigidbody.transform.position = CurrentPositions[^1];
+            ballRigidbody.velocity = Vector3.zero;
+            ballRigidbody.angularVelocity = Vector3.zero;
+
+            OnFallOff.Invoke();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
+            if (PlayerHandler.singleton) PlayerHandler.OnChangePlayer.RemoveListener(PlayerChanged);
+            if (PlayerHandler.Player) PlayerHandler.Player.OnSwing.RemoveListener(AddStroke);
             if (holeGenerator) holeGenerator.OnGenerate.RemoveListener(UpdateHoleTile);
-            if (PlayerHandler.Player) PlayerHandler.Player.OnSwing.RemoveListener(Stroke);
-            if (holeTile) holeTile.OnBallEnter.RemoveListener(CompleteHole);
+            if (holeTile) holeTile.OnBallEnter.RemoveListener(HoleBall);
         }
     }
 }

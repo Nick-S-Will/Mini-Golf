@@ -1,3 +1,4 @@
+using MiniGolf.Managers.Game;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -6,7 +7,7 @@ namespace MiniGolf.Player
 {
     public abstract class SwingController : MonoBehaviour
     {
-        public Transform camTransform;
+        public Transform cameraTransform;
         [Space]
         [SerializeField][Min(0f)] private float swingInputSensitivity = 0.1f;
         [SerializeField][Min(0f)] private float maxStrokeStrength = 1f;
@@ -35,7 +36,7 @@ namespace MiniGolf.Player
 
         protected virtual void Start()
         {
-            if (camTransform == null) Debug.LogError($"{nameof(camTransform)} not assigned");
+            if (cameraTransform == null) Debug.LogError($"{nameof(cameraTransform)} not assigned");
 
             OnSwing.AddListener(Swing);
             OnBackswingCancel.AddListener(CancelBackswing);

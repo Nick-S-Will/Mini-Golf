@@ -9,12 +9,13 @@ namespace MiniGolf.Cinemachine
     {
         private CinemachineVirtualCameraBase virtualCamera;
 
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
+
             virtualCamera = GetComponent<CinemachineVirtualCameraBase>();
 
-            PlayerHandler.instance.OnPlayerUpdate.AddListener(UpdateTarget);
-            UpdateTarget(null, PlayerHandler.Player);
+            PlayerHandler.OnChangePlayer.AddListener(UpdateTarget);
         }
 
         private void UpdateTarget(BallController oldPlayer, BallController newPlayer)
@@ -48,7 +49,7 @@ namespace MiniGolf.Cinemachine
         {
             base.OnDestroy();
 
-            if (PlayerHandler.instance) PlayerHandler.instance.OnPlayerUpdate.RemoveListener(UpdateTarget);
+            PlayerHandler.OnChangePlayer.RemoveListener(UpdateTarget);
         }
 
         protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime){}

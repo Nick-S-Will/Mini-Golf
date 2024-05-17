@@ -12,13 +12,13 @@ namespace MiniGolf.Overlay.UI
 
         private void Start()
         {
-            if (GameManager.instance == null)
+            if (GameManager.singleton == null)
             {
                 Debug.LogError($"No {nameof(GameManager)} loaded");
                 return;
             }
 
-            foreach (var course in GameManager.instance.Courses)
+            foreach (var course in GameManager.singleton.Courses)
             {
                 var display = MakeDisplay(course);
                 display.Button.onClick.AddListener(() => UpdateSelected(course));
@@ -29,7 +29,7 @@ namespace MiniGolf.Overlay.UI
         private void UpdateSelected(Course course)
         {
             selectedCourseDisplay.SetObject(course);
-            if (GameManager.instance.SelectedCourse != course) GameManager.instance.SelectedCourse = course;
+            if (GameManager.singleton.SelectedCourse != course) GameManager.singleton.SelectedCourse = course;
         }
     }
 }

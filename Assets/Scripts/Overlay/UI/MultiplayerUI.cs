@@ -1,3 +1,4 @@
+using MiniGolf.Managers.Game;
 using MiniGolf.Network;
 using Mirror;
 using System.Net.Sockets;
@@ -19,6 +20,7 @@ namespace MiniGolf.Overlay.UI
         [SerializeField] private Button hostButton, joinButton;
         [Header("Room")]
         [SerializeField] private GameObject roomPanel;
+        [SerializeField] private Toggle readyToggle;
         [SerializeField] private Button startButton;
 
         private bool hasValidPlayerName, hasValidIP;
@@ -32,6 +34,7 @@ namespace MiniGolf.Overlay.UI
             if (joinButton == null) Debug.LogError($"{nameof(joinButton)} not assigned");
             if (roomPanel == null) Debug.LogError($"{nameof(roomPanel)} not assigned");
             if (leaveButton == null) Debug.LogError($"{nameof(leaveButton)} not assigned");
+            if (readyToggle == null) Debug.LogError($"{nameof(readyToggle)} not assigned");
             if (startButton == null) Debug.LogError($"{nameof(startButton)} not assigned");
 
             var playerName = PlayerPrefs.GetString(GolfRoomPlayer.PLAYER_NAME_KEY, null);
@@ -104,21 +107,17 @@ namespace MiniGolf.Overlay.UI
 
         private void UpdateRoomButtons()
         {
-            bool localPlayerExists = GolfRoomManager.singleton.LocalPlayer;
-            if (!localPlayerExists)
-            {
-                Debug.LogWarning($"{nameof(GolfRoomManager.singleton.LocalPlayer)} doesn't exist");
-                return;
-            }
-
-            bool localPlayerIsLeader = GolfRoomManager.singleton.LocalPlayer.IsLeader;
-            courseSelectButton.gameObject.SetActive(localPlayerIsLeader);
-            startButton.gameObject.SetActive(localPlayerIsLeader);
+            var localRoomPlayer = GolfRoomManager.LocalRoomPlayer;
+            courseSelectButton.gameObject.SetActive(localRoomPlayer.IsLeader);
+            readyToggle.isOn = localRoomPlayer.readyToBegin;
+            startButton.gameObject.SetActive(localRoomPlayer.IsLeader);
             startButton.interactable = GolfRoomManager.singleton.allPlayersReady;
         }
         #endregion
 
-        #region Golf Room Manager Wrappers
+        #region Manager Wrappers (for UI events to access static manager singleton)
+        public void SetMultiplayerState(bool isMultiplayer) => GameManager.singleton.isMultiplayer = isMultiplayer;
+
         public void HostRoom()
         {
             try
@@ -128,7 +127,7 @@ namespace MiniGolf.Overlay.UI
             }
             catch (SocketException e)
             {
-                Debug.Log($"{nameof(SocketException)} occured. Probably trying to host 2 games at once.\n\n{e.StackTrace}");
+                Debug.Log($"{nameof(SocketException)} occured.\n\n{e.StackTrace}");
                 hostButton.interactable = true;
             }
         }
@@ -143,16 +142,12 @@ namespace MiniGolf.Overlay.UI
         {
             switch (GolfRoomManager.singleton.mode)
             {
-                case NetworkManagerMode.Host:
-                    GolfRoomManager.singleton.StopHost();
-                    break;
-                case NetworkManagerMode.ClientOnly:
-                    GolfRoomManager.singleton.StopClient();
-                    break;
+                case NetworkManagerMode.Host: GolfRoomManager.singleton.StopHost(); break;
+                case NetworkManagerMode.ClientOnly: GolfRoomManager.singleton.StopClient(); break;
             }
         }
 
-        public void SetReady(bool ready) => GolfRoomManager.singleton.LocalPlayer.CmdChangeReadyState(ready);
+        public void SetReady(bool ready) => GolfRoomManager.LocalRoomPlayer.CmdChangeReadyState(ready);
 
         public void StartGame() => GolfRoomManager.singleton.ServerChangeScene(GolfRoomManager.singleton.GameplayScene);
         #endregion

@@ -16,7 +16,7 @@ namespace MiniGolf.Managers.SceneTransition
             
         public static void ChangeScene(string sceneName)
         {
-            if (!instance) Debug.LogWarning($"No {nameof(SceneTransitionManager)} loaded");
+            if (!singleton) Debug.LogWarning($"No {nameof(SceneTransitionManager)} loaded");
 
             SceneManager.LoadScene(sceneName);
         }

@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1def31dbf708b94598c22977d0b5da4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camTransform: {fileID: 0}
+  cameraTransform: {fileID: 0}
   swingInputSensitivity: 0.35
-  maxStrokeStrength: 1
+  maxStrokeStrength: 0.75
   OnBackswing:
     m_PersistentCalls:
       m_Calls:

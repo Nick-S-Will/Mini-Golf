@@ -41,7 +41,7 @@ namespace MiniGolf.Player
         {
             graphicsParent.SetActive(true);
 
-            var projectedRotation = Quaternion.Euler(0f, camTransform.rotation.eulerAngles.y, 0f);
+            var projectedRotation = Quaternion.Euler(0f, cameraTransform.rotation.eulerAngles.y, 0f);
             var position = ballController.transform.position + projectedRotation * positionFromBall;
             transform.position = position;
 

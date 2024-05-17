@@ -9,7 +9,7 @@ namespace MiniGolf.Network
     {
         public static RoomDataSync instance;
 
-        [SyncVar]
+        [SyncVar(hook = nameof(CourseIndexChanged))]
         public int courseIndex;
 
         private void Awake()
@@ -22,7 +22,7 @@ namespace MiniGolf.Network
             }
 
             instance = this;
-            GameManager.instance.OnSelectedCourseChange.AddListener(UpdateCourse);
+            GameManager.singleton.OnSelectedCourseChange.AddListener(UpdateCourse);
 
             DontDestroyOnLoad(gameObject);
         }
@@ -37,16 +37,21 @@ namespace MiniGolf.Network
         private void OnDestroy()
         {
             if (instance == this) instance = null;
-            if (GameManager.instance) GameManager.instance.OnSelectedCourseChange.RemoveListener(UpdateCourse);
+            if (GameManager.singleton) GameManager.singleton.OnSelectedCourseChange.RemoveListener(UpdateCourse);
         }
 
         // Sends local selected index for server command
-        private void UpdateCourse() => CmdUpdateCourse(GameManager.instance.SelectedIndex);
+        private void UpdateCourse() => CmdUpdateCourse(GameManager.singleton.SelectedIndex);
 
         [Command]
         private void CmdUpdateCourse(int courseIndex)
         {
             this.courseIndex = courseIndex;
+        }
+
+        public virtual void CourseIndexChanged(int oldIndex, int newIndex)
+        {
+            GameManager.singleton.SelectedIndex = newIndex;
         }
     }
 }

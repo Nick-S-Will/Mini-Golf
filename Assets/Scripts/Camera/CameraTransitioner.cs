@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -25,6 +26,9 @@ namespace MiniGolf.Camera
         {
             camera = GetComponent<UnityEngine.Camera>();
             currentTarget = FindObjectsOfType<TransitionTarget>().First(target => target.Target.activeSelf);
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         private void Start()

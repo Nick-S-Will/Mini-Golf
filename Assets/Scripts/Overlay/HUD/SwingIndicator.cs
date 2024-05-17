@@ -11,7 +11,7 @@ namespace MiniGolf.Overlay.HUD
 
         private Color startColor;
 
-        private void Start()
+        private void Awake()
         {
             if (swingIndicator == null)
             {
@@ -21,10 +21,24 @@ namespace MiniGolf.Overlay.HUD
 
             startColor = swingIndicator.color;
 
-            PlayerHandler.Player.OnStopMoving.AddListener(ShowCanSwing);
-            PlayerHandler.Player.OnSwing.AddListener(ShowCannotSwing);
+            PlayerHandler.OnChangePlayer.AddListener(PlayerChanged);
+        }
 
-            if (!PlayerHandler.Player.IsMoving) ShowCanSwing();
+        private void PlayerChanged(BallController oldPlayer, BallController newPlayer)
+        {
+            if (oldPlayer)
+            {
+                oldPlayer.OnSwing.RemoveListener(ShowCannotSwing);
+                oldPlayer.OnStopMoving.RemoveListener(ShowCanSwing);
+            }
+            if (newPlayer)
+            {
+                newPlayer.OnSwing.AddListener(ShowCannotSwing);
+                newPlayer.OnStopMoving.AddListener(ShowCanSwing);
+
+                if (!newPlayer.IsMoving) ShowCanSwing();
+                else ShowCannotSwing();
+            }
         }
 
         private void ShowCanSwing()
@@ -39,6 +53,8 @@ namespace MiniGolf.Overlay.HUD
 
         private void OnDestroy()
         {
+            PlayerHandler.OnChangePlayer.RemoveListener(PlayerChanged);
+
             if (PlayerHandler.Player == null) return;
             
             PlayerHandler.Player.OnStopMoving.RemoveListener(ShowCanSwing);

@@ -12,10 +12,8 @@ namespace MiniGolf.Network
 
         public bool IsLeader => index == 0;
 
-        public override void Start()
+        public override void OnStartClient()
         {
-            base.Start();
-
             GolfRoomManager.singleton.OnPlayerStarted.Invoke();
         }
 
@@ -48,7 +46,6 @@ namespace MiniGolf.Network
             if (oldReadyState == newReadyState) return;
 
             GolfRoomManager.singleton.ReadyStatusChanged();
-            GolfRoomManager.singleton.OnPlayerReadyChanged.Invoke();
         }
 
         public override void IndexChanged(int oldIndex, int newIndex)

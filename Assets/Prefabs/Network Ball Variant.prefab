@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Ball Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4995670470205537362, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8196294606801974753, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -57,14 +61,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3108000758023829372, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
-      insertIndex: 2
+      insertIndex: 1
+      addedObject: {fileID: 1463007450125936448}
+    - targetCorrespondingSourceObject: {fileID: 3108000758023829372, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
+      insertIndex: 3
       addedObject: {fileID: 581959423395828929}
+    - targetCorrespondingSourceObject: {fileID: 3108000758023829372, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 8346822692101242890}
   m_SourcePrefab: {fileID: 100100000, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
+--- !u!4 &484475336089775167 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8196294606801974753, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
+  m_PrefabInstance: {fileID: 8576583517430880734}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6640543890578845346 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3108000758023829372, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
   m_PrefabInstance: {fileID: 8576583517430880734}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1463007450125936448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6640543890578845346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82de0285e72993c4abba77edb68d4e0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  index: 0
 --- !u!114 &581959423395828929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +110,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clientStarted: 0
   sceneId: 0
-  _assetId: 1378278056
+  _assetId: 3119317397
   serverOnly: 0
   visible: 0
   hasSpawned: 0
+--- !u!114 &8346822692101242890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6640543890578845346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 484475336089775167}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  sendIntervalMultiplier: 1
+  timelineOffset: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01

@@ -6,7 +6,17 @@ namespace MiniGolf.Overlay.UI
 {
     public class PauseMenu : MonoBehaviour
     {
+        [SerializeField] private GameObject hudParent;
+        [SerializeField] private PlayerInput playerInput;
+        [SerializeField] private string playActionMap = "Golf", pauseActionMap = "UI";
+        [SerializeField] private MonoBehaviour cameraBehaviour;
+
         public bool Paused => Time.timeScale == 0f;
+
+        private void Awake()
+        {
+            SetCursor(false);
+        }
 
         public void Toggle(InputAction.CallbackContext context)
         {
@@ -16,11 +26,13 @@ namespace MiniGolf.Overlay.UI
         public void SetActive(bool active)
         {
             gameObject.SetActive(active);
+            hudParent.SetActive(!active);
+
+            playerInput.SwitchCurrentActionMap(active ? pauseActionMap : playActionMap);
+            cameraBehaviour.enabled = !active;
 
             SetPaused(active);
-
-            Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = active;
+            SetCursor(active);
         }
 
         private void SetPaused(bool paused)
@@ -28,9 +40,16 @@ namespace MiniGolf.Overlay.UI
             Time.timeScale = paused ? 0f : 1f;
         }
 
+        public void SetCursor(bool visible)
+        {
+            Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = visible;
+        }
+
         private void OnDestroy()
         {
-            if (Paused) SetPaused(false);
+            SetPaused(false);
+            SetCursor(true);
         }
     }
 }

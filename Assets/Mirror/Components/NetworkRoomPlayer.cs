@@ -76,6 +76,7 @@ namespace Mirror
         #endregion
 
         #region Commands
+        public void CmdChangeIndex(int index) => this.index = index;
 
         [Command]
         public void CmdChangeReadyState(bool readyState)

@@ -25,7 +25,7 @@ namespace MiniGolf.Player
 
             sphereCollider = GetComponent<SphereCollider>();
         }
-        
+
         protected override void Start() => base.Start();
         
         private void FixedUpdate()
@@ -58,7 +58,7 @@ namespace MiniGolf.Player
         protected override void Swing()
         {
             var strokeStrength = BackswingScaler * MaxStrokeStrength;
-            var strokeDirection = Vector3.ProjectOnPlane(camTransform.forward, Vector3.up);
+            var strokeDirection = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up);
 
             Rigidbody.AddForce(strokeStrength * strokeDirection, ForceMode.Impulse);
         }

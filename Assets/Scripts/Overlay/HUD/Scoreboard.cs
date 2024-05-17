@@ -23,11 +23,11 @@ namespace MiniGolf.Overlay.HUD
 
         private void Start()
         {
-            var managerExists = GameManager.instance != null;
+            var managerExists = GameManager.singleton != null;
             if (!managerExists) Debug.LogWarning($"No {nameof(GameManager)} loaded");
 
-            var courseName = managerExists ? GameManager.instance.SelectedCourse.Name : "Test Name";
-            var pars = managerExists ? GameManager.instance.SelectedCourse.Pars : new int[18];
+            var courseName = managerExists ? GameManager.singleton.SelectedCourse.Name : "Test Name";
+            var pars = managerExists ? GameManager.singleton.SelectedCourse.Pars : new int[18];
             var headerData = new ProgressData(courseName, pars);
             var boardHeaderDisplay = Instantiate(progressDisplayPrefab, scoreLineParent);
             boardHeaderDisplay.SetObject(headerData);
