@@ -58,7 +58,7 @@ namespace MiniGolf.Player
         protected override void Swing()
         {
             var strokeStrength = BackswingScaler * MaxStrokeStrength;
-            var strokeDirection = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up);
+            var strokeDirection = Vector3.ProjectOnPlane(CameraTransform.forward, Vector3.up);
 
             Rigidbody.AddForce(strokeStrength * strokeDirection, ForceMode.Impulse);
         }

@@ -1,13 +1,12 @@
-using MiniGolf.Managers.Game;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace MiniGolf.Player
 {
-    public abstract class SwingController : MonoBehaviour
+    public abstract class SwingController : NetworkBehaviour
     {
-        public Transform cameraTransform;
         [Space]
         [SerializeField][Min(0f)] private float swingInputSensitivity = 0.1f;
         [SerializeField][Min(0f)] private float maxStrokeStrength = 1f;
@@ -21,6 +20,7 @@ namespace MiniGolf.Player
         /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is canceled and <see cref="BackswingScaler"/> > 0</summary>
         public UnityEvent OnSwing;
 
+        protected Transform CameraTransform { get; private set; }
         protected Rigidbody Rigidbody { get; private set; }
         protected float SwingInputSensitivity => swingInputSensitivity;
         protected float MaxStrokeStrength => maxStrokeStrength;
@@ -31,13 +31,22 @@ namespace MiniGolf.Player
 
         protected virtual void Awake()
         {
+            CameraTransform = UnityEngine.Camera.main.transform;
             Rigidbody = GetComponent<Rigidbody>();
+        }
+
+        public override void OnStartAuthority()
+        {
+            enabled = true;
+        }
+
+        public override void OnStopAuthority()
+        {
+            enabled = false;
         }
 
         protected virtual void Start()
         {
-            if (cameraTransform == null) Debug.LogError($"{nameof(cameraTransform)} not assigned");
-
             OnSwing.AddListener(Swing);
             OnBackswingCancel.AddListener(CancelBackswing);
         }

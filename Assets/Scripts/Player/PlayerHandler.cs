@@ -1,6 +1,4 @@
 using MiniGolf.Managers.Game;
-using MiniGolf.Network;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -15,7 +13,6 @@ namespace MiniGolf.Player
             get => singleton ? singleton.player : null;
             set
             {
-                if (value) value.cameraTransform = singleton.cameraTransform;
                 singleton.SetInput(value);
 
                 OnChangePlayer.Invoke(Player, value);
@@ -48,8 +45,7 @@ namespace MiniGolf.Player
 
         private void Start()
         {
-            if (GameManager.IsMultiplayer) Player = FindObjectsOfType<GolfPlayer>().First(player => player.index == GolfRoomManager.LocalRoomPlayer.index).GetComponent<BallController>();
-            else Player = Instantiate(offlinePlayerPrefab);
+            if (!GameManager.IsMultiplayer) Player = Instantiate(offlinePlayerPrefab);
         }
 
         public void ToggleBackSwing(InputAction.CallbackContext context) => Player.ToggleBackswing(context);

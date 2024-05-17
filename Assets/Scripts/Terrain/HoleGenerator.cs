@@ -183,7 +183,7 @@ namespace MiniGolf.Terrain
         {
             if (gizmoColorGradient == null)
             {
-                Debug.LogWarning($"{gizmoColorGradient} not set");
+                Debug.LogWarning($"{nameof(gizmoColorGradient)} not set");
                 return;
             }
             if (!showUsedCells || generationRoutine != null) return;

@@ -11,6 +11,8 @@ namespace MiniGolf.Overlay.UI
 {
     public class MultiplayerUI : MonoBehaviour
     {
+        public const string PLAYER_NAME_KEY = "Player Name";
+
         [Header("Main")]
         [SerializeField] private Button courseSelectButton;
         [SerializeField] private Button leaveButton, backButton;
@@ -37,18 +39,10 @@ namespace MiniGolf.Overlay.UI
             if (readyToggle == null) Debug.LogError($"{nameof(readyToggle)} not assigned");
             if (startButton == null) Debug.LogError($"{nameof(startButton)} not assigned");
 
-            var playerName = PlayerPrefs.GetString(GolfRoomPlayer.PLAYER_NAME_KEY, null);
+            var playerName = PlayerPrefs.GetString(PLAYER_NAME_KEY, null);
             nameInput.text = playerName;
             hasValidPlayerName = playerName != null;
             UpdateSetupButtons();
-        }
-
-        private void Start()
-        {
-            GolfRoomManager.singleton.OnClientExit.AddListener(ShowSetupDisplay);
-            GolfRoomManager.singleton.OnClientEnter.AddListener(ShowRoomDisplay);
-            GolfRoomManager.singleton.OnPlayerIndexChanged.AddListener(UpdateRoomButtons);
-            GolfRoomManager.singleton.OnPlayerReadyChanged.AddListener(UpdateRoomButtons);
         }
 
         #region Input Handling
@@ -69,7 +63,7 @@ namespace MiniGolf.Overlay.UI
                 return;
             }
 
-            PlayerPrefs.SetString(GolfRoomPlayer.PLAYER_NAME_KEY, playerName);
+            PlayerPrefs.SetString(PLAYER_NAME_KEY, playerName);
         }
 
         public void UpdateIP(string ip)
@@ -96,22 +90,12 @@ namespace MiniGolf.Overlay.UI
             roomPanel.SetActive(!inSetup);
 
             if (inSetup) UpdateSetupButtons();
-            else UpdateRoomButtons();
         }
 
         private void UpdateSetupButtons()
         {
             hostButton.interactable = hasValidPlayerName;
             joinButton.interactable = hasValidPlayerName && hasValidIP;
-        }
-
-        private void UpdateRoomButtons()
-        {
-            var localRoomPlayer = GolfRoomManager.LocalRoomPlayer;
-            courseSelectButton.gameObject.SetActive(localRoomPlayer.IsLeader);
-            readyToggle.isOn = localRoomPlayer.readyToBegin;
-            startButton.gameObject.SetActive(localRoomPlayer.IsLeader);
-            startButton.interactable = GolfRoomManager.singleton.allPlayersReady;
         }
         #endregion
 
@@ -146,20 +130,6 @@ namespace MiniGolf.Overlay.UI
                 case NetworkManagerMode.ClientOnly: GolfRoomManager.singleton.StopClient(); break;
             }
         }
-
-        public void SetReady(bool ready) => GolfRoomManager.LocalRoomPlayer.CmdChangeReadyState(ready);
-
-        public void StartGame() => GolfRoomManager.singleton.ServerChangeScene(GolfRoomManager.singleton.GameplayScene);
         #endregion
-
-        private void OnDestroy()
-        {
-            if (GolfRoomManager.singleton == null) return;
-
-            GolfRoomManager.singleton.OnClientExit.RemoveListener(ShowSetupDisplay);
-            GolfRoomManager.singleton.OnClientEnter.RemoveListener(ShowRoomDisplay);
-            GolfRoomManager.singleton.OnPlayerIndexChanged.RemoveListener(UpdateRoomButtons);
-            GolfRoomManager.singleton.OnPlayerReadyChanged.RemoveListener(UpdateRoomButtons);
-        }
     }
 }
