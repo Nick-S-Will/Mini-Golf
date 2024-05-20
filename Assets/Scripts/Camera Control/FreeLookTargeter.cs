@@ -1,8 +1,9 @@
 using Cinemachine;
+using MiniGolf.Player;
 using System.Collections;
 using UnityEngine;
 
-namespace MiniGolf.Cinemachine
+namespace MiniGolf.CameraControl
 {
     [RequireComponent(typeof(CinemachineFreeLook))]
     [RequireComponent(typeof(CinemachineInputProvider))]
@@ -15,10 +16,26 @@ namespace MiniGolf.Cinemachine
         private Transform target;
         private Coroutine lockRoutine;
 
+        protected override void Awake()
+        {
+            base.Awake();
+
+            PlayerHandler.OnSetPlayer.AddListener(AssignPlayer);
+        }
+
         private void Start()
         {
             freeLookCamera = GetComponent<CinemachineFreeLook>();
             inputProvider = GetComponent<CinemachineInputProvider>();
+        }
+
+        public void AssignPlayer(SwingController oldPlayer, SwingController newPlayer)
+        {
+            bool newPlayerExists = newPlayer;
+            freeLookCamera.Follow = newPlayerExists ? newPlayer.transform : null;
+            freeLookCamera.LookAt = freeLookCamera.Follow;
+            freeLookCamera.enabled = newPlayerExists;
+            inputProvider.enabled = newPlayerExists;
         }
 
         public void LookAtNewTarget(MonoBehaviour target)
@@ -49,5 +66,12 @@ namespace MiniGolf.Cinemachine
 
         protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
         {}
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            PlayerHandler.OnSetPlayer.RemoveListener(AssignPlayer);
+        }
     }
 }

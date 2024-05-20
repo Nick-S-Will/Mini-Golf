@@ -1,18 +1,17 @@
-using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-namespace MiniGolf.Camera
+namespace MiniGolf.CameraControl
 {
-    [RequireComponent(typeof(UnityEngine.Camera))]
+    [RequireComponent(typeof(Camera))]
     public class CameraTransitioner : MonoBehaviour
     {
         [SerializeField][Min(0f)] private float transitionTime = 1.0f;
         [Space]
         [SerializeField] private TransitionTarget startingTarget;
 
-        private new UnityEngine.Camera camera;
+        private Camera cam;
         private TransitionTarget currentTarget;
         private Coroutine transitionRoutine;
 
@@ -24,7 +23,7 @@ namespace MiniGolf.Camera
 
         private void Awake()
         {
-            camera = GetComponent<UnityEngine.Camera>();
+            cam = GetComponent<Camera>();
             currentTarget = FindObjectsOfType<TransitionTarget>().First(target => target.Target.activeSelf);
 
             Cursor.lockState = CursorLockMode.None;
@@ -50,21 +49,21 @@ namespace MiniGolf.Camera
                 currentTarget.Target.SetActive(false);
             }
 
-            var distance = Vector3.Distance(camera.transform.position, target.Position);
+            var distance = Vector3.Distance(cam.transform.position, target.Position);
             var moveSpeed = transitionTime == 0 ? float.MaxValue : distance / transitionTime;
 
-            var angle = Quaternion.Angle(camera.transform.rotation, target.Rotation);
+            var angle = Quaternion.Angle(cam.transform.rotation, target.Rotation);
             var angularSpeed = transitionTime == 0 ? float.MaxValue : angle / transitionTime;
 
-            while (camera.transform.position != target.Position)
+            while (cam.transform.position != target.Position)
             {
                 var maxDistance = moveSpeed * Time.deltaTime;
-                var position = Vector3.MoveTowards(camera.transform.position, target.Position, maxDistance);
+                var position = Vector3.MoveTowards(cam.transform.position, target.Position, maxDistance);
 
                 var maxAngle = angularSpeed * Time.deltaTime;
-                var rotation = Quaternion.RotateTowards(camera.transform.rotation, target.Rotation, maxAngle);
+                var rotation = Quaternion.RotateTowards(cam.transform.rotation, target.Rotation, maxAngle);
 
-                camera.transform.SetPositionAndRotation(position, rotation);
+                cam.transform.SetPositionAndRotation(position, rotation);
 
                 yield return null;
             }
@@ -77,7 +76,7 @@ namespace MiniGolf.Camera
         [ContextMenu("Go To Starting Target")]
         private void GoToStartingTarget()
         {
-            GetComponent<UnityEngine.Camera>().transform.SetPositionAndRotation(startingTarget.Position, startingTarget.Rotation);
+            GetComponent<Camera>().transform.SetPositionAndRotation(startingTarget.Position, startingTarget.Rotation);
         }
 
         public void Exit() => Application.Quit();

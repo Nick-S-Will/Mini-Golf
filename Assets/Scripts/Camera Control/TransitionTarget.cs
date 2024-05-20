@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-namespace MiniGolf.Camera
+namespace MiniGolf.CameraControl
 {
     public class TransitionTarget : MonoBehaviour
     {

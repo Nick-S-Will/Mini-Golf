@@ -48,7 +48,7 @@ namespace MiniGolf.Progress
             if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
             if (course == null && holeGenerator == null && GameManager.singleton == null) Debug.LogError($"{nameof(course)} is empty");
 
-            PlayerHandler.OnChangePlayer.AddListener(PlayerChanged);
+            PlayerHandler.OnSetPlayer.AddListener(ChangePlayer);
             holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
         }
 
@@ -62,7 +62,7 @@ namespace MiniGolf.Progress
             if (TryBeginHole()) OnStartCourse.Invoke();
         }
 
-        private void PlayerChanged(BallController oldPlayer, BallController newPlayer)
+        private void ChangePlayer(SwingController oldPlayer, SwingController newPlayer)
         {
             ballRigidbody = newPlayer ? newPlayer.GetComponent<Rigidbody>() : null;
 
@@ -149,7 +149,7 @@ namespace MiniGolf.Progress
         {
             base.OnDestroy();
 
-            if (PlayerHandler.singleton) PlayerHandler.OnChangePlayer.RemoveListener(PlayerChanged);
+            if (PlayerHandler.singleton) PlayerHandler.OnSetPlayer.RemoveListener(ChangePlayer);
             if (PlayerHandler.Player) PlayerHandler.Player.OnSwing.RemoveListener(AddStroke);
             if (holeGenerator) holeGenerator.OnGenerate.RemoveListener(UpdateHoleTile);
             if (holeTile) holeTile.OnBallEnter.RemoveListener(HoleBall);

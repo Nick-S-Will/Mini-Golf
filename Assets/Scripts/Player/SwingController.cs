@@ -5,9 +5,17 @@ using UnityEngine.InputSystem;
 
 namespace MiniGolf.Player
 {
+    [RequireComponent(typeof(NetworkRigidbodyReliable))]
+    [RequireComponent(typeof(Rigidbody))]
     public abstract class SwingController : NetworkBehaviour
     {
-        [Space]
+        public static UnityEvent<SwingController> OnSetLocalPlayer = new();
+
+        [Header("Move Detection")]
+        [SerializeField] private SphereCollider sphereCollider;
+        [SerializeField][Min(0f)] private float ballVelocityTolerance = 0.01f;
+        [SerializeField][Min(0f)] private float ballSurfaceAngleTolerance = 1f;
+        [Header("Swing Settings")]
         [SerializeField][Min(0f)] private float swingInputSensitivity = 0.1f;
         [SerializeField][Min(0f)] private float maxStrokeStrength = 1f;
         /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is started</summary>
@@ -19,6 +27,9 @@ namespace MiniGolf.Player
         public UnityEvent OnBackswingCancel;
         /// <summary>Invoked when <see cref="ToggleBackswing(InputAction.CallbackContext)"/>'s context is canceled and <see cref="BackswingScaler"/> > 0</summary>
         public UnityEvent OnSwing;
+        public UnityEvent OnStopMoving;
+
+        private Vector3 lastVelocity;
 
         protected Transform CameraTransform { get; private set; }
         protected Rigidbody Rigidbody { get; private set; }
@@ -27,22 +38,19 @@ namespace MiniGolf.Player
 
         public float BackswingScaler { get; private set; }
         public bool IsBackswinging { get; private set; }
-        public abstract bool CanBackswing { get; }
+        public bool IsMoving => Rigidbody.velocity.magnitude > ballVelocityTolerance;
 
         protected virtual void Awake()
         {
-            CameraTransform = UnityEngine.Camera.main.transform;
+            CameraTransform = Camera.main.transform;
             Rigidbody = GetComponent<Rigidbody>();
         }
 
-        public override void OnStartAuthority()
+        public override void OnStartLocalPlayer()
         {
-            enabled = true;
-        }
+            base.OnStartLocalPlayer();
 
-        public override void OnStopAuthority()
-        {
-            enabled = false;
+            OnSetLocalPlayer.Invoke(this);
         }
 
         protected virtual void Start()
@@ -51,9 +59,36 @@ namespace MiniGolf.Player
             OnBackswingCancel.AddListener(CancelBackswing);
         }
 
+        protected virtual void FixedUpdate()
+        {
+            UpdateMovingStatus();
+        }
+
+        private void UpdateMovingStatus()
+        {
+            var wasMoving = lastVelocity.magnitude > ballVelocityTolerance;
+            if (wasMoving && !IsMoving && OnFlatSurface())
+            {
+                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.angularVelocity = Vector3.zero;
+                OnStopMoving.Invoke();
+            }
+
+            lastVelocity = Rigidbody.velocity;
+        }
+
+        private bool OnFlatSurface()
+        {
+            var distance = sphereCollider.radius + ballVelocityTolerance;
+            if (!Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo, distance)) return false;
+
+            var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
+            return angle < ballSurfaceAngleTolerance;
+        }
+
         public void ToggleBackswing(InputAction.CallbackContext context)
         {
-            if (!enabled || !CanBackswing) return;
+            if (IsMoving) return;
 
             if (context.started)
             {

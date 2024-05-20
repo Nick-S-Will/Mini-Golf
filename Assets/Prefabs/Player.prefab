@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1318216040298733176}
   - component: {fileID: 4819946264330979126}
   - component: {fileID: 4995670470205537362}
-  - component: {fileID: 6265629295679706963}
   - component: {fileID: 1147630225485577951}
   - component: {fileID: 1663372517485318864}
   - component: {fileID: 561732399335120324}
@@ -21,7 +20,7 @@ GameObject:
   - component: {fileID: 8891712959429077910}
   - component: {fileID: 3666506180700008282}
   m_Layer: 0
-  m_Name: Ball
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
+  syncDirection: 1
   syncMode: 0
   syncInterval: 0
   target: {fileID: 8196294606801974753}
@@ -81,19 +80,19 @@ MonoBehaviour:
   syncScale: 0
   interpolatePosition: 1
   interpolateRotation: 1
-  interpolateScale: 1
+  interpolateScale: 0
   coordinateSpace: 0
   sendIntervalMultiplier: 1
-  timelineOffset: 0
+  timelineOffset: 1
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChange: 1
+  onlySyncOnChange: 0
   onlySyncOnChangeCorrectionMultiplier: 2
   rotationSensitivity: 0.01
   compressRotation: 0
-  positionPrecision: 0.01
-  scalePrecision: 0.01
+  positionPrecision: 0.0001
+  scalePrecision: 0.0001
 --- !u!114 &4995670470205537362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +100,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3108000758023829372}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1def31dbf708b94598c22977d0b5da4, type: 3}
   m_Name: 
@@ -109,6 +108,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  sphereCollider: {fileID: 1663372517485318864}
+  ballVelocityTolerance: 0.05
+  ballSurfaceAngleTolerance: 1
   swingInputSensitivity: 0.35
   maxStrokeStrength: 0.75
   OnBackswing:
@@ -159,8 +161,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ballVelocityTolerance: 0.05
-  ballSurfaceAngleTolerance: 1
   OnStopMoving:
     m_PersistentCalls:
       m_Calls:
@@ -176,84 +176,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6265629295679706963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3108000758023829372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 8879a58db0e2cdb4f9e41eb94c31b0c7, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4995670470205537362}
-        m_TargetAssemblyTypeName: MiniGolf.Player.SwingController, Assembly-CSharp
-        m_MethodName: ToggleBackswing
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: fb231cca-8858-4734-9caa-6e24466bb854
-    m_ActionName: Golf/Toggle Backswing[/Mouse/leftButton]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4995670470205537362}
-        m_TargetAssemblyTypeName: MiniGolf.Player.SwingController, Assembly-CSharp
-        m_MethodName: Backswinging
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: cbaed72e-8d7b-4186-a18c-01c8997fcaa3
-    m_ActionName: Golf/Backswinging[/Mouse/delta/y]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: a2e931ef-724e-4772-a1f7-09bee7a6ad0d
-    m_ActionName: Golf/Look[/Mouse/delta]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: b8808c18-fa74-4693-b3ab-153b1fcb7db5
-    m_ActionName: Golf/Toggle Scoreboard[/Keyboard/tab]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 49c6a49f-8bb2-4678-9647-6385ba260dc8
-    m_ActionName: Golf/Pause[/Keyboard/escape]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: a79d7771-8d1c-4ffa-b249-d548423899a9
-    m_ActionName: UI/Resume[/Keyboard/escape]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Golf
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &1147630225485577951
 Rigidbody:
   m_ObjectHideFlags: 0

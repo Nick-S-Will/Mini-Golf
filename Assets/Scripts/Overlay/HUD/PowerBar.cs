@@ -13,10 +13,10 @@ namespace MiniGolf.Overlay.HUD
         {
             slider = GetComponent<Slider>();
 
-            PlayerHandler.OnChangePlayer.AddListener(PlayerChanged);
+            PlayerHandler.OnSetPlayer.AddListener(ChangePlayer);
         }
 
-        private void PlayerChanged(BallController oldPlayer, BallController newPlayer)
+        private void ChangePlayer(SwingController oldPlayer, SwingController newPlayer)
         {
             if (oldPlayer) oldPlayer.OnBackswingChange.RemoveListener(UpdateSliderValue);
             if (newPlayer) newPlayer.OnBackswingChange.AddListener(UpdateSliderValue);
@@ -29,7 +29,7 @@ namespace MiniGolf.Overlay.HUD
 
         private void OnDestroy()
         {
-            PlayerHandler.OnChangePlayer.RemoveListener(PlayerChanged);
+            PlayerHandler.OnSetPlayer.RemoveListener(ChangePlayer);
             if (PlayerHandler.Player) PlayerHandler.Player.OnBackswingChange.RemoveListener(UpdateSliderValue);
         }
     }

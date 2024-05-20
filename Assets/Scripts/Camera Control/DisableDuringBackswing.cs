@@ -2,7 +2,7 @@ using Cinemachine;
 using MiniGolf.Player;
 using UnityEngine;
 
-namespace MiniGolf.Cinemachine
+namespace MiniGolf.CameraControl
 {
     [RequireComponent(typeof(CinemachineVirtualCameraBase))]
     public class DisableDuringBackswing : CinemachineExtension
@@ -15,10 +15,10 @@ namespace MiniGolf.Cinemachine
 
             virtualCamera = GetComponent<CinemachineVirtualCameraBase>();
 
-            PlayerHandler.OnChangePlayer.AddListener(UpdateTarget);
+            PlayerHandler.OnSetPlayer.AddListener(UpdateTarget);
         }
 
-        private void UpdateTarget(BallController oldPlayer, BallController newPlayer)
+        private void UpdateTarget(SwingController oldPlayer, SwingController newPlayer)
         {
             if (oldPlayer) RemoveListeners(oldPlayer);
             if (newPlayer == null) return;
@@ -28,14 +28,14 @@ namespace MiniGolf.Cinemachine
             AddListeners(newPlayer);
         }
 
-        private void AddListeners(BallController player)
+        private void AddListeners(SwingController player)
         {
             player.OnBackswing.AddListener(DisableVirtualCamera);
             player.OnBackswingCancel.AddListener(EnableVirtualCamera);
             player.OnSwing.AddListener(EnableVirtualCamera);
         }
 
-        private void RemoveListeners(BallController player)
+        private void RemoveListeners(SwingController player)
         {
             player.OnBackswing.RemoveListener(DisableVirtualCamera);
             player.OnBackswingCancel.RemoveListener(EnableVirtualCamera);
@@ -49,7 +49,7 @@ namespace MiniGolf.Cinemachine
         {
             base.OnDestroy();
 
-            PlayerHandler.OnChangePlayer.RemoveListener(UpdateTarget);
+            PlayerHandler.OnSetPlayer.RemoveListener(UpdateTarget);
         }
 
         protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime){}

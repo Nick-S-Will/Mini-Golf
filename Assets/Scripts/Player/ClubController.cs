@@ -18,7 +18,6 @@ namespace MiniGolf.Player
         private Vector3 positionFromBall;
 
         public bool IsSwinging => swingRoutine != null;
-        public override bool CanBackswing => !ballController.IsMoving;
 
         protected override void Awake()
         {

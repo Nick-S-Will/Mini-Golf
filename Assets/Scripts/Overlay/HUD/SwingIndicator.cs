@@ -21,10 +21,10 @@ namespace MiniGolf.Overlay.HUD
 
             startColor = swingIndicator.color;
 
-            PlayerHandler.OnChangePlayer.AddListener(PlayerChanged);
+            PlayerHandler.OnSetPlayer.AddListener(ChangePlayer);
         }
 
-        private void PlayerChanged(BallController oldPlayer, BallController newPlayer)
+        private void ChangePlayer(SwingController oldPlayer, SwingController newPlayer)
         {
             if (oldPlayer)
             {
@@ -53,7 +53,7 @@ namespace MiniGolf.Overlay.HUD
 
         private void OnDestroy()
         {
-            PlayerHandler.OnChangePlayer.RemoveListener(PlayerChanged);
+            PlayerHandler.OnSetPlayer.RemoveListener(ChangePlayer);
 
             if (PlayerHandler.Player == null) return;
             

@@ -1,5 +1,6 @@
 using Mirror;
-using Mirror.Examples.NetworkRoom;
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace MiniGolf.Network
@@ -34,8 +35,31 @@ namespace MiniGolf.Network
 
         public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
         {
-            roomPlayer.SetActive(false);
+            SetGolfRoomPlayerVisible(roomPlayer, false);
+
             return true;
+        }
+
+        public override void OnServerReady(NetworkConnectionToClient conn)
+        {
+            base.OnServerReady(conn);
+
+            if (!Utils.IsSceneActive(RoomScene) || conn.identity == null) return;
+
+            var roomPlayer = conn.identity.gameObject;
+            SetGolfRoomPlayerVisible(roomPlayer, true);
+        }
+
+        private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
+        {
+            var golfRoomPlayer = roomPlayer.GetComponent<GolfRoomPlayer>();
+            if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
+            else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
+        }
+
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
         }
 
         public override void OnGUI()
