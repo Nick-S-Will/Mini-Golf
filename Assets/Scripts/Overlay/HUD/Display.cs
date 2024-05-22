@@ -8,10 +8,10 @@ namespace MiniGolf.Overlay.HUD
 
         public T DisplayObject => displayObject;
 
-        public virtual void SetObject(T element)
+        public virtual void SetObject(T newObject)
         {
-            displayObject = element;
-            UpdateText();
+            displayObject = newObject;
+            if (displayObject != null) UpdateText();
         }
 
         /// <summary>Updates the <see cref="Display"/>'s overlay to reflect any changes in <see cref="DisplayObject"/></summary>

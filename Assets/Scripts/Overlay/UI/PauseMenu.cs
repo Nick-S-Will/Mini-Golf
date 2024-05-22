@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,7 +28,7 @@ namespace MiniGolf.Overlay.UI
             hudParent.SetActive(!active);
 
             playerInput.SwitchCurrentActionMap(active ? pauseActionMap : playActionMap);
-            cameraBehaviour.enabled = !active;
+            if (cameraBehaviour) cameraBehaviour.enabled = !active;
 
             SetPaused(active);
             SetCursor(active);

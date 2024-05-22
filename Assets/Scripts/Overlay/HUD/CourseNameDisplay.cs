@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MiniGolf.Overlay.HUD
 {
-    public class CourseDisplay : Display<Course>
+    public class CourseNameDisplay : Display<Course>
     {
         [SerializeField] private TMP_Text courseName;
 

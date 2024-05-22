@@ -9,10 +9,17 @@ namespace MiniGolf.Player
     public class PlayerHandler : Singleton<PlayerHandler>
     {
         /// <summary>
-        /// Passes old player and new player as <see cref="SwingController"/>s
+        /// Passes old player and new player as <see cref="SwingController"/>s. Listen to update observers etc.
         /// </summary>
         public static UnityEvent<SwingController, SwingController> OnSetPlayer = new();
-        public static SwingController Player => singleton ? singleton.player : null;
+        /// <summary>
+        /// Happens after <see cref="OnSetPlayer"/> to be sure all oberservers are updated. Listen to change game state for new player
+        /// </summary>
+        public static UnityEvent OnPlayerReady = new();
+        public static SwingController Player
+        {
+            get => singleton ? singleton.player : null;
+        }
         
         [Space]
         [SerializeField] private BallController playerPrefab;
@@ -34,10 +41,11 @@ namespace MiniGolf.Player
 
         private void SetPlayer(SwingController player)
         {
-            playerInput.enabled = player;
+            singleton.playerInput.enabled = player;
+            singleton.player = player;
 
             OnSetPlayer.Invoke(Player, player);
-            singleton.player = player;
+            OnPlayerReady.Invoke();
         }
 
         public void ToggleBackSwing(InputAction.CallbackContext context) => Player.ToggleBackswing(context);

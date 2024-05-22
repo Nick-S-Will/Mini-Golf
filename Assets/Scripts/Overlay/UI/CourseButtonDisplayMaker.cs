@@ -8,7 +8,7 @@ namespace MiniGolf.Overlay.UI
     public class CourseButtonDisplayMaker : DisplayMaker<ButtonDisplay<Course>, Course>
     {
         [Space]
-        [SerializeField] private CourseDisplay selectedCourseDisplay;
+        [SerializeField] private CourseNameDisplay selectedCourseDisplay;
 
         private void Start()
         {

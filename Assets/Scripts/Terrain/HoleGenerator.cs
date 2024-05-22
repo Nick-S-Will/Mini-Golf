@@ -20,7 +20,7 @@ namespace MiniGolf.Terrain
         [SerializeField] private Tile[] tilePrefabs;
         [SerializeField] private HoleTile[] holeTilePrefabs;
         [Space]
-        [SerializeField] private HoleData settings;
+        [SerializeField] private Hole settings;
         [SerializeField][Min(0f)] private float spawnInterval;
         [Space]
         [SerializeField] private Gradient gizmoColorGradient;
@@ -33,7 +33,7 @@ namespace MiniGolf.Terrain
         private MeshCollider meshCollider;
         private Coroutine generationRoutine;
 
-        public HoleData HoleData => settings;
+        public Hole HoleData => settings;
 
         private MeshCollider MeshCollider => meshCollider ? meshCollider : GetComponent<MeshCollider>();
         private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
@@ -55,7 +55,7 @@ namespace MiniGolf.Terrain
         }
 
         public void Generate() => Generate(settings);
-        public void Generate(HoleData settings)
+        public void Generate(Hole settings)
         {
             if (startTilePrefabs.Length == 0 || tilePrefabs.Length == 0 || holeTilePrefabs.Length == 0)
             {
@@ -68,7 +68,7 @@ namespace MiniGolf.Terrain
 
             generationRoutine = StartCoroutine(GenerationRoutine(settings));
         }
-        private IEnumerator GenerationRoutine(HoleData settings)
+        private IEnumerator GenerationRoutine(Hole settings)
         {
             System.Random rng = new(settings.Seed);
 
@@ -87,7 +87,7 @@ namespace MiniGolf.Terrain
             OnGenerate.Invoke((HoleTile)LastTile);
         }
 
-        private Tile[] GetTileOptionsFor(HoleData settings, int index)
+        private Tile[] GetTileOptionsFor(Hole settings, int index)
         {
             if (index < 0 || index >= settings.TileCount) throw new ArgumentOutOfRangeException($"Index '{index}' out of range [0, {settings.TileCount - 1}]");
 

@@ -1,24 +1,27 @@
-using MiniGolf.Managers.Game;
-using MiniGolf.Progress;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using MiniGolf.Managers.Game;
+using MiniGolf.Network;
+using MiniGolf.Terrain.Data;
+using MiniGolf.Player;
+
 namespace MiniGolf.Overlay.HUD
 {
-    public class Scoreboard : MonoBehaviour
+    public class Scoreboard : DisplayMaker<Display<PlayerScore>, PlayerScore>
     {
-        [SerializeField] private ProgressData[] players;
         [Space]
-        [SerializeField] private Transform scoreLineParent;
-        [SerializeField] private ProgressDisplay progressDisplayPrefab;
+        [SerializeField] private CourseParDisplay courseDisplay;
+        [SerializeField] private GameObject graphicParent;
 
-        private ProgressDisplay[] playerDisplays;
-
-        private void Awake()
+        protected override void Awake()
         {
-            if (players.Length == 0) Debug.LogError($"{nameof(players)} array empty");
-            if (scoreLineParent == null) Debug.LogError($"{nameof(scoreLineParent)} not assigned");
-            if (progressDisplayPrefab == null) Debug.LogError($"{nameof(progressDisplayPrefab)} not assigned");
+            base.Awake();
+
+            if (courseDisplay == null) Debug.LogError($"{nameof(courseDisplay)} not assigned");
+            if (graphicParent == null) Debug.LogError($"{nameof(graphicParent)} not assigned");
+
+            PlayerHandler.OnPlayerReady.AddListener(UpdateScoreLines);
         }
 
         private void Start()
@@ -26,20 +29,13 @@ namespace MiniGolf.Overlay.HUD
             var managerExists = GameManager.singleton != null;
             if (!managerExists) Debug.LogWarning($"No {nameof(GameManager)} loaded");
 
-            var courseName = managerExists ? GameManager.singleton.SelectedCourse.Name : "Test Name";
-            var pars = managerExists ? GameManager.singleton.SelectedCourse.Pars : new int[18];
-            var headerData = new ProgressData(courseName, pars);
-            var boardHeaderDisplay = Instantiate(progressDisplayPrefab, scoreLineParent);
-            boardHeaderDisplay.SetObject(headerData);
+            var course = managerExists ? GameManager.singleton.SelectedCourse : new Course();
+            courseDisplay.SetObject(course);
+        }
 
-            playerDisplays = new ProgressDisplay[players.Length];
-            for (int i = 0; i < players.Length; i++)
-            {
-                playerDisplays[i] = Instantiate(progressDisplayPrefab, scoreLineParent);
-                playerDisplays[i].SetObject(players[i]);
-            }
-
-            gameObject.SetActive(false);
+        private void UpdateScoreLines()
+        {
+            SetObjects(FindObjectsOfType<PlayerScore>());
         }
 
         public void Toggle(InputAction.CallbackContext context)
@@ -48,13 +44,18 @@ namespace MiniGolf.Overlay.HUD
             else if (context.canceled) SetVisible(false);
         }
 
-        public void SetVisible(bool active)
+        public void SetVisible(bool visible)
         {
-            gameObject.SetActive(active);
+            graphicParent.SetActive(visible);
 
-            if (!active) return;
+            if (!visible) return;
 
-            foreach (var playerDisplay in playerDisplays) playerDisplay.UpdateText();
+            foreach (var playerDisplay in displayInstances) playerDisplay.UpdateText();
+        }
+
+        private void OnDestroy()
+        {
+            PlayerHandler.OnPlayerReady.RemoveListener(UpdateScoreLines);
         }
     }
 }

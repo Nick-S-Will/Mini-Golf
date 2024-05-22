@@ -40,12 +40,23 @@ namespace MiniGolf.CameraControl
 
         public void LookAtNewTarget(MonoBehaviour target)
         {
-            this.target = target.transform;
+            this.target = target ? target.transform : null;
             LookAtTarget();
         }
 
         public void LookAtTarget()
         {
+            if (freeLookCamera.Follow == null)
+            {
+                Debug.LogError($"{nameof(CinemachineFreeLook)} \"{name}\" has no follow");
+                return;
+            }
+            if (target == null)
+            {
+                Debug.LogWarning($"{nameof(FreeLookTargeter)} \"{name}\" has no target");
+                return;
+            }
+
             var direction = target.position - freeLookCamera.Follow.position;
             var position = freeLookCamera.Follow.position - direction;
             var lookRotation = Quaternion.LookRotation(direction, Vector3.up);

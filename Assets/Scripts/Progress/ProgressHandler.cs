@@ -23,11 +23,10 @@ namespace MiniGolf.Progress
         [SerializeField][Min(0f)] private float courseEndTime = 5f;
         [Space]
         public UnityEvent OnStartCourse;
+        public UnityEvent OnStartHole;
         public UnityEvent OnStroke, OnFallOff;
-        /// <summary>Passes amount of time before hole change</summary>
-        public UnityEvent<float> OnCompleteHole;
-        /// <summary>Passes amount of time before scene change</summary>
-        public UnityEvent<float> OnCompleteCourse;
+        public UnityEvent OnCompleteHole;
+        public UnityEvent OnCompleteCourse;
 
         private Rigidbody ballRigidbody;
         private HoleTile holeTile;
@@ -49,17 +48,15 @@ namespace MiniGolf.Progress
             if (course == null && holeGenerator == null && GameManager.singleton == null) Debug.LogError($"{nameof(course)} is empty");
 
             PlayerHandler.OnSetPlayer.AddListener(ChangePlayer);
+            PlayerHandler.OnPlayerReady.AddListener(BeginCourse);
             holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
         }
 
         private void Start()
         {
-            if (GameManager.singleton) course = GameManager.singleton.SelectedCourse;
-            else if (holeGenerator) course = new Course("Test", new HoleData[] { holeGenerator.HoleData });
+            course = GameManager.singleton ? GameManager.singleton.SelectedCourse : new Course();
             holePositions = new List<Vector3>[course.Length];
             for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
-
-            if (TryBeginHole()) OnStartCourse.Invoke();
         }
 
         private void ChangePlayer(SwingController oldPlayer, SwingController newPlayer)
@@ -68,6 +65,13 @@ namespace MiniGolf.Progress
 
             if (oldPlayer) oldPlayer.OnSwing.RemoveListener(AddStroke);
             if (newPlayer) newPlayer.OnSwing.AddListener(AddStroke);
+        }
+
+        private void BeginCourse()
+        {
+            if (TryBeginHole()) OnStartCourse.Invoke();
+
+            PlayerHandler.OnPlayerReady.RemoveListener(BeginCourse);
         }
 
         private bool TryBeginHole()
@@ -81,6 +85,7 @@ namespace MiniGolf.Progress
                 ballsInHole = 0;
             }
 
+            OnStartHole.Invoke();
             return true;
         }
 
@@ -115,7 +120,7 @@ namespace MiniGolf.Progress
         private IEnumerator CompleteHoleRoutine()
         {
             holeIndex++;
-            OnCompleteHole.Invoke(holeEndTime);
+            OnCompleteHole.Invoke();
             yield return new WaitForSeconds(holeEndTime);
 
             if (!TryBeginHole()) yield return StartCoroutine(CompleteCourseRoutine());
@@ -123,7 +128,7 @@ namespace MiniGolf.Progress
 
         private IEnumerator CompleteCourseRoutine()
         {
-            OnCompleteCourse.Invoke(courseEndTime);
+            OnCompleteCourse.Invoke();
             yield return new WaitForSeconds(courseEndTime);
 
             SceneTransitionManager.ChangeScene(Scene.Title);

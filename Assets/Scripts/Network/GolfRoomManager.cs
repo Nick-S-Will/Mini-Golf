@@ -9,7 +9,7 @@ namespace MiniGolf.Network
     {
         public static new GolfRoomManager singleton { get; private set; }
 
-        private bool showStartButton;
+        private bool readyToStart;
 
         public override void Awake()
         {
@@ -30,14 +30,7 @@ namespace MiniGolf.Network
         public override void OnRoomServerPlayersReady()
         {
             if (Utils.IsHeadless()) base.OnRoomServerPlayersReady();
-            else showStartButton = true;
-        }
-
-        public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
-        {
-            SetGolfRoomPlayerVisible(roomPlayer, false);
-
-            return true;
+            else readyToStart = true;
         }
 
         public override void OnServerReady(NetworkConnectionToClient conn)
@@ -48,6 +41,17 @@ namespace MiniGolf.Network
 
             var roomPlayer = conn.identity.gameObject;
             SetGolfRoomPlayerVisible(roomPlayer, true);
+        }
+
+        public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
+        {
+            SetGolfRoomPlayerVisible(roomPlayer, false);
+
+            var playerScore = gamePlayer.GetComponent<PlayerScore>();
+            if (playerScore) playerScore.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
+            else Debug.LogError($"{nameof(gamePlayer)} object must have {nameof(PlayerScore)} component");
+
+            return true;
         }
 
         private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
@@ -66,9 +70,9 @@ namespace MiniGolf.Network
         {
             base.OnGUI();
 
-            if (allPlayersReady && showStartButton && GUI.Button(new Rect(150, 300, 120, 20), "START GAME"))
+            if (allPlayersReady && readyToStart && GUI.Button(new Rect(150, 300, 120, 20), "START GAME"))
             {
-                showStartButton = false;
+                readyToStart = false;
 
                 ServerChangeScene(GameplayScene);
             }
