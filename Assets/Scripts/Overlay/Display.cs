@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MiniGolf.Overlay.HUD
+namespace MiniGolf.Overlay
 {
     public abstract class Display<T> : MonoBehaviour
     {

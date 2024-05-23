@@ -18,12 +18,7 @@ namespace MiniGolf.Overlay.HUD
 
         public override void SetObject(PlayerScore playerScore)
         {
-            if (displayObject) displayObject.OnScoreChange.RemoveListener(UpdateText);
-
             base.SetObject(playerScore);
-            totalScoreText.transform.SetAsLastSibling();
-
-            if (displayObject) displayObject.OnScoreChange.AddListener(UpdateText);
         }
 
         public override void UpdateText()
@@ -32,6 +27,7 @@ namespace MiniGolf.Overlay.HUD
 
             base.UpdateText();
 
+            totalScoreText.transform.SetAsLastSibling();
             totalScoreText.text = displayObject.Total.ToString();
         }
     }

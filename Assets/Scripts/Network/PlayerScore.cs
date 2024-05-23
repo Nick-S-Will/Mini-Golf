@@ -1,8 +1,6 @@
 using MiniGolf.Progress;
 using Mirror;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.Events;
 
 namespace MiniGolf.Network
 {
@@ -10,8 +8,6 @@ namespace MiniGolf.Network
     {
         [SyncVar]
         public int index;
-        [Space]
-        public UnityEvent OnScoreChange;
 
         private readonly SyncList<int> scores = new();
 
@@ -25,7 +21,7 @@ namespace MiniGolf.Network
         {
             ProgressHandler.singleton.OnStroke.AddListener(UpdateScores);
 
-            GetScores();
+            InitializeScores();
         }
 
         public override void OnStopAuthority()
@@ -33,21 +29,17 @@ namespace MiniGolf.Network
             ProgressHandler.singleton.OnStroke.RemoveListener(UpdateScores);
         }
 
-        [Command]
-        private void GetScores()
+        private void InitializeScores()
         {
             scores.Clear();
-            var progressScores = ProgressHandler.singleton.Scores;
-            foreach (var score in progressScores) scores.Add(score);
+            var scoreCount = ProgressHandler.singleton.Scores.Length;
+            for (int i = 0; i < scoreCount; i++) scores.Add(0);
         }
 
-        [Command]
         private void UpdateScores()
         {
             var progressScores = ProgressHandler.singleton.Scores;
             for (int i = 0; i < scores.Count; i++) scores[i] = progressScores[i];
-
-            OnScoreChange.Invoke();
         }
     }
 }

@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace MiniGolf.Overlay.HUD
+namespace MiniGolf.Overlay
 {
     public class ArrayDisplay<DisplayObject, ArrayType> : Display<DisplayObject> where DisplayObject : IContainer<ArrayType>
     {
@@ -38,6 +37,7 @@ namespace MiniGolf.Overlay.HUD
 
         public override void UpdateText()
         {
+            UpdateTexts(displayObject);
             for (int i = 0; i < displayObject.Length; i++)
             {
                 texts[i].text = displayObject[i].ToString();

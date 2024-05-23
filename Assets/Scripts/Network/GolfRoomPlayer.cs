@@ -13,14 +13,14 @@ namespace MiniGolf.Network
         [SerializeField] private bool isVisible = true;
 
         private NetworkRigidbodyUnreliable networkRigidbody;
-        private new Rigidbody rigidbody;
+        private Rigidbody displayRigidbody;
         private SphereCollider sphereCollider;
         private MeshRenderer meshRenderer;
 
         private void Awake()
         {
             networkRigidbody = GetComponent<NetworkRigidbodyUnreliable>();
-            rigidbody = GetComponent<Rigidbody>();
+            displayRigidbody = GetComponent<Rigidbody>();
             sphereCollider = GetComponent<SphereCollider>();
             meshRenderer = GetComponent<MeshRenderer>();
         }
@@ -30,7 +30,7 @@ namespace MiniGolf.Network
             if (oldValue == newValue) return;
 
             networkRigidbody.enabled = newValue;
-            rigidbody.isKinematic = !newValue;
+            displayRigidbody.isKinematic = !newValue;
             sphereCollider.enabled = newValue;
             meshRenderer.enabled = newValue;
         }

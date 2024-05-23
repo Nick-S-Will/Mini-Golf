@@ -189,13 +189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa60da68dc18e6f41b86f46705c6c401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
+  syncDirection: 1
   syncMode: 0
   syncInterval: 0
   index: 0
-  OnScoreChange:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!54 &1147630225485577951
 Rigidbody:
   m_ObjectHideFlags: 0

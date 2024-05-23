@@ -9,6 +9,7 @@ namespace MiniGolf.Player
     [RequireComponent(typeof(Rigidbody))]
     public abstract class SwingController : NetworkBehaviour
     {
+        public static UnityEvent<SwingController> OnStartPlayer = new();
         public static UnityEvent<SwingController> OnSetLocalPlayer = new();
 
         [Header("Move Detection")]
@@ -57,6 +58,8 @@ namespace MiniGolf.Player
         {
             OnSwing.AddListener(Swing);
             OnBackswingCancel.AddListener(CancelBackswing);
+
+            OnStartPlayer.Invoke(this);
         }
 
         protected virtual void FixedUpdate()

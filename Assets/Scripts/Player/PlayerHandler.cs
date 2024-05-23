@@ -9,11 +9,11 @@ namespace MiniGolf.Player
     public class PlayerHandler : Singleton<PlayerHandler>
     {
         /// <summary>
-        /// Passes old player and new player as <see cref="SwingController"/>s. Listen to update observers etc.
+        /// Passes old player and new player as <see cref="SwingController"/>s. For updating observers etc.
         /// </summary>
         public static UnityEvent<SwingController, SwingController> OnSetPlayer = new();
         /// <summary>
-        /// Happens after <see cref="OnSetPlayer"/> to be sure all oberservers are updated. Listen to change game state for new player
+        /// Happens after <see cref="OnSetPlayer"/> to be sure all oberservers are updated
         /// </summary>
         public static UnityEvent OnPlayerReady = new();
         public static SwingController Player

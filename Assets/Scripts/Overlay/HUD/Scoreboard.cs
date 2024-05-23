@@ -21,7 +21,7 @@ namespace MiniGolf.Overlay.HUD
             if (courseDisplay == null) Debug.LogError($"{nameof(courseDisplay)} not assigned");
             if (graphicParent == null) Debug.LogError($"{nameof(graphicParent)} not assigned");
 
-            PlayerHandler.OnPlayerReady.AddListener(UpdateScoreLines);
+            SwingController.OnStartPlayer.AddListener(AddScoreLine);
         }
 
         private void Start()
@@ -33,9 +33,15 @@ namespace MiniGolf.Overlay.HUD
             courseDisplay.SetObject(course);
         }
 
-        private void UpdateScoreLines()
+        private void OnDestroy()
         {
-            SetObjects(FindObjectsOfType<PlayerScore>());
+            SwingController.OnStartPlayer.RemoveListener(AddScoreLine);
+        }
+
+        private void AddScoreLine(SwingController player)
+        {
+            var playerScore = player.GetComponent<PlayerScore>();
+            MakeDisplay(playerScore);
         }
 
         public void Toggle(InputAction.CallbackContext context)
@@ -51,11 +57,6 @@ namespace MiniGolf.Overlay.HUD
             if (!visible) return;
 
             foreach (var playerDisplay in displayInstances) playerDisplay.UpdateText();
-        }
-
-        private void OnDestroy()
-        {
-            PlayerHandler.OnPlayerReady.RemoveListener(UpdateScoreLines);
         }
     }
 }
