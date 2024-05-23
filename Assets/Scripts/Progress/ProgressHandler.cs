@@ -9,6 +9,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using System;
+using MiniGolf.Network;
 
 namespace MiniGolf.Progress
 {
@@ -28,17 +29,18 @@ namespace MiniGolf.Progress
         public UnityEvent OnCompleteHole;
         public UnityEvent OnCompleteCourse;
 
-        private Rigidbody ballRigidbody;
+        private SwingController player;
         private HoleTile holeTile;
         private Course course;
         /// <summary>Array of positions for each hole</summary>
         private List<Vector3>[] holePositions;
-        private int holeIndex, ballsInHole;
+        private Func<Vector3> getHoleStartPosition = () => PlayerHandler.singleton.transform.position;
+        private Func<int, bool> canChangeHoles = holedBallCount => holedBallCount > 0;
+        private int holeIndex, holedBallCount;
 
-        private List<Vector3> CurrentPositions => holePositions[holeIndex];
         public int[] Scores => holePositions.Select(positions => positions.Count()).ToArray();
         public int CurrentScore => holeIndex < holePositions.Length ? CurrentPositions.Count : 0;
-        public Func<int, bool> CanChangeHoles { get; set; } = ballsInHole => ballsInHole > 0;
+        private List<Vector3> CurrentPositions => holePositions[holeIndex];
 
         protected override void Awake()
         {
@@ -57,11 +59,17 @@ namespace MiniGolf.Progress
             course = GameManager.singleton ? GameManager.singleton.SelectedCourse : new Course();
             holePositions = new List<Vector3>[course.Length];
             for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
+
+            if (GolfRoomManager.singleton)
+            {
+                getHoleStartPosition = GolfRoomManager.singleton.GetHoleStartPosition;
+                canChangeHoles = holedBallCount => holedBallCount == GolfRoomManager.singleton.roomSlots.Count;
+            }
         }
 
         private void ChangePlayer(SwingController oldPlayer, SwingController newPlayer)
         {
-            ballRigidbody = newPlayer ? newPlayer.GetComponent<Rigidbody>() : null;
+            player = newPlayer;
 
             if (oldPlayer) oldPlayer.OnSwing.RemoveListener(AddStroke);
             if (newPlayer) newPlayer.OnSwing.AddListener(AddStroke);
@@ -81,8 +89,10 @@ namespace MiniGolf.Progress
             holeGenerator.Generate(course.HoleData[holeIndex]);
             if (holeIndex > 0)
             {
-                ballRigidbody.transform.SetPositionAndRotation(PlayerHandler.singleton.transform.position, Quaternion.identity);
-                ballsInHole = 0;
+                player.transform.SetPositionAndRotation(getHoleStartPosition(), Quaternion.identity);
+                player.SetPhysics(true);
+
+                holedBallCount = 0;
             }
 
             OnStartHole.Invoke();
@@ -99,30 +109,28 @@ namespace MiniGolf.Progress
 
         private void AddStroke()
         {
-            holePositions[holeIndex].Add(ballRigidbody.position);
+            holePositions[holeIndex].Add(player.transform.position);
             OnStroke.Invoke();
         }
 
         private void HoleBall(BallController ball)
         {
-            if (ballRigidbody.gameObject == ball.gameObject)
-            {
-                ballRigidbody.velocity = Vector3.zero;
-                ballRigidbody.angularVelocity = Vector3.zero;
-            }
+            //if (player.gameObject == ball.gameObject) 
+            ball.SetPhysics(false);
+            
+            holedBallCount++;
 
-            ballsInHole++;
-
-            if (CanChangeHoles(ballsInHole)) CompleteHole();
+            if (canChangeHoles(holedBallCount)) CompleteHole();
         }
 
         private void CompleteHole() => _ = StartCoroutine(CompleteHoleRoutine());
         private IEnumerator CompleteHoleRoutine()
         {
-            holeIndex++;
             OnCompleteHole.Invoke();
+
             yield return new WaitForSeconds(holeEndTime);
 
+            holeIndex++;
             if (!TryBeginHole()) yield return StartCoroutine(CompleteCourseRoutine());
         }
 
@@ -141,11 +149,11 @@ namespace MiniGolf.Progress
 
         private void CheckFall()
         {
-            if (ballRigidbody == null || ballRigidbody.transform.position.y > ballMinY) return;
+            if (player == null || player.Rigidbody.transform.position.y > ballMinY) return;
 
-            ballRigidbody.transform.position = CurrentPositions[^1];
-            ballRigidbody.velocity = Vector3.zero;
-            ballRigidbody.angularVelocity = Vector3.zero;
+            player.transform.position = CurrentPositions[^1];
+            player.Rigidbody.velocity = Vector3.zero;
+            player.Rigidbody.angularVelocity = Vector3.zero;
 
             OnFallOff.Invoke();
         }

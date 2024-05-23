@@ -14,6 +14,7 @@ namespace MiniGolf.Overlay.HUD
             base.Awake();
 
             if (playerNameText == null) Debug.LogError($"{nameof(playerNameText)} not assigned");
+            if (totalScoreText == null) Debug.LogError($"{nameof(totalScoreText)} not assigned");
         }
 
         public override void SetObject(PlayerScore playerScore)

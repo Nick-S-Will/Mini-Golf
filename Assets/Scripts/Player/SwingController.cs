@@ -33,10 +33,10 @@ namespace MiniGolf.Player
         private Vector3 lastVelocity;
 
         protected Transform CameraTransform { get; private set; }
-        protected Rigidbody Rigidbody { get; private set; }
         protected float SwingInputSensitivity => swingInputSensitivity;
         protected float MaxStrokeStrength => maxStrokeStrength;
 
+        public Rigidbody Rigidbody { get; private set; }
         public float BackswingScaler { get; private set; }
         public bool IsBackswinging { get; private set; }
         public bool IsMoving => Rigidbody.velocity.magnitude > ballVelocityTolerance;
@@ -87,6 +87,14 @@ namespace MiniGolf.Player
 
             var angle = Vector3.Angle(Vector3.up, hitInfo.normal);
             return angle < ballSurfaceAngleTolerance;
+        }
+
+        public void SetPhysics(bool enabled)
+        {
+            if (!enabled) Rigidbody.velocity = Vector3.zero;
+
+            Rigidbody.useGravity = enabled;
+            GetComponent<Collider>().enabled = enabled;
         }
 
         public void ToggleBackswing(InputAction.CallbackContext context)

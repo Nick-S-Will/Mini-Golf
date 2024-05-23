@@ -27,6 +27,8 @@ namespace MiniGolf.Network
         public override void OnStopAuthority()
         {
             ProgressHandler.singleton.OnStroke.RemoveListener(UpdateScores);
+
+            // TODO: Add event for scoreboard to listen to to destroy this object's display
         }
 
         private void InitializeScores()

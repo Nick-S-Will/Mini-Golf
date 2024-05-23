@@ -1,6 +1,4 @@
 using Mirror;
-using System;
-using System.Linq;
 using UnityEngine;
 
 namespace MiniGolf.Network
@@ -21,10 +19,26 @@ namespace MiniGolf.Network
         {
             var startTransform = GetStartPosition();
             var position = startTransform ? startTransform.position : Vector3.zero;
-            var rotation = startTransform ? startTransform.rotation : Quaternion.identity;
-            var roomPlayer = Instantiate(roomPlayerPrefab.gameObject, position, rotation);
+            var roomPlayer = Instantiate(roomPlayerPrefab, position, Quaternion.identity);
 
-            return roomPlayer;
+            return roomPlayer.gameObject;
+        }
+
+        public Vector3 GetHoleStartPosition()
+        {
+            startPositions.RemoveAll(t => t == null);
+
+            if (startPositions.Count < maxConnections)
+            {
+                Debug.LogWarning($"Number of {nameof(startPositions)} ({startPositions.Count}) should be at least {nameof(maxConnections)} ({maxConnections})");
+                return Vector3.zero;
+            }
+
+            var playerScore = NetworkClient.localPlayer.GetComponent<PlayerScore>();
+            var playerIndex = playerScore.index;
+            var position = startPositions[playerIndex].position;
+
+            return position;
         }
 
         public override void OnRoomServerPlayersReady()
