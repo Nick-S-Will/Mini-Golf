@@ -35,7 +35,6 @@ namespace MiniGolf.CameraControl
             freeLookCamera.Follow = newPlayerExists ? newPlayer.transform : null;
             freeLookCamera.LookAt = freeLookCamera.Follow;
             freeLookCamera.enabled = newPlayerExists;
-            inputProvider.enabled = newPlayerExists;
         }
 
         public void LookAtNewTarget(MonoBehaviour target)
@@ -68,9 +67,11 @@ namespace MiniGolf.CameraControl
 
         private IEnumerator LockCameraRoutine()
         {
+            var startEnabled = inputProvider.enabled;
+
             inputProvider.enabled = false;
             yield return new WaitForSeconds(cameraLockSeconds);
-            inputProvider.enabled = true;
+            inputProvider.enabled = startEnabled;
 
             lockRoutine = null;
         }

@@ -23,11 +23,9 @@ namespace MiniGolf.Progress
         [SerializeField][Min(0f)] private float holeEndTime = 2f;
         [SerializeField][Min(0f)] private float courseEndTime = 5f;
         [Space]
-        public UnityEvent OnStartCourse;
-        public UnityEvent OnStartHole;
+        public UnityEvent OnStartCourse, OnStartHole;
         public UnityEvent OnStroke, OnFallOff;
-        public UnityEvent OnCompleteHole;
-        public UnityEvent OnCompleteCourse;
+        public UnityEvent OnCompleteHole, OnCompleteCourse;
 
         private SwingController player;
         private HoleTile holeTile;
@@ -56,6 +54,7 @@ namespace MiniGolf.Progress
 
         private void Start()
         {
+            if (GameManager.singleton == null) Debug.LogWarning($"No {nameof(GameManager)} loaded");
             course = GameManager.singleton ? GameManager.singleton.SelectedCourse : new Course();
             holePositions = new List<Vector3>[course.Length];
             for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
@@ -90,6 +89,7 @@ namespace MiniGolf.Progress
             if (holeIndex > 0)
             {
                 player.transform.SetPositionAndRotation(getHoleStartPosition(), Quaternion.identity);
+                PlayerHandler.SetControls(true);
                 player.SetPhysics(true);
 
                 holedBallCount = 0;
@@ -99,12 +99,12 @@ namespace MiniGolf.Progress
             return true;
         }
 
-        private void UpdateHoleTile(HoleTile holeTile)
+        private void UpdateHoleTile(HoleTile newHoleTile)
         {
-            if (this.holeTile) holeTile.OnBallEnter.RemoveListener(HoleBall);
+            if (holeTile) holeTile.OnBallEnter.RemoveListener(HoleBall);
 
-            this.holeTile = holeTile;
-            this.holeTile.OnBallEnter.AddListener(HoleBall);
+            holeTile = newHoleTile;
+            holeTile.OnBallEnter.AddListener(HoleBall);
         }
 
         private void AddStroke()
@@ -113,9 +113,9 @@ namespace MiniGolf.Progress
             OnStroke.Invoke();
         }
 
-        private void HoleBall(BallController ball)
+        private void HoleBall(SwingController ball)
         {
-            //if (player.gameObject == ball.gameObject) 
+            if (player == ball) PlayerHandler.SetControls(false, true);
             ball.SetPhysics(false);
             
             holedBallCount++;

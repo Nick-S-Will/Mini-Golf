@@ -2629,9 +2629,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1374732144}
   - component: {fileID: 1374732143}
-  - component: {fileID: 1374732142}
-  - component: {fileID: 1374732141}
+  - component: {fileID: 1374732145}
   - component: {fileID: 1374732140}
+  - component: {fileID: 1374732141}
   - component: {fileID: 1374732139}
   m_Layer: 0
   m_Name: FreeLook Camera
@@ -2695,22 +2695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f01063a3004e8f44e83a012c79c02614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1374732142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1374732138}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerIndex: -1
-  AutoEnableInputs: 1
-  XYAxis: {fileID: -5630151704836100654, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  ZAxis: {fileID: 0}
 --- !u!114 &1374732143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2834,6 +2818,22 @@ Transform:
   - {fileID: 97029521}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1374732145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374732138}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerIndex: -1
+  AutoEnableInputs: 1
+  XYAxis: {fileID: -5630151704836100654, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  ZAxis: {fileID: 0}
 --- !u!1 &1393941116
 GameObject:
   m_ObjectHideFlags: 0

@@ -91,7 +91,7 @@ namespace MiniGolf.Player
 
         public void SetPhysics(bool enabled)
         {
-            if (!enabled) Rigidbody.velocity = Vector3.zero;
+            if (!enabled && !Rigidbody.isKinematic) Rigidbody.velocity = Vector3.zero;
 
             Rigidbody.useGravity = enabled;
             GetComponent<Collider>().enabled = enabled;
