@@ -1,25 +1,19 @@
 using MiniGolf.Player;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace MiniGolf.Overlay.HUD
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class SwingIndicator : MonoBehaviour
     {
-        [SerializeField] private Image swingIndicator;
-        [SerializeField] private Color canSwingColor = Color.green;
+        [SerializeField] private LayerMask groundCheckMask;
+        [SerializeField] private float groundOffset = 0.01f;
 
-        private Color startColor;
+        private SpriteRenderer spriteRenderer;
 
         private void Awake()
         {
-            if (swingIndicator == null)
-            {
-                Debug.LogError($"{nameof(swingIndicator)} not assigned");
-                return;
-            }
-
-            startColor = swingIndicator.color;
+            spriteRenderer = GetComponent<SpriteRenderer>();
 
             PlayerHandler.OnSetPlayer.AddListener(ChangePlayer);
         }
@@ -41,14 +35,26 @@ namespace MiniGolf.Overlay.HUD
             }
         }
 
-        private void ShowCanSwing()
-        {
-            swingIndicator.color = canSwingColor;
-        }
+        private void ShowCanSwing() => SetVisible(true);
+        private void ShowCannotSwing() => SetVisible(false);
 
-        private void ShowCannotSwing()
+        private void SetVisible(bool visible)
         {
-            swingIndicator.color = startColor;
+            if (!visible)
+            {
+                spriteRenderer.enabled = false;
+                return;
+            }
+
+            var playerPosition = PlayerHandler.Player.transform.position;
+            var ballRadius = PlayerHandler.Player.GetComponent<SphereCollider>().radius;
+            Physics.SphereCast(playerPosition, ballRadius - groundOffset, Vector3.down, out RaycastHit hitInfo, ballRadius, groundCheckMask);
+
+            spriteRenderer.enabled = hitInfo.collider;
+            if (hitInfo.collider == null) return;
+
+            transform.position = hitInfo.point + groundOffset * hitInfo.normal;
+            transform.forward = hitInfo.normal;
         }
 
         private void OnDestroy()
