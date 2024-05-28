@@ -105,10 +105,13 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  showRoomGUI: 1
+  showRoomGUI: 0
   readyToBegin: 0
   index: 0
   isVisible: 1
+  OnReadyChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &6595965002562952244
 Rigidbody:
   m_ObjectHideFlags: 0

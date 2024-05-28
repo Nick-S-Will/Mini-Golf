@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace MiniGolf.Network
 {
@@ -7,7 +8,7 @@ namespace MiniGolf.Network
     {
         public static new GolfRoomManager singleton { get; private set; }
 
-        private bool readyToStart;
+        public bool ReadyToStart { get; private set; }
 
         public override void Awake()
         {
@@ -15,38 +16,7 @@ namespace MiniGolf.Network
             singleton = this;
         }
 
-        public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
-        {
-            var startTransform = GetStartPosition();
-            var position = startTransform ? startTransform.position : Vector3.zero;
-            var roomPlayer = Instantiate(roomPlayerPrefab, position, Quaternion.identity);
-
-            return roomPlayer.gameObject;
-        }
-
-        public Vector3 GetHoleStartPosition()
-        {
-            startPositions.RemoveAll(t => t == null);
-
-            if (startPositions.Count < maxConnections)
-            {
-                Debug.LogWarning($"Number of {nameof(startPositions)} ({startPositions.Count}) should be at least {nameof(maxConnections)} ({maxConnections})");
-                return Vector3.zero;
-            }
-
-            var playerScore = NetworkClient.localPlayer.GetComponent<PlayerScore>();
-            var playerIndex = playerScore.index;
-            var position = startPositions[playerIndex].position;
-
-            return position;
-        }
-
-        public override void OnRoomServerPlayersReady()
-        {
-            if (Utils.IsHeadless()) base.OnRoomServerPlayersReady();
-            else readyToStart = true;
-        }
-
+        #region Scene Change
         public override void OnServerReady(NetworkConnectionToClient conn)
         {
             base.OnServerReady(conn);
@@ -74,22 +44,58 @@ namespace MiniGolf.Network
             if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
             else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
         }
+        #endregion
 
-        public override void OnStartServer()
+        #region Room
+        public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
-            base.OnStartServer();
+            base.OnServerAddPlayer(conn);
+
+            NetworkServer.SendToAll(new NewPlayerMessage());
         }
 
-        public override void OnGUI()
+        public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
         {
-            base.OnGUI();
+            var startTransform = GetStartPosition();
+            var position = startTransform ? startTransform.position : Vector3.zero;
+            var roomPlayer = Instantiate(roomPlayerPrefab, position, Quaternion.identity);
 
-            if (allPlayersReady && readyToStart && GUI.Button(new Rect(150, 300, 120, 20), "START GAME"))
+            return roomPlayer.gameObject;
+        }
+
+        public override void OnRoomServerPlayersReady()
+        {
+            if (Utils.IsHeadless()) base.OnRoomServerPlayersReady();
+            else ReadyToStart = true;
+        }
+
+        public override void OnRoomServerPlayersNotReady() => ReadyToStart = false;
+        
+        public void StartGame()
+        {
+            ReadyToStart = false;
+
+            ServerChangeScene(GameplayScene);
+        }
+        #endregion
+
+        #region Game
+        public Vector3 GetHoleStartPosition()
+        {
+            startPositions.RemoveAll(t => t == null);
+
+            if (startPositions.Count < maxConnections)
             {
-                readyToStart = false;
-
-                ServerChangeScene(GameplayScene);
+                Debug.LogWarning($"Number of {nameof(startPositions)} ({startPositions.Count}) should be at least {nameof(maxConnections)} ({maxConnections})");
+                return Vector3.zero;
             }
+
+            var playerScore = NetworkClient.localPlayer.GetComponent<PlayerScore>();
+            var playerIndex = playerScore.index;
+            var position = startPositions[playerIndex].position;
+
+            return position;
         }
+        #endregion
     }
 }

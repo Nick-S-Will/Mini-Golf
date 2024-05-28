@@ -1,3 +1,6 @@
+using MiniGolf.Managers.SceneTransition;
+using MiniGolf.Network;
+using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -43,6 +46,22 @@ namespace MiniGolf.Overlay.UI
         {
             Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = visible;
+        }
+
+        public void Quit()
+        {
+            if (GolfRoomManager.singleton == null)
+            {
+                SceneTransitionManager.ChangeScene(Scene.Title);
+                return;
+            }
+
+            switch (GolfRoomManager.singleton.mode)
+            {
+                case NetworkManagerMode.Host: GolfRoomManager.singleton.StopHost(); break;
+                case NetworkManagerMode.ClientOnly: GolfRoomManager.singleton.StopClient(); break;
+                case NetworkManagerMode.ServerOnly: GolfRoomManager.singleton.StopServer(); break;
+            }
         }
 
         private void OnDestroy()

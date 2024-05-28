@@ -8,14 +8,10 @@ namespace MiniGolf.Managers.Game
 {
     public class GameManager : Singleton<GameManager>
     {
-        public static bool IsMultiplayer => singleton ? singleton.isMultiplayer : false;
-
         [SerializeField] private Course[] courseOptions;
 
         [HideInInspector] public UnityEvent OnSelectedCourseChange;
         private Course selectedCourse;
-        [HideInInspector]
-        public bool isMultiplayer;
 
         public Course[] Courses => courseOptions;
         public Course SelectedCourse

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Mirror;
+using UnityEngine.Events;
 
 namespace MiniGolf.Network
 {
@@ -12,10 +13,14 @@ namespace MiniGolf.Network
         [SyncVar(hook = nameof(OnVisibilityChanged))]
         [SerializeField] private bool isVisible = true;
 
+        [HideInInspector] public UnityEvent OnReadyChanged;
+
         private NetworkRigidbodyUnreliable networkRigidbody;
         private Rigidbody displayRigidbody;
         private SphereCollider sphereCollider;
         private MeshRenderer meshRenderer;
+
+        public string Name => $"Player {index}";
 
         private void Awake()
         {
@@ -33,6 +38,11 @@ namespace MiniGolf.Network
             displayRigidbody.isKinematic = !newValue;
             sphereCollider.enabled = newValue;
             meshRenderer.enabled = newValue;
+        }
+
+        public override void ReadyStateChanged(bool oldReadyState, bool newReadyState)
+        {
+            OnReadyChanged.Invoke();
         }
 
         [Server]
