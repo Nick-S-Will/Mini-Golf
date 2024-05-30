@@ -18,6 +18,7 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
         if (startButton == null) Debug.LogError($"{nameof(startButton)} not assigned");
 
         NetworkClient.RegisterHandler<NewPlayerMessage>(msg => UpdatePlayerList());
+        NetworkClient.RegisterHandler<PlayerLeaveMessage>(msg => UpdatePlayerList());
     }
 
     private void Update()

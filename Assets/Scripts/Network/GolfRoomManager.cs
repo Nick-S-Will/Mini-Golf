@@ -1,6 +1,5 @@
 using Mirror;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace MiniGolf.Network
 {
@@ -52,6 +51,11 @@ namespace MiniGolf.Network
             base.OnServerAddPlayer(conn);
 
             NetworkServer.SendToAll(new NewPlayerMessage());
+        }
+
+        public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
+        {
+            NetworkServer.SendToAll(new PlayerLeaveMessage());
         }
 
         public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)

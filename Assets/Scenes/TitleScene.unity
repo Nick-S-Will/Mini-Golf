@@ -997,8 +997,8 @@ GameObject:
   m_Component:
   - component: {fileID: 259953636}
   - component: {fileID: 259953639}
-  - component: {fileID: 259953638}
   - component: {fileID: 259953637}
+  - component: {fileID: 259953638}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -1433,7 +1433,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "127.0.0.1\u200B"
+  m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2271,8 +2271,8 @@ GameObject:
   m_Component:
   - component: {fileID: 740802260}
   - component: {fileID: 740802263}
-  - component: {fileID: 740802262}
   - component: {fileID: 740802261}
+  - component: {fileID: 740802262}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
@@ -2403,9 +2403,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 741681579}
+  - component: {fileID: 741681583}
   - component: {fileID: 741681582}
-  - component: {fileID: 741681581}
   - component: {fileID: 741681580}
+  - component: {fileID: 741681581}
   m_Layer: 5
   m_Name: Multiplayer
   m_TagString: Untagged
@@ -2552,6 +2553,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741681578}
   m_CullTransparentMesh: 1
+--- !u!114 &741681583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 741681578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c915b501b085247bdaed340ffb6238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  platform: 17
 --- !u!1 &759165624
 GameObject:
   m_ObjectHideFlags: 0
@@ -3769,8 +3783,8 @@ GameObject:
   m_Component:
   - component: {fileID: 977865111}
   - component: {fileID: 977865114}
-  - component: {fileID: 977865113}
   - component: {fileID: 977865112}
+  - component: {fileID: 977865113}
   m_Layer: 5
   m_Name: Singleplayer
   m_TagString: Untagged
@@ -4123,8 +4137,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1019020796}
   - component: {fileID: 1019020799}
-  - component: {fileID: 1019020798}
   - component: {fileID: 1019020797}
+  - component: {fileID: 1019020798}
   m_Layer: 5
   m_Name: Name Input
   m_TagString: Untagged
@@ -4214,8 +4228,8 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MiniGolf.Overlay.UI.MultiplayerUI, Assembly-CSharp
+      - m_Target: {fileID: 952901528}
+        m_TargetAssemblyTypeName: MiniGolf.Overlay.UI.RoomSetupUI, Assembly-CSharp
         m_MethodName: UpdatePlayerName
         m_Mode: 0
         m_Arguments:
@@ -4725,8 +4739,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1189082445}
   - component: {fileID: 1189082448}
-  - component: {fileID: 1189082447}
   - component: {fileID: 1189082446}
+  - component: {fileID: 1189082447}
   m_Layer: 5
   m_Name: IP Input
   m_TagString: Untagged
@@ -5199,7 +5213,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1231425664}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
