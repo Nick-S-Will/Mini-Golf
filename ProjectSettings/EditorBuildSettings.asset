@@ -9,10 +9,10 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScene.unity
     guid: 4e7ec2273a3375b4ab51a98c2d0fc1d0
   - enabled: 1
-    path: Assets/Scenes/Multiplayer Scenes/OnlineScene.unity
+    path: Assets/Scenes/OnlineScene.unity
     guid: 0c94ef96f49d0194f8f8953fc45a7eb7
   - enabled: 1
-    path: Assets/Scenes/Multiplayer Scenes/MultiplayerGameScene.unity
+    path: Assets/Scenes/MultiplayerGameScene.unity
     guid: f093714edb514cc4696d0243515f8789
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 63622e579fb532c45be429c5067b2b0e, type: 2}
