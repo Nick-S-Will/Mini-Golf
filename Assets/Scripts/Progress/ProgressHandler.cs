@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 using MiniGolf.Network;
+using Mirror;
 
 namespace MiniGolf.Progress
 {
@@ -117,7 +118,7 @@ namespace MiniGolf.Progress
         {
             if (player == ball) PlayerHandler.SetControls(false, true);
             ball.SetPhysics(false);
-            
+
             holedBallCount++;
 
             if (canChangeHoles(holedBallCount)) CompleteHole();
@@ -137,9 +138,14 @@ namespace MiniGolf.Progress
         private IEnumerator CompleteCourseRoutine()
         {
             OnCompleteCourse.Invoke();
-            yield return new WaitForSeconds(courseEndTime);
+            yield return new WaitForSeconds(Mathf.Max(courseEndTime - holeEndTime, 0f));
 
-            SceneTransitionManager.ChangeScene(Scene.Title);
+            switch (GolfRoomManager.singleton.mode)
+            {
+                case NetworkManagerMode.Host: GolfRoomManager.singleton.StopHost(); break;
+                case NetworkManagerMode.ClientOnly: GolfRoomManager.singleton.StopClient(); break;
+                case NetworkManagerMode.ServerOnly: GolfRoomManager.singleton.StopServer(); break;
+            }
         }
 
         private void FixedUpdate()

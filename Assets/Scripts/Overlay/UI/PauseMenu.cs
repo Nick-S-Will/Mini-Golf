@@ -51,12 +51,6 @@ namespace MiniGolf.Overlay.UI
 
         public void Quit()
         {
-            if (GolfRoomManager.singleton == null)
-            {
-                SceneTransitionManager.ChangeScene(Scene.Title);
-                return;
-            }
-
             switch (GolfRoomManager.singleton.mode)
             {
                 case NetworkManagerMode.Host: GolfRoomManager.singleton.StopHost(); break;
