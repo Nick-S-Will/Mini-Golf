@@ -4,7 +4,6 @@ using MiniGolf.Overlay;
 using MiniGolf.Overlay.HUD;
 using Mirror;
 using UnityEngine.UI;
-using MiniGolf.Managers.Game;
 
 public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 {
@@ -28,9 +27,9 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 
     private void Update()
     {
-        if (!GameManager.singleton.IsMultiplayer)
+        if (NetworkServer.dontListen)
         {
-            if (localPlayer) SetReady(true);
+            if (NetworkClient.ready && localPlayer) SetReady(true);
             return;
         }
 

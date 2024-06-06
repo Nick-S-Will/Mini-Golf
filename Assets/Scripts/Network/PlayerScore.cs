@@ -11,7 +11,14 @@ namespace MiniGolf.Network
 
         private readonly SyncList<int> scores = new();
 
-        public string Name => $"Player {index + 1}";
+        public string Name
+        {
+            get
+            {
+                var localRoomPlayer = GolfRoomManager.singleton.roomSlots.First(roomPlayer => roomPlayer.index == index);
+                return localRoomPlayer.GetComponent<GolfRoomPlayer>().Name;
+            }
+        }
         public int[] Scores => scores.ToArray();
         public int Total => scores.Sum();
 

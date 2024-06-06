@@ -1,4 +1,5 @@
 using MiniGolf.Network;
+using Mirror;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -67,6 +68,8 @@ namespace MiniGolf.Overlay.UI
         }
 
         #region Manager Wrappers (for UI events to access static manager singleton)
+        public void SetSingleplayer(bool isSingleplayer) => NetworkServer.dontListen = isSingleplayer;
+
         public void HostRoom()
         {
             try

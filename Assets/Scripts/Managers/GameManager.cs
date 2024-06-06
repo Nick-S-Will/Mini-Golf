@@ -43,7 +43,6 @@ namespace MiniGolf.Managers.Game
                 SelectedCourse = courseOptions[value];
             }
         }
-        public bool IsMultiplayer { get; set; }
 
         protected override void Awake()
         {
