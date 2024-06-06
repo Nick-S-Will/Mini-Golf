@@ -1070,18 +1070,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 209001158}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 240146113}
         m_TargetAssemblyTypeName: MiniGolf.CameraControl.CameraTransitioner, Assembly-CSharp
         m_MethodName: GoToTarget
@@ -1090,6 +1078,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 1547776606}
           m_ObjectArgumentAssemblyTypeName: MiniGolf.CameraControl.TransitionTarget,
             Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 209001158}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1596,7 +1596,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 418750047}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80a6e94c659c56a48a22e27a0dc29239, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -1630,8 +1630,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 418750050}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
-  scene: 1
+      m_Calls:
+      - m_Target: {fileID: 952901528}
+        m_TargetAssemblyTypeName: MiniGolf.Overlay.UI.RoomSetupUI, Assembly-CSharp
+        m_MethodName: HostRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &433627998 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7575622081207761905, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
@@ -2478,18 +2489,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 209001158}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 240146113}
         m_TargetAssemblyTypeName: MiniGolf.CameraControl.CameraTransitioner, Assembly-CSharp
         m_MethodName: GoToTarget
@@ -2503,9 +2502,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MiniGolf.Overlay.UI.MultiplayerUI, Assembly-CSharp
-        m_MethodName: SetMultiplayerState
+      - m_Target: {fileID: 263799699}
+        m_TargetAssemblyTypeName: MiniGolf.Managers.Game.GameManager, Assembly-CSharp
+        m_MethodName: set_IsMultiplayer
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2514,6 +2513,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 209001158}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &741681581
 MonoBehaviour:
@@ -2625,10 +2636,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Course Select
       objectReference: {fileID: 0}
-    - target: {fileID: 1709106936425548127, guid: abebe569eeae7194b825649ec04aea6e, type: 3}
-      propertyPath: selectedCourseDisplay
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8170007306616632011, guid: abebe569eeae7194b825649ec04aea6e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2713,7 +2720,10 @@ PrefabInstance:
     - {fileID: 5517699049723789544, guid: abebe569eeae7194b825649ec04aea6e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7548757518812613006, guid: abebe569eeae7194b825649ec04aea6e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2090648181}
   m_SourcePrefab: {fileID: 100100000, guid: abebe569eeae7194b825649ec04aea6e, type: 3}
 --- !u!1 &784322110
 GameObject:
@@ -3856,18 +3866,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 209001158}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 240146113}
         m_TargetAssemblyTypeName: MiniGolf.CameraControl.CameraTransitioner, Assembly-CSharp
         m_MethodName: GoToTarget
@@ -3881,10 +3879,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MiniGolf.Overlay.UI.MultiplayerUI, Assembly-CSharp
-        m_MethodName: SetMultiplayerState
+      - m_Target: {fileID: 263799699}
+        m_TargetAssemblyTypeName: MiniGolf.Managers.Game.GameManager, Assembly-CSharp
+        m_MethodName: set_IsMultiplayer
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 209001158}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5732,7 +5742,7 @@ MonoBehaviour:
   autoStartServerBuild: 0
   autoConnectClientBuild: 0
   offlineScene: Assets/Scenes/TitleScene.unity
-  onlineScene: Assets/Scenes/Multiplayer Scenes/OnlineScene.unity
+  onlineScene: Assets/Scenes/OnlineScene.unity
   transport: {fileID: 1328530580}
   networkAddress: localhost
   maxConnections: 4
@@ -5761,8 +5771,8 @@ MonoBehaviour:
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 5205167191080443900, guid: 376bd837e366ba04793a1af294cbaca4, type: 3}
-  RoomScene: Assets/Scenes/Multiplayer Scenes/OnlineScene.unity
-  GameplayScene: Assets/Scenes/Multiplayer Scenes/MultiplayerGameScene.unity
+  RoomScene: Assets/Scenes/OnlineScene.unity
+  GameplayScene: Assets/Scenes/MultiplayerGameScene.unity
   _allPlayersReady: 0
   roomSlots: []
   clientIndex: 0
@@ -7995,6 +8005,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   subMenus:
   - {fileID: 952901526}
+--- !u!1 &2090648177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7548757518812613006, guid: abebe569eeae7194b825649ec04aea6e, type: 3}
+  m_PrefabInstance: {fileID: 777125435}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2090648181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2090648177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 659bcfc2de8cf9d428bd924eac83a9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  courseName: {fileID: 0}
 --- !u!1 &2100385117 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4949283373310472328, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}

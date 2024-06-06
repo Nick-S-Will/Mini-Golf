@@ -20,7 +20,7 @@ namespace MiniGolf.Network
         private SphereCollider sphereCollider;
         private MeshRenderer meshRenderer;
 
-        public string Name => $"Player {index}";
+        public string Name => $"Player {index}"; // TODO: Make selected name work
 
         private void Awake()
         {

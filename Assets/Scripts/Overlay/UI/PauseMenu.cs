@@ -1,5 +1,6 @@
 using MiniGolf.Managers.SceneTransition;
 using MiniGolf.Network;
+using MiniGolf.Player;
 using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,10 +9,10 @@ namespace MiniGolf.Overlay.UI
 {
     public class PauseMenu : MonoBehaviour
     {
-        [SerializeField] private GameObject hudParent;
-        [SerializeField] private PlayerInput playerInput;
-        [SerializeField] private string playActionMap = "Golf", pauseActionMap = "UI";
-        [SerializeField] private MonoBehaviour cameraBehaviour;
+        [SerializeField] private GameObject hudParent, graphicsParent;
+        [Space]
+        [SerializeField] private string playActionMap = "Golf";
+        [SerializeField] private string pauseActionMap = "UI";
 
         public bool Paused => Time.timeScale == 0f;
 
@@ -27,11 +28,11 @@ namespace MiniGolf.Overlay.UI
 
         public void SetActive(bool active)
         {
-            gameObject.SetActive(active);
             hudParent.SetActive(!active);
+            graphicsParent.SetActive(active);
 
-            playerInput.SwitchCurrentActionMap(active ? pauseActionMap : playActionMap);
-            if (cameraBehaviour) cameraBehaviour.enabled = !active;
+            PlayerHandler.SetActionMap(active ? pauseActionMap : playActionMap);
+            PlayerHandler.SetControls(true, !active);
 
             SetPaused(active);
             SetCursor(active);

@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 namespace MiniGolf.Player
 {
-    [RequireComponent(typeof(NetworkRigidbodyReliable))]
     [RequireComponent(typeof(Rigidbody))]
     public abstract class SwingController : NetworkBehaviour
     {

@@ -1,5 +1,5 @@
 using Cinemachine;
-using Mirror;
+using MiniGolf.Network;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -19,9 +19,6 @@ namespace MiniGolf.Player
         public static UnityEvent OnPlayerReady = new();
         public static SwingController Player => singleton ? singleton.player : null;
 
-        [Space]
-        [SerializeField] private BallController playerPrefab;
-
         private PlayerInput playerInput;
         private CinemachineInputProvider[] cameraInputs;
         private SwingController player;
@@ -30,13 +27,11 @@ namespace MiniGolf.Player
         {
             base.Awake();
 
-            if (playerPrefab == null) Debug.LogError($"{nameof(playerPrefab)} not assigned");
-
             playerInput = GetComponent<PlayerInput>();
             cameraInputs = FindObjectsOfType<CinemachineInputProvider>();
 
-            if (NetworkManager.singleton) SwingController.OnSetLocalPlayer.AddListener(SetPlayer);
-            else SetPlayer(Instantiate(playerPrefab, Vector3.up, Quaternion.identity));
+            if (GolfRoomManager.singleton) SwingController.OnSetLocalPlayer.AddListener(SetPlayer);
+            else Debug.LogWarning($"No {nameof(GolfRoomManager)} loaded");
         }
 
         private void SetPlayer(SwingController player)
@@ -55,6 +50,8 @@ namespace MiniGolf.Player
             singleton.playerInput.enabled = playerEnabled;
             foreach (var cameraInput in singleton.cameraInputs) cameraInput.enabled = cameraEnabled;
         }
+
+        public static void SetActionMap(string mapName) => singleton.playerInput.SwitchCurrentActionMap(mapName);
 
         public void ToggleBackSwing(InputAction.CallbackContext context) => Player.ToggleBackswing(context);
         public void BackSwinging(InputAction.CallbackContext context) => Player.Backswinging(context);

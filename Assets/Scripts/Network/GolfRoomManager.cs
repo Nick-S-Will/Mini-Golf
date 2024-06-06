@@ -1,3 +1,4 @@
+using MiniGolf.Managers.Game;
 using Mirror;
 using UnityEngine;
 
@@ -50,12 +51,12 @@ namespace MiniGolf.Network
         {
             base.OnServerAddPlayer(conn);
 
-            NetworkServer.SendToAll(new NewPlayerMessage());
+            NetworkServer.SendToAll(new UpdatePlayerListMessage(true));
         }
 
         public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
         {
-            NetworkServer.SendToAll(new PlayerLeaveMessage());
+            NetworkServer.SendToAll(new UpdatePlayerListMessage(false));
         }
 
         public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
@@ -69,6 +70,12 @@ namespace MiniGolf.Network
 
         public override void OnRoomServerPlayersReady()
         {
+            if (!GameManager.singleton.IsMultiplayer)
+            {
+                StartGame();
+                return;
+            }
+
             if (Utils.IsHeadless()) base.OnRoomServerPlayersReady();
             else ReadyToStart = true;
         }

@@ -8,7 +8,7 @@ namespace MiniGolf.Managers.SceneTransition
 
     public class SceneTransitionManager : Singleton<SceneTransitionManager>
     {
-        public static readonly Dictionary<Scene, string> sceneToName = new() { { Scene.Title, "TitleScene" }, { Scene.Game, "GameScene" } };
+        public static readonly Dictionary<Scene, string> sceneToName = new() { { Scene.Title, "TitleScene" }, { Scene.Game, "MultiplayerGameScene" } };
         
         protected override void Awake() => base.Awake();
 

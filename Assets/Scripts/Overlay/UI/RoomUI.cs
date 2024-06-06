@@ -4,6 +4,7 @@ using MiniGolf.Overlay;
 using MiniGolf.Overlay.HUD;
 using Mirror;
 using UnityEngine.UI;
+using MiniGolf.Managers.Game;
 
 public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 {
@@ -17,15 +18,27 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 
         if (startButton == null) Debug.LogError($"{nameof(startButton)} not assigned");
 
-        NetworkClient.RegisterHandler<NewPlayerMessage>(msg => UpdatePlayerList());
-        NetworkClient.RegisterHandler<PlayerLeaveMessage>(msg => UpdatePlayerList());
+        NetworkClient.RegisterHandler<UpdatePlayerListMessage>(UpdatePlayerList);
+    }
+
+    private void OnDestroy()
+    {
+        NetworkClient.UnregisterHandler<UpdatePlayerListMessage>();
     }
 
     private void Update()
     {
+        if (!GameManager.singleton.IsMultiplayer)
+        {
+            if (localPlayer) SetReady(true);
+            return;
+        }
+
         UpdateDisplays();
         if (localPlayer) UpdateStartButton();
     }
+
+    private void UpdatePlayerList(UpdatePlayerListMessage _) => UpdatePlayerList();
 
     private void UpdatePlayerList() 
     {
