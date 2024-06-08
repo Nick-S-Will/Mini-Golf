@@ -50,13 +50,11 @@ namespace MiniGolf.Network
         {
             base.OnServerAddPlayer(conn);
 
-            Debug.LogWarning("Player Join");
             NetworkServer.SendToAll(new UpdatePlayerListMessage(true));
         }
 
         public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
         {
-            Debug.LogWarning("Player Leave");
             NetworkServer.SendToAll(new UpdatePlayerListMessage(false));
         }
 

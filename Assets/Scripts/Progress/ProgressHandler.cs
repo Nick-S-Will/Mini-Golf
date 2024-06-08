@@ -1,6 +1,5 @@
 using MiniGolf.Player;
 using MiniGolf.Managers.Game;
-using MiniGolf.Managers.SceneTransition;
 using MiniGolf.Terrain;
 using MiniGolf.Terrain.Data;
 using System.Collections;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using System;
 using MiniGolf.Network;
 using Mirror;
 
@@ -33,9 +31,7 @@ namespace MiniGolf.Progress
         private Course course;
         /// <summary>Array of positions for each hole</summary>
         private List<Vector3>[] holePositions;
-        private Func<Vector3> getHoleStartPosition = () => PlayerHandler.singleton.transform.position;
-        private Func<int, bool> canChangeHoles = holedBallCount => holedBallCount > 0;
-        private int holeIndex, holedBallCount;
+        private int holeIndex;
 
         public int[] Scores => holePositions.Select(positions => positions.Count()).ToArray();
         public int CurrentScore => holeIndex < holePositions.Length ? CurrentPositions.Count : 0;
@@ -59,12 +55,6 @@ namespace MiniGolf.Progress
             course = GameManager.singleton ? GameManager.singleton.SelectedCourse : new Course();
             holePositions = new List<Vector3>[course.Length];
             for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
-
-            if (GolfRoomManager.singleton)
-            {
-                getHoleStartPosition = GolfRoomManager.singleton.GetHoleStartPosition;
-                canChangeHoles = holedBallCount => holedBallCount == GolfRoomManager.singleton.roomSlots.Count;
-            }
         }
 
         private void ChangePlayer(SwingController oldPlayer, SwingController newPlayer)
@@ -89,11 +79,9 @@ namespace MiniGolf.Progress
             holeGenerator.Generate(course.HoleData[holeIndex]);
             if (holeIndex > 0)
             {
-                player.transform.SetPositionAndRotation(getHoleStartPosition(), Quaternion.identity);
+                player.transform.SetPositionAndRotation(GolfRoomManager.singleton.GetHoleStartPosition(), Quaternion.identity);
+                player.SetPhysicsEnabled(true);
                 PlayerHandler.SetControls(true);
-                player.SetPhysics(true);
-
-                holedBallCount = 0;
             }
 
             OnStartHole.Invoke();
@@ -105,7 +93,7 @@ namespace MiniGolf.Progress
             if (holeTile) holeTile.OnBallEnter.RemoveListener(HoleBall);
 
             holeTile = newHoleTile;
-            holeTile.OnBallEnter.AddListener(HoleBall);
+            if (holeTile) holeTile.OnBallEnter.AddListener(HoleBall);
         }
 
         private void AddStroke()
@@ -116,13 +104,16 @@ namespace MiniGolf.Progress
 
         private void HoleBall(SwingController ball)
         {
-            if (player == ball) PlayerHandler.SetControls(false, true);
-            ball.SetPhysics(false);
+            if (player == ball)
+            {
+                PlayerHandler.SetControls(false, true);
+                ball.SetPhysicsEnabled(false);
+            }
 
-            holedBallCount++;
-
-            if (canChangeHoles(holedBallCount)) CompleteHole();
+            if (CanChangeHoles()) CompleteHole();
         }
+
+        private bool CanChangeHoles() => holeTile.BallCount == GolfRoomManager.singleton.roomSlots.Count;
 
         private void CompleteHole() => _ = StartCoroutine(CompleteHoleRoutine());
         private IEnumerator CompleteHoleRoutine()

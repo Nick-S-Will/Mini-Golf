@@ -1144,7 +1144,6 @@ GameObject:
   - component: {fileID: 263799698}
   - component: {fileID: 263799699}
   - component: {fileID: 263799702}
-  - component: {fileID: 263799700}
   - component: {fileID: 263799701}
   m_Layer: 0
   m_Name: Game Managers
@@ -1228,20 +1227,6 @@ MonoBehaviour:
   OnSelectedCourseChange:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &263799700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 263799697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 337bf2416fd3421479db741f6606d82a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isPersistent: 1
-  logIfMultiple: 0
 --- !u!82 &263799701
 AudioSource:
   m_ObjectHideFlags: 0

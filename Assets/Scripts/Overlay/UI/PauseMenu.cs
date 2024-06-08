@@ -1,4 +1,3 @@
-using MiniGolf.Managers.SceneTransition;
 using MiniGolf.Network;
 using MiniGolf.Player;
 using Mirror;
@@ -14,7 +13,7 @@ namespace MiniGolf.Overlay.UI
         [SerializeField] private string playActionMap = "Golf";
         [SerializeField] private string pauseActionMap = "UI";
 
-        public bool Paused => Time.timeScale == 0f;
+        public bool Paused => graphicsParent.activeSelf;
 
         private void Awake()
         {
@@ -34,13 +33,7 @@ namespace MiniGolf.Overlay.UI
             PlayerHandler.SetActionMap(active ? pauseActionMap : playActionMap);
             PlayerHandler.SetControls(true, !active);
 
-            SetPaused(active);
             SetCursor(active);
-        }
-
-        private void SetPaused(bool paused)
-        {
-            Time.timeScale = paused ? 0f : 1f;
         }
 
         public void SetCursor(bool visible)
@@ -61,7 +54,6 @@ namespace MiniGolf.Overlay.UI
 
         private void OnDestroy()
         {
-            SetPaused(false);
             SetCursor(true);
         }
     }

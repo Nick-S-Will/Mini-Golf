@@ -9,10 +9,22 @@ namespace MiniGolf.Terrain
         [Space]
         public UnityEvent<SwingController> OnBallEnter;
 
+        public int BallCount { get; private set; }
+
         private void OnTriggerEnter(Collider other)
         {
             var ballController = other.GetComponent<SwingController>();
-            if (ballController) OnBallEnter.Invoke(ballController);
+            if (ballController)
+            {
+                BallCount++;
+                OnBallEnter.Invoke(ballController);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            var ballController = other.GetComponent<SwingController>();
+            if (ballController) BallCount--;
         }
     }
 }

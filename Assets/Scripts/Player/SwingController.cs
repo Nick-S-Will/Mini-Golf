@@ -30,6 +30,7 @@ namespace MiniGolf.Player
         public UnityEvent OnStopMoving;
 
         private Vector3 lastVelocity;
+        private bool physicsEnabled;
 
         protected Transform CameraTransform { get; private set; }
         protected float SwingInputSensitivity => swingInputSensitivity;
@@ -88,7 +89,7 @@ namespace MiniGolf.Player
             return angle < ballSurfaceAngleTolerance;
         }
 
-        public void SetPhysics(bool enabled)
+        public void SetPhysicsEnabled(bool enabled)
         {
             if (!enabled && !Rigidbody.isKinematic) Rigidbody.velocity = Vector3.zero;
 
