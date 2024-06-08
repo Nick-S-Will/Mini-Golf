@@ -3,10 +3,23 @@ using UnityEngine;
 
 namespace MiniGolf.Network
 {
+    public enum PlayMode { None, Singleplayer, Multiplayer }
+
     public class GolfRoomManager : NetworkRoomManager
     {
         public static new GolfRoomManager singleton { get; private set; }
 
+        private PlayMode playMode;
+
+        public PlayMode PlayMode
+        {
+            get => playMode;
+            set
+            {
+                playMode = value;
+                NetworkServer.dontListen = playMode == PlayMode.Singleplayer;
+            }
+        }
         public bool ReadyToStart { get; private set; }
 
         public override void Awake()
@@ -50,11 +63,15 @@ namespace MiniGolf.Network
         {
             base.OnServerAddPlayer(conn);
 
+            if (!Utils.IsSceneActive(RoomScene)) return;
+
             NetworkServer.SendToAll(new UpdatePlayerListMessage(true));
         }
 
         public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
         {
+            if (!Utils.IsSceneActive(RoomScene)) return;
+
             NetworkServer.SendToAll(new UpdatePlayerListMessage(false));
         }
 
@@ -69,7 +86,7 @@ namespace MiniGolf.Network
 
         public override void OnRoomServerPlayersReady()
         {
-            if (NetworkServer.dontListen)
+            if (PlayMode == PlayMode.Singleplayer)
             {
                 StartGame();
                 return;
@@ -105,6 +122,24 @@ namespace MiniGolf.Network
             var position = startPositions[playerIndex].position;
 
             return position;
+        }
+
+        public void QuitGame()
+        {
+            switch (singleton.mode)
+            {
+                case NetworkManagerMode.ServerOnly: singleton.StopServer(); break;
+                case NetworkManagerMode.ClientOnly: singleton.StopClient(); break;
+                case NetworkManagerMode.Host: singleton.StopHost(); break;
+            }
+        }
+
+        public void EndGame() // TODO: Complete functionality for room scene to not crash after return
+        {
+            if (singleton.mode == NetworkManagerMode.ClientOnly) return;
+
+            if (PlayMode == PlayMode.Singleplayer) singleton.StopHost();
+            else ServerChangeScene(RoomScene);
         }
         #endregion
     }

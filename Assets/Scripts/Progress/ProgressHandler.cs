@@ -81,7 +81,7 @@ namespace MiniGolf.Progress
             {
                 player.transform.SetPositionAndRotation(GolfRoomManager.singleton.GetHoleStartPosition(), Quaternion.identity);
                 player.SetPhysicsEnabled(true);
-                PlayerHandler.SetControls(true);
+                PlayerHandler.SetPlayerControls(true);
             }
 
             OnStartHole.Invoke();
@@ -106,7 +106,7 @@ namespace MiniGolf.Progress
         {
             if (player == ball)
             {
-                PlayerHandler.SetControls(false, true);
+                PlayerHandler.SetPlayerControls(false);
                 ball.SetPhysicsEnabled(false);
             }
 
@@ -131,12 +131,7 @@ namespace MiniGolf.Progress
             OnCompleteCourse.Invoke();
             yield return new WaitForSeconds(Mathf.Max(courseEndTime - holeEndTime, 0f));
 
-            switch (GolfRoomManager.singleton.mode)
-            {
-                case NetworkManagerMode.Host: GolfRoomManager.singleton.StopHost(); break;
-                case NetworkManagerMode.ClientOnly: GolfRoomManager.singleton.StopClient(); break;
-                case NetworkManagerMode.ServerOnly: GolfRoomManager.singleton.StopServer(); break;
-            }
+            GolfRoomManager.singleton.EndGame();
         }
 
         private void FixedUpdate()

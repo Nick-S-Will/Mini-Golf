@@ -27,7 +27,7 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 
     private void Update()
     {
-        if (NetworkServer.dontListen)
+        if (GolfRoomManager.singleton.PlayMode == MiniGolf.Network.PlayMode.Singleplayer)
         {
             if (NetworkClient.ready && localPlayer) SetReady(true);
             return;

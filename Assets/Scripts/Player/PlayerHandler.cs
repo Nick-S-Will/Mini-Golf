@@ -47,8 +47,15 @@ namespace MiniGolf.Player
 
         public static void SetControls(bool playerEnabled, bool cameraEnabled)
         {
-            singleton.playerInput.enabled = playerEnabled;
-            foreach (var cameraInput in singleton.cameraInputs) cameraInput.enabled = cameraEnabled;
+            SetPlayerControls(playerEnabled);
+            SetCameraControls(cameraEnabled);
+        }
+
+        public static void SetPlayerControls(bool enabled) => singleton.playerInput.enabled = enabled;
+
+        public static void SetCameraControls(bool enabled)
+        {
+            foreach (var cameraInput in singleton.cameraInputs) cameraInput.enabled = enabled;
         }
 
         public static void SetActionMap(string mapName) => singleton.playerInput.SwitchCurrentActionMap(mapName);

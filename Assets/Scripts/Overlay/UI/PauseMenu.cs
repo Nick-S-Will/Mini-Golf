@@ -42,15 +42,7 @@ namespace MiniGolf.Overlay.UI
             Cursor.visible = visible;
         }
 
-        public void Quit()
-        {
-            switch (GolfRoomManager.singleton.mode)
-            {
-                case NetworkManagerMode.Host: GolfRoomManager.singleton.StopHost(); break;
-                case NetworkManagerMode.ClientOnly: GolfRoomManager.singleton.StopClient(); break;
-                case NetworkManagerMode.ServerOnly: GolfRoomManager.singleton.StopServer(); break;
-            }
-        }
+        public void Quit() => GolfRoomManager.singleton.QuitGame();
 
         private void OnDestroy()
         {
