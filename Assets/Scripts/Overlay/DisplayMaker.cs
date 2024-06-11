@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace MiniGolf.Overlay
 {
-    public abstract class DisplayMaker<DisplayType, ObjectType> : MonoBehaviour where DisplayType : Display<ObjectType> where ObjectType : class
+    public abstract class DisplayMaker<DisplayType, ObjectType> : MonoBehaviour where DisplayType : Display<ObjectType> where ObjectType : class, IComparable<ObjectType>
     {
+        private static Action<UnityEngine.Object> ContextDestroy => Application.isPlaying ? Destroy : DestroyImmediate;
+
         [SerializeField] protected Transform displayParent;
         [SerializeField] protected DisplayType displayPrefab;
 
@@ -18,6 +20,26 @@ namespace MiniGolf.Overlay
             if (displayPrefab == null) Debug.LogError($"{nameof(displayPrefab)} not assigned");
         }
 
+        public virtual void SetObjects(ObjectType[] displayObjects)
+        {
+            if (displayObjects == null) return;
+
+            var extraDisplayCount = displayInstances.Count - displayObjects.Length;
+            for (int i = 1; i <= extraDisplayCount; i++) displayInstances[^i].gameObject.SetActive(false);
+
+            for (int i = 0; i < displayObjects.Length; i++)
+            {
+                if (i < displayInstances.Count)
+                {
+                    displayInstances[i].SetObject(displayObjects[i]);
+                    displayInstances[i].gameObject.SetActive(true);
+                }
+                else _ = MakeDisplay(displayObjects[i]);
+            }
+
+            UpdateDisplays();
+        }
+
         public virtual DisplayType MakeDisplay(ObjectType displayObject)
         {
             var display = Instantiate(displayPrefab, displayParent ? displayParent : transform);
@@ -27,37 +49,35 @@ namespace MiniGolf.Overlay
             return display;
         }
 
-        public virtual void SetObjects(ObjectType[] displayObjects)
-        {
-            if (displayObjects == null) return;
-
-            int displayCount = displayObjects.Length;
-
-            var neededDisplayCount = displayCount - displayInstances.Count;
-            for (int i = displayInstances.Count; i < displayCount; i++) _ = MakeDisplay(null);
-
-            var extraDisplayCount = -neededDisplayCount;
-            for (int i = 1; i <= extraDisplayCount; i++) displayInstances[^i].gameObject.SetActive(false);
-
-            for (int i = 0; i < displayCount; i++)
-            {
-                displayInstances[i].SetObject(displayObjects[i]);
-                displayInstances[i].gameObject.SetActive(true);
-            }
-        }
-
         public virtual void UpdateDisplays()
         {
-            foreach (var display in displayInstances)
+            foreach (var display in Displays)
             {
-                display.UpdateText();
+                if (display.DisplayObject.Equals(null)) DestroyDisplay(display);
             }
+
+            displayInstances.Sort((display1, display2) => display1.DisplayObject.CompareTo(display2.DisplayObject));
+            int extraChildCount = displayParent.childCount - displayInstances.Count;
+            for (int i = 0; i < displayInstances.Count; i++) displayInstances[i].transform.SetSiblingIndex(extraChildCount + i);
+
+            foreach (var display in displayInstances) display.UpdateText();
+        }
+
+        public virtual void DestroyDisplay(DisplayType display)
+        {
+            if (!displayInstances.Contains(display))
+            {
+                Debug.LogError($"Given object ({display.name}) isn't in {nameof(displayInstances)}");
+                return;
+            }
+
+            displayInstances.Remove(display);
+            ContextDestroy(display.gameObject);
         }
 
         public virtual void DestroyDisplays()
         {
-            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
-            foreach (var display in Displays) contextDestroy(display.gameObject);
+            foreach (var display in Displays) ContextDestroy(display.gameObject);
             displayInstances.Clear();
         }
     }

@@ -1,10 +1,11 @@
 using MiniGolf.Progress;
 using Mirror;
+using System;
 using System.Linq;
 
 namespace MiniGolf.Network
 {
-    public class PlayerScore : NetworkBehaviour, IContainer<int>
+    public class PlayerScore : NetworkBehaviour, IArrayDisplayable<int>, IComparable<PlayerScore>
     {
         [SyncVar]
         public int index;
@@ -15,14 +16,14 @@ namespace MiniGolf.Network
         {
             get
             {
-                var localRoomPlayer = GolfRoomManager.singleton.roomSlots.First(roomPlayer => roomPlayer.index == index);
-                return localRoomPlayer.GetComponent<GolfRoomPlayer>().Name;
+                var correspondingRoomPlayer = GolfRoomManager.singleton.roomSlots.First(roomPlayer => roomPlayer.index == index);
+                return correspondingRoomPlayer.GetComponent<GolfRoomPlayer>().Name;
             }
         }
         public int[] Scores => scores.ToArray();
         public int Total => scores.Sum();
 
-        int[] IContainer<int>.Values => Scores;
+        int[] IArrayDisplayable<int>.Values => Scores;
 
         public override void OnStartAuthority()
         {
@@ -50,5 +51,7 @@ namespace MiniGolf.Network
             var progressScores = ProgressHandler.singleton.Scores;
             for (int i = 0; i < scores.Count; i++) scores[i] = progressScores[i];
         }
+
+        public int CompareTo(PlayerScore other) => Math.Sign(Total - other.Total);
     }
 }

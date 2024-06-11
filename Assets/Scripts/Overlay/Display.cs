@@ -11,7 +11,7 @@ namespace MiniGolf.Overlay
         public virtual void SetObject(T newObject)
         {
             displayObject = newObject;
-            if (displayObject != null) UpdateText();
+            UpdateText();
         }
 
         /// <summary>Updates the <see cref="Display"/>'s overlay to reflect any changes in <see cref="DisplayObject"/></summary>

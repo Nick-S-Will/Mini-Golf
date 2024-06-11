@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MiniGolf.Overlay
 {
-    public class ArrayDisplay<DisplayObject, ArrayType> : Display<DisplayObject> where DisplayObject : IContainer<ArrayType>
+    public class ArrayDisplay<DisplayObject, ArrayType> : Display<DisplayObject> where DisplayObject : IArrayDisplayable<ArrayType>
     {
         [SerializeField] private TMP_Text textPrefab;
 

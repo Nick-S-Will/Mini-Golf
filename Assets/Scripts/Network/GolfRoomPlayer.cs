@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.Events;
 using MiniGolf.Overlay.UI;
+using System;
 
 namespace MiniGolf.Network
 {
@@ -9,7 +10,7 @@ namespace MiniGolf.Network
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SphereCollider))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class GolfRoomPlayer : NetworkRoomPlayer
+    public class GolfRoomPlayer : NetworkRoomPlayer, IComparable<GolfRoomPlayer>
     {
         [SyncVar]
         [SerializeField] private string playerName = "Loading...";
@@ -64,6 +65,8 @@ namespace MiniGolf.Network
             sphereCollider.enabled = newValue;
             meshRenderer.enabled = newValue;
         }
+
+        public int CompareTo(GolfRoomPlayer other) => playerName.CompareTo(other.playerName);
 
         public override void OnGUI()
         {

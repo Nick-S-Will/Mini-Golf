@@ -56,8 +56,7 @@ namespace MiniGolf.Overlay.HUD
 
             if (!visible) return;
 
-            // TODO: Sort by score
-            foreach (var playerDisplay in displayInstances) playerDisplay.UpdateText();
+            UpdateDisplays();
         }
     }
 }
