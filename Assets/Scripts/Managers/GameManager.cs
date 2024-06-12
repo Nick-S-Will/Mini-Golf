@@ -1,6 +1,4 @@
 using MiniGolf.Terrain.Data;
-using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,36 +9,23 @@ namespace MiniGolf.Managers.Game
         [SerializeField] private Course[] courseOptions;
 
         [HideInInspector] public UnityEvent OnSelectedCourseChange;
-        private Course selectedCourse;
+        private int selectedCourseIndex;
 
         public Course[] Courses => courseOptions;
-        public Course SelectedCourse
+        public Course SelectedCourse => singleton.Courses[selectedCourseIndex];
+        public int SelectedCourseIndex
         {
-            get => selectedCourse;
+            get => selectedCourseIndex;
             set
             {
-                if (!courseOptions.Contains(value))
+                if (value < 0 || value >= courseOptions.Length)
                 {
-                    Debug.LogError($"Course '{value.Name}' not in {nameof(courseOptions)} array");
+                    Debug.LogError($"Given index ({value}) is out of range of {nameof(courseOptions)} [0, {courseOptions.Length - 1}]");
                     return;
                 }
 
-                selectedCourse = value;
+                selectedCourseIndex = value;
                 OnSelectedCourseChange.Invoke();
-            }
-        }
-        public int SelectedIndex
-        {
-            get => Array.IndexOf(courseOptions, selectedCourse);
-            set
-            {
-                if (value < 0 || value > courseOptions.Length)
-                {
-                    Debug.LogError($"Index '{value}' not in range of {nameof(courseOptions)} array of length '{courseOptions.Length}'.");
-                    return;
-                }
-
-                SelectedCourse = courseOptions[value];
             }
         }
 
@@ -53,7 +38,6 @@ namespace MiniGolf.Managers.Game
                 Debug.LogError($"{nameof(courseOptions)} is empty");
                 return;
             }
-            selectedCourse = courseOptions[0];
 
             DontDestroyOnLoad(singleton.gameObject);
         }

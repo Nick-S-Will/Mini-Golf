@@ -1,28 +1,24 @@
+using MiniGolf.Managers.Game;
 using Mirror;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace MiniGolf.Network
 {
-    [RequireComponent(typeof(NetworkIdentity))]
     public class RoomDataSync : NetworkBehaviour
     {
         public static RoomDataSync singleton;
 
-        public static UnityEvent OnPlayerJoined = new();
+        [SyncVar(hook = nameof(SelectedCourseIndexChanged))]
+        private int selectedCourseIndex;
 
         private void Awake()
         {
-            if (singleton)
+            if (singleton == null) singleton = this;
+            else
             {
                 Debug.LogError($"Multiple {nameof(RoomDataSync)}s loaded");
                 Destroy(gameObject);
-                return;
             }
-
-            singleton = this;
-
-            DontDestroyOnLoad(gameObject);
         }
 
         private void OnDestroy()
@@ -30,7 +26,15 @@ namespace MiniGolf.Network
             if (singleton == this) singleton = null;
         }
 
-        [ClientRpc]
-        public void NotifyPlayerJoined() => OnPlayerJoined.Invoke();
+        [Command]
+        public void SetSelectedCourse(int courseIndex)
+        {
+            selectedCourseIndex = courseIndex;
+        }
+        
+        private void SelectedCourseIndexChanged(int _, int newIndex)
+        {
+            GameManager.singleton.SelectedCourseIndex = newIndex;
+        }
     }
 }

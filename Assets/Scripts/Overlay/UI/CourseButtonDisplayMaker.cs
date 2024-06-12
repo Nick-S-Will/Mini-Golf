@@ -1,6 +1,8 @@
 using MiniGolf.Managers.Game;
+using MiniGolf.Network;
 using MiniGolf.Overlay.HUD;
 using MiniGolf.Terrain.Data;
+using System;
 using UnityEngine;
 
 namespace MiniGolf.Overlay.UI
@@ -14,22 +16,32 @@ namespace MiniGolf.Overlay.UI
         {
             if (GameManager.singleton == null)
             {
-                Debug.LogError($"No {nameof(GameManager)} loaded");
+                Debug.LogWarning($"No {nameof(GameManager)} loaded");
                 return;
             }
 
-            foreach (var course in GameManager.singleton.Courses)
+            GameManager.singleton.OnSelectedCourseChange.AddListener(UpdateSelectedCourseDisplay);
+
+            var courses = GameManager.singleton.Courses;
+            foreach (var course in courses)
             {
                 var display = MakeDisplay(course);
-                display.Button.onClick.AddListener(() => UpdateSelected(course));
+                var courseIndex = Array.IndexOf(GameManager.singleton.Courses, course);
+                display.Button.onClick.AddListener(() => SetSelectedCourse(courseIndex));
             }
-            UpdateSelected(displayInstances[0].DisplayObject);
+
+            UpdateSelectedCourseDisplay();
         }
 
-        private void UpdateSelected(Course course)
+        private void SetSelectedCourse(int courseIndex)
         {
-            selectedCourseDisplay.SetObject(course);
-            if (GameManager.singleton.SelectedCourse != course) GameManager.singleton.SelectedCourse = course;
+            if (RoomDataSync.singleton) RoomDataSync.singleton.SetSelectedCourse(courseIndex);
+            else GameManager.singleton.SelectedCourseIndex = courseIndex;
+        }
+
+        private void UpdateSelectedCourseDisplay()
+        {
+            selectedCourseDisplay.SetObject(GameManager.singleton.SelectedCourse);
         }
     }
 }

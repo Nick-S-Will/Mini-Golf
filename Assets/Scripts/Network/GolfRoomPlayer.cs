@@ -25,6 +25,7 @@ namespace MiniGolf.Network
         private MeshRenderer meshRenderer;
 
         public string Name => playerName;
+        public bool IsLeader => index == 0;
 
         private void Awake()
         {

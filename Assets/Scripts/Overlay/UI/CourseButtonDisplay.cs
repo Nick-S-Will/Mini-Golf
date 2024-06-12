@@ -8,8 +8,6 @@ namespace MiniGolf.Overlay.UI
     {
         [SerializeField] private TMP_Text courseName, par, holeCount;
 
-        protected override void Awake() => base.Awake();
-        
         public override void UpdateText()
         {
             bool isCourse = displayObject != null;

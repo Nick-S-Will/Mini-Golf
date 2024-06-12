@@ -7,7 +7,9 @@ using UnityEngine.UI;
 
 public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 {
+    [Space]
     [SerializeField] private Button startButton;
+    [SerializeField] private GameObject[] leaderUIObjects;
 
     private GolfRoomPlayer localPlayer;
 
@@ -27,14 +29,14 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 
     private void Update()
     {
-        if (GolfRoomManager.singleton.PlayMode == MiniGolf.Network.PlayMode.Singleplayer)
+        if (NetworkClient.ready && GolfRoomManager.singleton.PlayMode == MiniGolf.Network.PlayMode.Singleplayer)
         {
-            if (NetworkClient.ready && localPlayer) SetReady(true);
+            if (localPlayer) SetReady(true);
             return;
         }
 
         UpdateDisplays();
-        if (localPlayer) UpdateStartButton();
+        UpdateLeaderUI();
     }
 
     private void UpdatePlayerList(UpdatePlayerListMessage _) => UpdatePlayerList();
@@ -46,10 +48,14 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
         localPlayer = NetworkClient.localPlayer.GetComponent<GolfRoomPlayer>();
     }
 
-    private void UpdateStartButton()
+    private void UpdateLeaderUI()
     {
-        startButton.gameObject.SetActive(localPlayer.index == 0);
-        startButton.interactable = GolfRoomManager.singleton.ReadyToStart;
+        var active = localPlayer && localPlayer.IsLeader;
+
+        startButton.gameObject.SetActive(active);
+        if (active) startButton.interactable = GolfRoomManager.singleton.ReadyToStart;
+
+        foreach (var obj in leaderUIObjects) obj.SetActive(active);
     }
 
     public void SetReady(bool ready) => localPlayer.CmdChangeReadyState(ready);

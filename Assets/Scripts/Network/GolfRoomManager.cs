@@ -9,6 +9,8 @@ namespace MiniGolf.Network
     {
         public static new GolfRoomManager singleton { get; private set; }
 
+        [SerializeField] private RoomDataSync roomDataSyncPrefab;
+
         private PlayMode playMode;
 
         public PlayMode PlayMode
@@ -39,6 +41,13 @@ namespace MiniGolf.Network
             SetGolfRoomPlayerVisible(roomPlayer, true);
         }
 
+        private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
+        {
+            var golfRoomPlayer = roomPlayer.GetComponent<GolfRoomPlayer>();
+            if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
+            else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
+        }
+
         public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
         {
             SetGolfRoomPlayerVisible(roomPlayer, false);
@@ -48,13 +57,6 @@ namespace MiniGolf.Network
             else Debug.LogError($"{nameof(gamePlayer)} object must have {nameof(PlayerScore)} component");
 
             return true;
-        }
-
-        private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
-        {
-            var golfRoomPlayer = roomPlayer.GetComponent<GolfRoomPlayer>();
-            if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
-            else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
         }
         #endregion
 
@@ -66,6 +68,23 @@ namespace MiniGolf.Network
             if (!Utils.IsSceneActive(RoomScene)) return;
 
             NetworkServer.SendToAll(new UpdatePlayerListMessage(true));
+
+            if (RoomDataSync.singleton == null)
+            {
+                var roomDataSync = Instantiate(roomDataSyncPrefab, transform);
+                NetworkServer.Spawn(roomDataSync.gameObject);
+            }
+            if (!RoomDataSync.singleton.netIdentity.isOwned) RoomDataSync.singleton.netIdentity.AssignClientAuthority(conn);
+        }
+
+        public override void OnServerDisconnect(NetworkConnectionToClient conn)
+        {
+            base.OnServerDisconnect(conn);
+
+            if (RoomDataSync.singleton == null || roomSlots.Count == 0) return;
+
+            RoomDataSync.singleton.netIdentity.RemoveClientAuthority();
+            RoomDataSync.singleton.netIdentity.AssignClientAuthority(roomSlots[0].connectionToClient);
         }
 
         public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
@@ -97,7 +116,7 @@ namespace MiniGolf.Network
         }
 
         public override void OnRoomServerPlayersNotReady() => ReadyToStart = false;
-        
+
         public void StartGame()
         {
             ReadyToStart = false;

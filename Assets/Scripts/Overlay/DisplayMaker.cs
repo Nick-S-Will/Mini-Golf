@@ -40,7 +40,7 @@ namespace MiniGolf.Overlay
             UpdateDisplays();
         }
 
-        public virtual DisplayType MakeDisplay(ObjectType displayObject)
+        public virtual DisplayType MakeDisplay(ObjectType displayObject) // TODO: Revise this to reuse inactive or destroy in set objects
         {
             var display = Instantiate(displayPrefab, displayParent ? displayParent : transform);
             display.SetObject(displayObject);

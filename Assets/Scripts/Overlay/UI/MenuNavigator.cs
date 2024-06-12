@@ -7,8 +7,6 @@ namespace MiniGolf.Overlay.UI
     {
         [SerializeField] private GameObject[] subMenus;
 
-        private GameObject selectedMenu;
-
         public void ToggleSubMenu(GameObject menu)
         {
             if (!subMenus.Contains(menu))
@@ -17,13 +15,10 @@ namespace MiniGolf.Overlay.UI
                 return;
             }
 
-            foreach (var menuObject in subMenus) menuObject.SetActive(false);
-
-            if (menu == selectedMenu) selectedMenu = null;
-            else
+            foreach (var menuObject in subMenus)
             {
-                menu.SetActive(true);
-                selectedMenu = menu;
+                if (menu == menuObject) menu.SetActive(!menu.activeSelf);
+                else menuObject.SetActive(false);
             }
         }
     }

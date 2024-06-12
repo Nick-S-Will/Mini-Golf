@@ -1,4 +1,3 @@
-using MiniGolf.Overlay.HUD;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +8,13 @@ namespace MiniGolf.Overlay.UI
     {
         protected Button button;
 
-        public Button Button => button;
-
-        protected virtual void Awake()
+        public Button Button
         {
-            button = GetComponent<Button>();
+            get
+            {
+                if (button == null) button = GetComponent<Button>();
+                return button;
+            }
         }
     }
 }
