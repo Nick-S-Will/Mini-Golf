@@ -5,6 +5,7 @@ using MiniGolf.Managers.Game;
 using MiniGolf.Network;
 using MiniGolf.Terrain.Data;
 using MiniGolf.Player;
+using MiniGolf.Progress;
 
 namespace MiniGolf.Overlay.HUD
 {
@@ -13,6 +14,8 @@ namespace MiniGolf.Overlay.HUD
         [Space]
         [SerializeField] private CourseParDisplay courseDisplay;
         [SerializeField] private GameObject graphicParent;
+
+        private bool visibilityLocked;
 
         protected override void Awake()
         {
@@ -31,6 +34,8 @@ namespace MiniGolf.Overlay.HUD
 
             var course = managerExists ? GameManager.singleton.SelectedCourse : new Course();
             courseDisplay.SetObject(course);
+
+            ProgressHandler.singleton.OnCompleteCourse.AddListener(LockVisible);
         }
 
         private void OnDestroy()
@@ -44,6 +49,12 @@ namespace MiniGolf.Overlay.HUD
             MakeDisplay(playerScore);
         }
 
+        public void LockVisible()
+        {
+            SetVisible(true);
+            visibilityLocked = true;
+        }
+
         public void Toggle(InputAction.CallbackContext context)
         {
             if (context.started) SetVisible(true);
@@ -52,6 +63,8 @@ namespace MiniGolf.Overlay.HUD
 
         public void SetVisible(bool visible)
         {
+            if (visibilityLocked) return;
+
             graphicParent.SetActive(visible);
 
             if (!visible) return;

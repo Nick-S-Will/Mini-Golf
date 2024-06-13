@@ -1992,7 +1992,7 @@ MonoBehaviour:
   holeGenerator: {fileID: 189819109}
   ballMinY: -5
   holeEndTime: 2
-  courseEndTime: 3
+  courseEndTime: 8
   OnStartCourse:
     m_PersistentCalls:
       m_Calls: []
