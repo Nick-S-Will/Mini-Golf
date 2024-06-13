@@ -1,6 +1,5 @@
 using MiniGolf.Network;
 using MiniGolf.Player;
-using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

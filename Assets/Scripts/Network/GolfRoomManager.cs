@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace MiniGolf.Network
 {
@@ -41,13 +42,6 @@ namespace MiniGolf.Network
             SetGolfRoomPlayerVisible(roomPlayer, true);
         }
 
-        private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
-        {
-            var golfRoomPlayer = roomPlayer.GetComponent<GolfRoomPlayer>();
-            if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
-            else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
-        }
-
         public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
         {
             SetGolfRoomPlayerVisible(roomPlayer, false);
@@ -57,6 +51,20 @@ namespace MiniGolf.Network
             else Debug.LogError($"{nameof(gamePlayer)} object must have {nameof(PlayerScore)} component");
 
             return true;
+        }
+
+        private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
+        {
+            var golfRoomPlayer = roomPlayer.GetComponent<GolfRoomPlayer>();
+            if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
+            else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
+        }
+
+        public override void OnRoomServerSceneChanged(string sceneName)
+        {
+            if (sceneName != RoomScene) return;
+
+            NetworkServer.SendToAll(new UpdatePlayerListMessage(true));
         }
         #endregion
 
@@ -149,7 +157,7 @@ namespace MiniGolf.Network
             {
                 case NetworkManagerMode.ServerOnly: singleton.StopServer(); break;
                 case NetworkManagerMode.ClientOnly: singleton.StopClient(); break;
-                case NetworkManagerMode.Host: singleton.StopHost(); break;
+                case NetworkManagerMode.Host: EndGame(); break;
             }
         }
 

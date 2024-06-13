@@ -43,9 +43,9 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 
     private void UpdatePlayerList() 
     {
-        SetObjects(FindObjectsOfType<GolfRoomPlayer>());
+        if (NetworkClient.localPlayer) localPlayer = NetworkClient.localPlayer.GetComponent<GolfRoomPlayer>();
 
-        localPlayer = NetworkClient.localPlayer.GetComponent<GolfRoomPlayer>();
+        SetObjects(FindObjectsOfType<GolfRoomPlayer>());
     }
 
     private void UpdateLeaderUI()
