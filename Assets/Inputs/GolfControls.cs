@@ -53,24 +53,6 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Toggle Scoreboard"",
-                    ""type"": ""Button"",
-                    ""id"": ""b8808c18-fa74-4693-b3ab-153b1fcb7db5"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)"",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Pause"",
-                    ""type"": ""Button"",
-                    ""id"": ""49c6a49f-8bb2-4678-9647-6385ba260dc8"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -117,56 +99,6 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""action"": ""Toggle Backswing"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f2d82bff-e7d7-46af-b012-38e9b60717ba"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c2bc59a0-ffbc-4765-925d-cfc9c38600d2"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Toggle Scoreboard"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""UI"",
-            ""id"": ""c129ee99-1a39-432f-ada0-953162800e8c"",
-            ""actions"": [
-                {
-                    ""name"": ""Resume"",
-                    ""type"": ""Button"",
-                    ""id"": ""a79d7771-8d1c-4ffa-b249-d548423899a9"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""e075ac80-50f5-4616-a5a8-5f7498328da0"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Resume"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -178,11 +110,6 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
         m_Golf_ToggleBackswing = m_Golf.FindAction("Toggle Backswing", throwIfNotFound: true);
         m_Golf_Backswinging = m_Golf.FindAction("Backswinging", throwIfNotFound: true);
         m_Golf_Look = m_Golf.FindAction("Look", throwIfNotFound: true);
-        m_Golf_ToggleScoreboard = m_Golf.FindAction("Toggle Scoreboard", throwIfNotFound: true);
-        m_Golf_Pause = m_Golf.FindAction("Pause", throwIfNotFound: true);
-        // UI
-        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Resume = m_UI.FindAction("Resume", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -247,8 +174,6 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Golf_ToggleBackswing;
     private readonly InputAction m_Golf_Backswinging;
     private readonly InputAction m_Golf_Look;
-    private readonly InputAction m_Golf_ToggleScoreboard;
-    private readonly InputAction m_Golf_Pause;
     public struct GolfActions
     {
         private @GolfControls m_Wrapper;
@@ -256,8 +181,6 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
         public InputAction @ToggleBackswing => m_Wrapper.m_Golf_ToggleBackswing;
         public InputAction @Backswinging => m_Wrapper.m_Golf_Backswinging;
         public InputAction @Look => m_Wrapper.m_Golf_Look;
-        public InputAction @ToggleScoreboard => m_Wrapper.m_Golf_ToggleScoreboard;
-        public InputAction @Pause => m_Wrapper.m_Golf_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Golf; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -276,12 +199,6 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
-            @ToggleScoreboard.started += instance.OnToggleScoreboard;
-            @ToggleScoreboard.performed += instance.OnToggleScoreboard;
-            @ToggleScoreboard.canceled += instance.OnToggleScoreboard;
-            @Pause.started += instance.OnPause;
-            @Pause.performed += instance.OnPause;
-            @Pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(IGolfActions instance)
@@ -295,12 +212,6 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
-            @ToggleScoreboard.started -= instance.OnToggleScoreboard;
-            @ToggleScoreboard.performed -= instance.OnToggleScoreboard;
-            @ToggleScoreboard.canceled -= instance.OnToggleScoreboard;
-            @Pause.started -= instance.OnPause;
-            @Pause.performed -= instance.OnPause;
-            @Pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(IGolfActions instance)
@@ -318,62 +229,10 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
         }
     }
     public GolfActions @Golf => new GolfActions(this);
-
-    // UI
-    private readonly InputActionMap m_UI;
-    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_Resume;
-    public struct UIActions
-    {
-        private @GolfControls m_Wrapper;
-        public UIActions(@GolfControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Resume => m_Wrapper.m_UI_Resume;
-        public InputActionMap Get() { return m_Wrapper.m_UI; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
-        public void AddCallbacks(IUIActions instance)
-        {
-            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-            @Resume.started += instance.OnResume;
-            @Resume.performed += instance.OnResume;
-            @Resume.canceled += instance.OnResume;
-        }
-
-        private void UnregisterCallbacks(IUIActions instance)
-        {
-            @Resume.started -= instance.OnResume;
-            @Resume.performed -= instance.OnResume;
-            @Resume.canceled -= instance.OnResume;
-        }
-
-        public void RemoveCallbacks(IUIActions instance)
-        {
-            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IUIActions instance)
-        {
-            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public UIActions @UI => new UIActions(this);
     public interface IGolfActions
     {
         void OnToggleBackswing(InputAction.CallbackContext context);
         void OnBackswinging(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnToggleScoreboard(InputAction.CallbackContext context);
-        void OnPause(InputAction.CallbackContext context);
-    }
-    public interface IUIActions
-    {
-        void OnResume(InputAction.CallbackContext context);
     }
 }

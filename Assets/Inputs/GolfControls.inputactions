@@ -31,24 +31,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "Toggle Scoreboard",
-                    "type": "Button",
-                    "id": "b8808c18-fa74-4693-b3ab-153b1fcb7db5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Pause",
-                    "type": "Button",
-                    "id": "49c6a49f-8bb2-4678-9647-6385ba260dc8",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -93,56 +75,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Toggle Backswing",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f2d82bff-e7d7-46af-b012-38e9b60717ba",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c2bc59a0-ffbc-4765-925d-cfc9c38600d2",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Toggle Scoreboard",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "UI",
-            "id": "c129ee99-1a39-432f-ada0-953162800e8c",
-            "actions": [
-                {
-                    "name": "Resume",
-                    "type": "Button",
-                    "id": "a79d7771-8d1c-4ffa-b249-d548423899a9",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "e075ac80-50f5-4616-a5a8-5f7498328da0",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Resume",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

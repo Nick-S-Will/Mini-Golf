@@ -8,9 +8,6 @@ namespace MiniGolf.Overlay.UI
     public class PauseMenu : MonoBehaviour
     {
         [SerializeField] private GameObject hudParent, graphicsParent;
-        [Space]
-        [SerializeField] private string playActionMap = "Golf";
-        [SerializeField] private string pauseActionMap = "UI";
 
         public bool Paused => graphicsParent.activeSelf;
 
@@ -29,8 +26,7 @@ namespace MiniGolf.Overlay.UI
             hudParent.SetActive(!active);
             graphicsParent.SetActive(active);
 
-            PlayerHandler.SetActionMap(active ? pauseActionMap : playActionMap);
-            PlayerHandler.SetControls(true, !active);
+            PlayerHandler.SetControls(!active, !active, true);
 
             SetCursor(active);
         }

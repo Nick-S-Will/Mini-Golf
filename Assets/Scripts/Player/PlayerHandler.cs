@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 namespace MiniGolf.Player
 {
-    [RequireComponent(typeof(PlayerInput))]
     public class PlayerHandler : Singleton<PlayerHandler>
     {
         /// <summary>
@@ -19,7 +18,8 @@ namespace MiniGolf.Player
         public static UnityEvent OnPlayerReady = new();
         public static SwingController Player => singleton ? singleton.player : null;
 
-        private PlayerInput playerInput;
+        [SerializeField] private PlayerInput playerInput, uiInput;
+
         private CinemachineInputProvider[] cameraInputs;
         private SwingController player;
 
@@ -27,7 +27,6 @@ namespace MiniGolf.Player
         {
             base.Awake();
 
-            playerInput = GetComponent<PlayerInput>();
             cameraInputs = FindObjectsOfType<CinemachineInputProvider>();
 
             if (GolfRoomManager.singleton) SwingController.OnSetLocalPlayer.AddListener(SetPlayer);
@@ -43,15 +42,18 @@ namespace MiniGolf.Player
             if (player) OnPlayerReady.Invoke();
         }
 
-        public static void SetControls(bool enabled) => SetControls(enabled, enabled);
+        public static void SetControls(bool allEnabled) => SetControls(allEnabled, allEnabled, allEnabled);
 
-        public static void SetControls(bool playerEnabled, bool cameraEnabled)
+        public static void SetControls(bool playerEnabled, bool cameraEnabled, bool uiEnabled)
         {
             SetPlayerControls(playerEnabled);
+            SetUIControls(uiEnabled);
             SetCameraControls(cameraEnabled);
         }
 
         public static void SetPlayerControls(bool enabled) => singleton.playerInput.enabled = enabled;
+
+        public static void SetUIControls(bool enabled) => singleton.uiInput.enabled = enabled;
 
         public static void SetCameraControls(bool enabled)
         {

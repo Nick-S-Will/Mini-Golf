@@ -1,0 +1,54 @@
+{
+    "name": "UIControls",
+    "maps": [
+        {
+            "name": "UI",
+            "id": "c129ee99-1a39-432f-ada0-953162800e8c",
+            "actions": [
+                {
+                    "name": "Toggle Scoreboard",
+                    "type": "Button",
+                    "id": "154c99c4-d957-4897-a53b-f3a219668ab5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Toggle Pause",
+                    "type": "Button",
+                    "id": "a79d7771-8d1c-4ffa-b249-d548423899a9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e075ac80-50f5-4616-a5a8-5f7498328da0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6376cb02-dd06-484d-bfd9-fff1f7990dd9",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Scoreboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
