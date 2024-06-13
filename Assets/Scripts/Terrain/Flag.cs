@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MiniGolf.Terrain
@@ -12,7 +14,7 @@ namespace MiniGolf.Terrain
         [SerializeField] private string playerTag = "Player";
 
         private Coroutine moveRoutine;
-        private Transform target;
+        private List<Transform> targets = new();
         private SphereCollider sphereCollider;
         private float MaxDistance => sphereCollider.radius;
 
@@ -21,37 +23,40 @@ namespace MiniGolf.Terrain
             sphereCollider = GetComponent<SphereCollider>();
         }
 
-        private IEnumerator MoveRoutine()
-        {
-            var startPosition = meshParent.position;
-            var endPosition = startPosition + meshParent.rotation * moveDelta;
-
-            while (target != null)
-            {
-                var distance = Vector3.Distance(transform.position, target.position);
-                var interpolate = (distance - minDistance) / (MaxDistance - minDistance);
-                var position = Vector3.Lerp(endPosition, startPosition, interpolate);
-                meshParent.position = position;
-
-                yield return null;
-            }
-
-            meshParent.position = startPosition;
-            moveRoutine = null;
-        }
-
         private void OnTriggerEnter(Collider collider)
         {
-            if (collider.CompareTag(playerTag) && moveRoutine == null)
+            if (collider.CompareTag(playerTag))
             {
-                target = collider.transform;
-                moveRoutine = StartCoroutine(MoveRoutine());
+                targets.Add(collider.transform);
+                StartMoving();
             }
         }
 
         private void OnTriggerExit(Collider collider)
         {
-            if (collider.transform == target) target = null;
+            _ = targets.Remove(collider.transform);
+        }
+
+        private void StartMoving() => moveRoutine ??= StartCoroutine(MoveRoutine());
+        private IEnumerator MoveRoutine()
+        {
+            var startPosition = meshParent.position;
+            var endPosition = startPosition + meshParent.rotation * moveDelta;
+
+            while (this && targets.Count > 0)
+            {
+                var distance = targets.Min(target => Vector3.Distance(transform.position, target.position));
+                var interpolate = (distance - minDistance) / (MaxDistance - minDistance);
+                var position = Vector3.Lerp(endPosition, startPosition, interpolate);
+                meshParent.position = position;
+
+                yield return null;
+
+                targets.RemoveAll(target => target == null);
+            }
+
+            meshParent.position = startPosition;
+            moveRoutine = null;
         }
 
         private void OnDrawGizmosSelected()
