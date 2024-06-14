@@ -8,11 +8,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using MiniGolf.Network;
-using Mirror;
 
 namespace MiniGolf.Progress
 {
-    public class ProgressHandler : Singleton<ProgressHandler>
+    public class ProgressHandler : Singleton<ProgressHandler> // TODO: Check if singleton is necessary
     {
         [Space]
         [SerializeField] private HoleGenerator holeGenerator;

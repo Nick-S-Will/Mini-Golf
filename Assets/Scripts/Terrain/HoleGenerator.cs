@@ -23,8 +23,9 @@ namespace MiniGolf.Terrain
         [SerializeField] private Hole settings;
         [SerializeField][Min(0f)] private float spawnInterval;
         [Space]
-        [SerializeField] private Gradient gizmoColorGradient;
-        [SerializeField] private bool showUsedCells;
+        [SerializeField] private Gradient cellGizmoColorGradient;
+        [SerializeField] private Color boundsGizmoColor = Color.white;
+        [SerializeField] private bool showUsedCells, showBounds;
         [Space]
         public UnityEvent<HoleTile> OnGenerate;
 
@@ -39,20 +40,7 @@ namespace MiniGolf.Terrain
         private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
 
-        private void Awake()
-        {
-            meshCollider = GetComponent<MeshCollider>();
-        }
-
-        public void Clear()
-        {
-            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
-            var tiles = transform.Cast<Transform>().ToArray();
-            foreach (var tile in tiles) contextDestroy(tile.gameObject);
-            tileInstances.Clear();
-            usedCells.Clear();
-            MeshCollider.sharedMesh = null;
-        }
+        public Bounds Bounds => MeshCollider.bounds;
 
         public void Generate() => Generate(settings);
         public void Generate(Hole settings)
@@ -85,6 +73,20 @@ namespace MiniGolf.Terrain
 
             generationRoutine = null;
             OnGenerate.Invoke((HoleTile)LastTile);
+        }
+
+        public void Clear()
+        {
+            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
+            var children = transform.Cast<Transform>().ToArray();
+            foreach (var child in children)
+            {
+                var tile = child.GetComponent<Tile>();
+                if (tile) contextDestroy(tile.gameObject);
+            }
+            tileInstances.Clear();
+            usedCells.Clear();
+            MeshCollider.sharedMesh = null;
         }
 
         private Tile[] GetTileOptionsFor(Hole settings, int index)
@@ -181,17 +183,26 @@ namespace MiniGolf.Terrain
 
         private void OnDrawGizmosSelected()
         {
-            if (gizmoColorGradient == null)
+            if (cellGizmoColorGradient == null)
             {
-                Debug.LogWarning($"{nameof(gizmoColorGradient)} not set");
+                Debug.LogWarning($"{nameof(cellGizmoColorGradient)} not set");
                 return;
             }
-            if (!showUsedCells || generationRoutine != null) return;
 
-            for (int i = 0; i < usedCells.Count; i++)
+            if (showUsedCells && usedCells.Count > 1)
             {
-                Gizmos.color = gizmoColorGradient.Evaluate(i / (usedCells.Count - 1f));
-                Gizmos.DrawWireCube(CellToPosition(usedCells[i]), Tile.SCALE);
+                for (int i = 0; i < usedCells.Count; i++)
+                {
+                    Gizmos.color = cellGizmoColorGradient.Evaluate(i / (usedCells.Count - 1f));
+                    Gizmos.DrawWireCube(CellToPosition(usedCells[i]), Tile.SCALE);
+                }
+            }
+
+            if (showBounds && MeshCollider.sharedMesh)
+            {
+                var bounds = MeshCollider.sharedMesh.bounds;
+                Gizmos.color = boundsGizmoColor;
+                Gizmos.DrawWireCube(bounds.center, bounds.size);
             }
         }
     }
