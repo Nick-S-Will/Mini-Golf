@@ -1,23 +1,23 @@
 {
-    "name": "UIControls",
+    "name": "SpectateControls",
     "maps": [
         {
-            "name": "UI",
-            "id": "c129ee99-1a39-432f-ada0-953162800e8c",
+            "name": "Spectate",
+            "id": "93ed96d8-9ef3-4a0b-a7e2-7e55db5f759b",
             "actions": [
                 {
-                    "name": "Toggle Scoreboard",
+                    "name": "Previous Player",
                     "type": "Button",
-                    "id": "154c99c4-d957-4897-a53b-f3a219668ab5",
+                    "id": "c17d621f-d3e1-482d-9b8b-3297bf9c9b63",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": true
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
-                    "name": "Toggle Pause",
+                    "name": "Next Player",
                     "type": "Button",
-                    "id": "a79d7771-8d1c-4ffa-b249-d548423899a9",
+                    "id": "22292c29-5822-4614-b00e-175a7e5f3429",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -27,45 +27,45 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "e075ac80-50f5-4616-a5a8-5f7498328da0",
-                    "path": "<Keyboard>/escape",
+                    "id": "13c4898a-0419-4fd2-82f4-7326aecf6ba9",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Toggle Pause",
+                    "action": "Next Player",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "f7bb60ff-06a1-427f-9a3a-42aebcb1d9d0",
-                    "path": "<Gamepad>/start",
+                    "id": "e391b272-b27d-47a5-b97f-5f39ebd36a09",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Toggle Pause",
+                    "action": "Next Player",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "6376cb02-dd06-484d-bfd9-fff1f7990dd9",
-                    "path": "<Keyboard>/tab",
+                    "id": "bb9f130a-e7ce-401d-996f-beb10b8e1d07",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Toggle Scoreboard",
+                    "action": "Previous Player",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ff7482bb-2f03-4373-85be-b93d9ca49815",
-                    "path": "<Gamepad>/select",
+                    "id": "d8062543-e1ed-49dd-9f4b-589cbfbb19a8",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Toggle Scoreboard",
+                    "action": "Previous Player",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

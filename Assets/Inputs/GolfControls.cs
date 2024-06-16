@@ -99,6 +99,17 @@ public partial class @GolfControls: IInputActionCollection2, IDisposable
                     ""action"": ""Toggle Backswing"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c7bd8b9d-eafb-4972-92ec-b42b45ba93aa"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle Backswing"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }

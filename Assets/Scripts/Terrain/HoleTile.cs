@@ -12,7 +12,14 @@ namespace MiniGolf.Terrain
 
         private readonly HashSet<SwingController> heldBalls = new();
 
-        public int BallCount => heldBalls.Count;
+        public int BallCount 
+        {
+            get
+            {
+                heldBalls.RemoveWhere(ball => ball == null);
+                return heldBalls.Count;
+            }
+        }
 
         public bool Contains(SwingController controller) => heldBalls.Contains(controller);
 
