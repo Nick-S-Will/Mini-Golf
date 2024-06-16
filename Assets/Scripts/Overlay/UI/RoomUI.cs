@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
 {
     [Space]
+    [SerializeField] private Toggle readyToggle;
     [SerializeField] private Button startButton;
+    [Space]
     [SerializeField] private GameObject[] leaderUIObjects;
 
     private GolfRoomPlayer localPlayer;
@@ -17,6 +19,7 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
     {
         base.Awake();
 
+        if (readyToggle == null) Debug.LogError($"{nameof(readyToggle)} not assigned");
         if (startButton == null) Debug.LogError($"{nameof(startButton)} not assigned");
 
         NetworkClient.RegisterHandler<UpdatePlayerListMessage>(UpdatePlayerList);
@@ -44,6 +47,7 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
     private void UpdatePlayerList() 
     {
         if (NetworkClient.localPlayer) localPlayer = NetworkClient.localPlayer.GetComponent<GolfRoomPlayer>();
+        if (localPlayer) readyToggle.isOn = localPlayer.readyToBegin;
 
         SetObjects(FindObjectsOfType<GolfRoomPlayer>());
     }

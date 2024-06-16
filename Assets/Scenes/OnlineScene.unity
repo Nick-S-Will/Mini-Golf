@@ -2685,6 +2685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayParent: {fileID: 862321844}
   displayPrefab: {fileID: 8648100412776719679, guid: 3b85c2da1d53aca4c901b9325d9e0176, type: 3}
+  readyToggle: {fileID: 707800455}
   startButton: {fileID: 1642005524}
   leaderUIObjects:
   - {fileID: 128698104}
@@ -3581,7 +3582,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1439831954}
   m_HandleRect: {fileID: 1439831953}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

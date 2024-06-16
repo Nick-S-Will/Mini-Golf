@@ -1204,26 +1204,6 @@ MonoBehaviour:
       tileCount: 6
     - seed: 3
       tileCount: 6
-  - name: Advanced
-    holeData:
-    - seed: 1
-      tileCount: 3
-    - seed: 2
-      tileCount: 3
-    - seed: 0
-      tileCount: 3
-    - seed: 0
-      tileCount: 5
-    - seed: 2
-      tileCount: 6
-    - seed: 3
-      tileCount: 6
-    - seed: 4
-      tileCount: 8
-    - seed: 11
-      tileCount: 9
-    - seed: 6
-      tileCount: 9
   OnSelectedCourseChange:
     m_PersistentCalls:
       m_Calls: []
