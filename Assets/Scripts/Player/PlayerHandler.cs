@@ -1,5 +1,6 @@
 using Cinemachine;
 using MiniGolf.Network;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -17,6 +18,27 @@ namespace MiniGolf.Player
         /// </summary>
         public static UnityEvent OnPlayerReady = new();
         public static SwingController Player => singleton ? singleton.player : null;
+
+        public static bool SwingControlsEnabled
+        {
+            get => singleton.playerInput.enabled;
+            set => singleton.playerInput.enabled = value;
+        }
+
+        public static bool UIControlsEnabled
+        {
+            get => singleton.uiInput.enabled;
+            set => singleton.uiInput.enabled = value;
+        }
+
+        public static bool CameraControlsEnabled
+        {
+            get => singleton.cameraInputs.Any(input => input.enabled);
+            set
+            {
+                foreach (var cameraInput in singleton.cameraInputs) cameraInput.enabled = value;
+            }
+        }
 
         [SerializeField] private PlayerInput playerInput, uiInput;
 
@@ -44,23 +66,12 @@ namespace MiniGolf.Player
 
         public static void SetControls(bool allEnabled) => SetControls(allEnabled, allEnabled, allEnabled);
 
-        public static void SetControls(bool playerEnabled, bool cameraEnabled, bool uiEnabled)
+        public static void SetControls(bool swingEnabled, bool cameraEnabled, bool uiEnabled)
         {
-            SetPlayerControls(playerEnabled);
-            SetUIControls(uiEnabled);
-            SetCameraControls(cameraEnabled);
+            SwingControlsEnabled = swingEnabled;
+            CameraControlsEnabled = cameraEnabled;
+            UIControlsEnabled = uiEnabled;
         }
-
-        public static void SetPlayerControls(bool enabled) => singleton.playerInput.enabled = enabled;
-
-        public static void SetUIControls(bool enabled) => singleton.uiInput.enabled = enabled;
-
-        public static void SetCameraControls(bool enabled)
-        {
-            foreach (var cameraInput in singleton.cameraInputs) cameraInput.enabled = enabled;
-        }
-
-        public static void SetActionMap(string mapName) => singleton.playerInput.SwitchCurrentActionMap(mapName);
 
         public void ToggleBackSwing(InputAction.CallbackContext context) => Player.ToggleBackswing(context);
         public void BackSwinging(InputAction.CallbackContext context) => Player.Backswinging(context);

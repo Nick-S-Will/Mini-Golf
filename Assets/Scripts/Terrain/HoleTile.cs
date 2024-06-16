@@ -1,4 +1,5 @@
 using MiniGolf.Player;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,22 +10,26 @@ namespace MiniGolf.Terrain
         [Space]
         public UnityEvent<SwingController> OnBallEnter;
 
-        public int BallCount { get; private set; }
+        private readonly HashSet<SwingController> heldBalls = new();
+
+        public int BallCount => heldBalls.Count;
+
+        public bool Contains(SwingController controller) => heldBalls.Contains(controller);
 
         private void OnTriggerEnter(Collider other)
         {
-            var ballController = other.GetComponent<SwingController>();
-            if (ballController)
+            var swingController = other.GetComponent<SwingController>();
+            if (swingController)
             {
-                BallCount++;
-                OnBallEnter.Invoke(ballController);
+                heldBalls.Add(swingController);
+                OnBallEnter.Invoke(swingController);
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            var ballController = other.GetComponent<SwingController>();
-            if (ballController) BallCount--;
+            var swingController = other.GetComponent<SwingController>();
+            if (swingController) _ = heldBalls.Remove(swingController);
         }
     }
 }

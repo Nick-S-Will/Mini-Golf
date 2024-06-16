@@ -97,7 +97,7 @@ namespace MiniGolf.Network
 
         public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
         {
-            if (!Utils.IsSceneActive(RoomScene)) return;
+            if (Utils.IsSceneActive(offlineScene)) return;
 
             NetworkServer.SendToAll(new UpdatePlayerListMessage(false));
         }

@@ -34,13 +34,13 @@ namespace MiniGolf.Terrain
         private MeshCollider meshCollider;
         private Coroutine generationRoutine;
 
-        public Hole HoleData => settings;
-
         private MeshCollider MeshCollider => meshCollider ? meshCollider : GetComponent<MeshCollider>();
         private Tile LastTile => tileInstances.Count > 0 ? tileInstances.Last() : null;
         private Vector3Int LastCell => usedCells.Count > 0 ? usedCells.Last() : Vector3Int.back;
 
-        public Bounds Bounds => MeshCollider.bounds;
+        public Hole HoleData => settings;
+        public HoleTile CurrentHoleTile { get; private set; }
+        public Bounds HoleBounds => MeshCollider.bounds;
 
         public void Generate() => Generate(settings);
         public void Generate(Hole settings)
@@ -64,15 +64,17 @@ namespace MiniGolf.Terrain
             {
                 Tile[] tilePrefabOptions = GetTileOptionsFor(settings, tileIndex);
                 var randomIndex = rng.Next(tilePrefabOptions.Length);
-                _ = SpawnTile(tilePrefabOptions[randomIndex], rng);
+                var tile = SpawnTile(tilePrefabOptions[randomIndex], rng);
+
+                if (tile is HoleTile holeTile) CurrentHoleTile = holeTile;
 
                 if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }
 
             MeshCollider.sharedMesh = CalculateHoleMesh();
+            OnGenerate.Invoke(CurrentHoleTile);
 
             generationRoutine = null;
-            OnGenerate.Invoke((HoleTile)LastTile);
         }
 
         public void Clear()
@@ -86,12 +88,13 @@ namespace MiniGolf.Terrain
             }
             tileInstances.Clear();
             usedCells.Clear();
+            CurrentHoleTile = null;
             MeshCollider.sharedMesh = null;
         }
 
         private Tile[] GetTileOptionsFor(Hole settings, int index)
         {
-            if (index < 0 || index >= settings.TileCount) throw new ArgumentOutOfRangeException($"Index '{index}' out of range [0, {settings.TileCount - 1}]");
+            if (index < 0 || index >= settings.TileCount) Debug.LogError($"Index '{index}' out of range [0, {settings.TileCount - 1}]");
 
             if (index == 0) return startTilePrefabs;
             else if (index == settings.TileCount - 1) return holeTilePrefabs;
