@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MiniGolf.UI
+namespace Displayable
 {
     public abstract class Display<T> : MonoBehaviour
     {

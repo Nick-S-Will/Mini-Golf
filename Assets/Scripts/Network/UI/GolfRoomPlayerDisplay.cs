@@ -1,4 +1,4 @@
-using MiniGolf.UI;
+using Displayable;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

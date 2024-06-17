@@ -1,5 +1,5 @@
 using UnityEngine;
-using MiniGolf.UI;
+using Displayable;
 using Mirror;
 using UnityEngine.UI;
 

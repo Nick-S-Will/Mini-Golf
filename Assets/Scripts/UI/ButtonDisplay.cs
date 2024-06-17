@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace MiniGolf.UI
+namespace Displayable
 {
     [RequireComponent(typeof(Button))]
     public abstract class ButtonDisplay<T> : Display<T>

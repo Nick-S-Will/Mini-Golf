@@ -6,7 +6,7 @@ using MiniGolf.Terrain.Data;
 using MiniGolf.Player;
 using MiniGolf.Progress;
 using MiniGolf.Terrain.Data.UI;
-using MiniGolf.UI;
+using Displayable;
 
 namespace MiniGolf.Network.UI
 {

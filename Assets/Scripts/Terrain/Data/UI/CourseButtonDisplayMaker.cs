@@ -1,6 +1,6 @@
 using MiniGolf.Managers.Game;
 using MiniGolf.Network;
-using MiniGolf.UI;
+using Displayable;
 using System;
 using UnityEngine;
 

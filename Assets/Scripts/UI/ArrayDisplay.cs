@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace MiniGolf.UI
+namespace Displayable
 {
     public class ArrayDisplay<DisplayObject, ArrayType> : Display<DisplayObject> where DisplayObject : IArrayDisplayable<ArrayType>
     {

@@ -1,3 +1,4 @@
+using Displayable;
 using MiniGolf.Progress;
 using Mirror;
 using System;

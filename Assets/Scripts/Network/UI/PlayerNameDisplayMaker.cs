@@ -1,5 +1,5 @@
 using MiniGolf.Player;
-using MiniGolf.UI;
+using Displayable;
 
 namespace MiniGolf.Network.UI
 {

@@ -1,4 +1,4 @@
-namespace MiniGolf
+namespace Displayable
 {
     public interface IArrayDisplayable<T>
     {
