@@ -1,5 +1,4 @@
-using MiniGolf.Managers.Options;
-using MiniGolf.Overlay.UI;
+using MiniGolf.Audio.UI;
 using UnityEditor;
 using UnityEditor.UI;
 

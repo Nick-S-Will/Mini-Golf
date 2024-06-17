@@ -1,7 +1,6 @@
 using UnityEngine;
 using Mirror;
 using UnityEngine.Events;
-using MiniGolf.Overlay.UI;
 using System;
 
 namespace MiniGolf.Network
@@ -12,6 +11,8 @@ namespace MiniGolf.Network
     [RequireComponent(typeof(MeshRenderer))]
     public class GolfRoomPlayer : NetworkRoomPlayer, IComparable<GolfRoomPlayer>
     {
+        public const string PLAYER_NAME_KEY = "Player Name";
+
         [SyncVar]
         [SerializeField] private string playerName = "Loading...";
         [SyncVar(hook = nameof(OnVisibilityChanged))]
@@ -37,7 +38,7 @@ namespace MiniGolf.Network
 
         public override void OnStartAuthority()
         {
-            SetName(PlayerPrefs.GetString(RoomSetupUI.PLAYER_NAME_KEY, $"Player {index + 1}"));
+            SetName(PlayerPrefs.GetString(PLAYER_NAME_KEY, $"Player {index + 1}"));
         }
 
         public override void ReadyStateChanged(bool oldReadyState, bool newReadyState)
