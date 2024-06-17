@@ -48,8 +48,6 @@ namespace MiniGolf.Progress
             PlayerHandler.OnSetPlayer.AddListener(ChangePlayer);
             PlayerHandler.OnPlayerReady.AddListener(BeginCourse);
             holeGenerator.OnGenerate.AddListener(UpdateHoleTile);
-
-            NetworkClient.RegisterHandler<UpdatePlayerListMessage>(TryCompleteHole);
         }
 
         private void Start()
@@ -58,6 +56,8 @@ namespace MiniGolf.Progress
             course = GameManager.singleton ? GameManager.singleton.SelectedCourse : new Course();
             holePositions = new List<Vector3>[course.Length];
             for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
+
+            GolfRoomManager.singleton.OnPlayerListChanged.AddListener(TryCompleteHole);
         }
 
         protected override void OnDestroy()
@@ -68,6 +68,7 @@ namespace MiniGolf.Progress
             if (PlayerHandler.Player) PlayerHandler.Player.OnSwing.RemoveListener(AddStroke);
             if (holeGenerator) holeGenerator.OnGenerate.RemoveListener(UpdateHoleTile);
             if (holeTile) holeTile.OnBallEnter.RemoveListener(HoleBall);
+            if (GolfRoomManager.singleton) GolfRoomManager.singleton.OnPlayerListChanged.RemoveListener(TryCompleteHole);
         }
 
         private void FixedUpdate()
@@ -144,10 +145,8 @@ namespace MiniGolf.Progress
             else if (isPlayer) OnPlayerWaiting.Invoke();
         }
 
-        private void TryCompleteHole(UpdatePlayerListMessage playerListMessage)
+        private void TryCompleteHole()
         {
-            if (playerListMessage.playerJoined) return;
-
             if (CanChangeHoles()) CompleteHole();
         }
 

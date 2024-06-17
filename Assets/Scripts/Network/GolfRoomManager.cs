@@ -1,6 +1,6 @@
 using Mirror;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 namespace MiniGolf.Network
 {
@@ -14,6 +14,7 @@ namespace MiniGolf.Network
 
         private PlayMode playMode;
 
+        public UnityEvent OnPlayerListChanged { get; private set; } = new();
         public PlayMode PlayMode
         {
             get => playMode;
@@ -31,7 +32,28 @@ namespace MiniGolf.Network
             singleton = this;
         }
 
-        #region Scene Change
+        public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
+        {
+            if (RoomDataSync.singleton && roomSlots.Count > 0)
+            {
+                RoomDataSync.singleton.netIdentity.RemoveClientAuthority();
+                RoomDataSync.singleton.netIdentity.AssignClientAuthority(roomSlots[0].connectionToClient);
+            }
+
+            if (Utils.IsSceneActive(RoomScene) || Utils.IsSceneActive(GameplayScene))
+            {
+                NetworkServer.SendToAll(new PlayerListChangedMessage(false));
+            }
+        }
+
+        #region Room
+        public override void OnRoomServerSceneChanged(string sceneName)
+        {
+            if (sceneName != RoomScene) return;
+
+            NetworkServer.SendToAll(new PlayerListChangedMessage(true));
+        }
+
         public override void OnServerReady(NetworkConnectionToClient conn)
         {
             base.OnServerReady(conn);
@@ -42,40 +64,13 @@ namespace MiniGolf.Network
             SetGolfRoomPlayerVisible(roomPlayer, true);
         }
 
-        public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
-        {
-            SetGolfRoomPlayerVisible(roomPlayer, false);
-
-            var playerScore = gamePlayer.GetComponent<PlayerScore>();
-            if (playerScore) playerScore.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
-            else Debug.LogError($"{nameof(gamePlayer)} object must have {nameof(PlayerScore)} component");
-
-            return true;
-        }
-
-        private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
-        {
-            var golfRoomPlayer = roomPlayer.GetComponent<GolfRoomPlayer>();
-            if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
-            else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
-        }
-
-        public override void OnRoomServerSceneChanged(string sceneName)
-        {
-            if (sceneName != RoomScene) return;
-
-            NetworkServer.SendToAll(new UpdatePlayerListMessage(true));
-        }
-        #endregion
-
-        #region Room
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
             base.OnServerAddPlayer(conn);
 
             if (!Utils.IsSceneActive(RoomScene)) return;
 
-            NetworkServer.SendToAll(new UpdatePlayerListMessage(true));
+            NetworkServer.SendToAll(new PlayerListChangedMessage(true));
 
             if (RoomDataSync.singleton == null)
             {
@@ -83,23 +78,6 @@ namespace MiniGolf.Network
                 NetworkServer.Spawn(roomDataSync.gameObject);
             }
             if (!RoomDataSync.singleton.netIdentity.isOwned) RoomDataSync.singleton.netIdentity.AssignClientAuthority(conn);
-        }
-
-        public override void OnServerDisconnect(NetworkConnectionToClient conn)
-        {
-            base.OnServerDisconnect(conn);
-
-            if (RoomDataSync.singleton == null || roomSlots.Count == 0) return;
-
-            RoomDataSync.singleton.netIdentity.RemoveClientAuthority();
-            RoomDataSync.singleton.netIdentity.AssignClientAuthority(roomSlots[0].connectionToClient);
-        }
-
-        public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
-        {
-            if (Utils.IsSceneActive(offlineScene)) return;
-
-            NetworkServer.SendToAll(new UpdatePlayerListMessage(false));
         }
 
         public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
@@ -134,6 +112,29 @@ namespace MiniGolf.Network
         #endregion
 
         #region Game
+        public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
+        {
+            SetGolfRoomPlayerVisible(roomPlayer, false);
+
+            var playerScore = gamePlayer.GetComponent<PlayerScore>();
+            if (playerScore) playerScore.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
+            else Debug.LogError($"{nameof(gamePlayer)} object must have {nameof(PlayerScore)} component");
+
+            return true;
+        }
+
+        public override void OnRoomClientSceneChanged()
+        {
+            if (!Utils.IsSceneActive(GameplayScene)) return;
+
+            NetworkClient.RegisterHandler<PlayerListChangedMessage>(NotifyPlayerListChanged);
+        }
+
+        private void NotifyPlayerListChanged(PlayerListChangedMessage playerListChangedMessage)
+        {
+            OnPlayerListChanged.Invoke();
+        }
+
         public Vector3 GetHoleStartPosition()
         {
             startPositions.RemoveAll(t => t == null);
@@ -161,7 +162,7 @@ namespace MiniGolf.Network
             }
         }
 
-        public void EndGame() // TODO: Complete functionality for room scene to not crash after return
+        public void EndGame()
         {
             if (singleton.mode == NetworkManagerMode.ClientOnly) return;
 
@@ -169,5 +170,12 @@ namespace MiniGolf.Network
             else ServerChangeScene(RoomScene);
         }
         #endregion
+
+        private void SetGolfRoomPlayerVisible(GameObject roomPlayer, bool visible)
+        {
+            var golfRoomPlayer = roomPlayer.GetComponent<GolfRoomPlayer>();
+            if (golfRoomPlayer) golfRoomPlayer.SetVisible(visible);
+            else Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
+        }
     }
 }

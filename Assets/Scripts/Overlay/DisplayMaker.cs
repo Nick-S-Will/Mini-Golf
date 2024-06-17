@@ -17,6 +17,7 @@ namespace MiniGolf.Overlay
 
         protected virtual void Awake()
         {
+            if (displayParent == null) Debug.LogError($"{nameof(displayParent)} not assigned");
             if (displayPrefab == null) Debug.LogError($"{nameof(displayPrefab)} not assigned");
         }
 
@@ -51,16 +52,21 @@ namespace MiniGolf.Overlay
 
         public virtual void UpdateDisplays()
         {
-            foreach (var display in Displays)
-            {
-                if (display.DisplayObject.Equals(null)) DestroyDisplay(display);
-            }
+            DestroyDisplaysWithNullObjects();
 
             displayInstances.Sort((display1, display2) => display1.DisplayObject.CompareTo(display2.DisplayObject));
             int extraChildCount = displayParent.childCount - displayInstances.Count;
             for (int i = 0; i < displayInstances.Count; i++) displayInstances[i].transform.SetSiblingIndex(extraChildCount + i);
 
             foreach (var display in displayInstances) display.UpdateText();
+        }
+
+        protected virtual void DestroyDisplaysWithNullObjects()
+        {
+            foreach (var display in Displays)
+            {
+                if (display.DisplayObject.Equals(null)) DestroyDisplay(display);
+            }
         }
 
         public virtual void DestroyDisplay(DisplayType display)

@@ -2,11 +2,11 @@ using Mirror;
 
 namespace MiniGolf.Network
 {
-    public struct UpdatePlayerListMessage : NetworkMessage
+    public struct PlayerListChangedMessage : NetworkMessage
     {
         public readonly bool playerJoined;
 
-        public UpdatePlayerListMessage(bool playerJoined)
+        public PlayerListChangedMessage(bool playerJoined)
         {
             this.playerJoined = playerJoined;
         }

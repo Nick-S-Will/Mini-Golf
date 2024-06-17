@@ -22,12 +22,12 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
         if (readyToggle == null) Debug.LogError($"{nameof(readyToggle)} not assigned");
         if (startButton == null) Debug.LogError($"{nameof(startButton)} not assigned");
 
-        NetworkClient.RegisterHandler<UpdatePlayerListMessage>(UpdatePlayerList);
+        NetworkClient.RegisterHandler<PlayerListChangedMessage>(UpdatePlayerList);
     }
 
     private void OnDestroy()
     {
-        NetworkClient.UnregisterHandler<UpdatePlayerListMessage>();
+        NetworkClient.UnregisterHandler<PlayerListChangedMessage>();
     }
 
     private void Update()
@@ -42,7 +42,7 @@ public class RoomUI : DisplayMaker<GolfRoomPlayerDisplay, GolfRoomPlayer>
         UpdateLeaderUI();
     }
 
-    private void UpdatePlayerList(UpdatePlayerListMessage _) => UpdatePlayerList();
+    private void UpdatePlayerList(PlayerListChangedMessage _) => UpdatePlayerList();
 
     private void UpdatePlayerList() 
     {

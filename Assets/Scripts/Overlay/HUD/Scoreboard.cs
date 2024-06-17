@@ -41,6 +41,7 @@ namespace MiniGolf.Overlay.HUD
         private void OnDestroy()
         {
             SwingController.OnStartPlayer.RemoveListener(AddScoreLine);
+            if (ProgressHandler.singleton) ProgressHandler.singleton.OnCompleteCourse.RemoveListener(LockVisible);
         }
 
         private void AddScoreLine(SwingController player)
