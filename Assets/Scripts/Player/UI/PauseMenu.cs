@@ -1,4 +1,5 @@
 using MiniGolf.Network;
+using MiniGolf.Terrain;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,8 +8,7 @@ namespace MiniGolf.Player.UI
     public class PauseMenu : MonoBehaviour
     {
         [SerializeField] private GameObject hudParent, graphicsParent;
-
-        private bool swingEnabled, cameraEnabled, uiEnabled;
+        [SerializeField] private HoleGenerator holeGenerator;
 
         public bool IsPaused => graphicsParent.activeSelf;
 
@@ -17,10 +17,6 @@ namespace MiniGolf.Player.UI
             SetCursor(false);
         }
 
-        private void Start()
-        {
-            UpdateControlEnabledStatus();
-        }
         private void OnDestroy()
         {
             SetCursor(true);
@@ -33,22 +29,13 @@ namespace MiniGolf.Player.UI
 
         public void SetActive(bool active)
         {
-            if (!IsPaused) UpdateControlEnabledStatus();
-
             hudParent.SetActive(!active);
             graphicsParent.SetActive(active);
 
-            if (active) PlayerHandler.SetControls(false, false, true);
-            else PlayerHandler.SetControls(swingEnabled, cameraEnabled, uiEnabled);
-            
-            SetCursor(active);
-        }
+            var canSwing = !active && !holeGenerator.CurrentHoleTile.Contains(PlayerHandler.Player);
+            PlayerHandler.SetControls(canSwing, !active, true);
 
-        private void UpdateControlEnabledStatus() // TODO: Replace this system since it causes problems when pausing in the hole
-        {
-            swingEnabled = PlayerHandler.SwingControlsEnabled;
-            cameraEnabled = PlayerHandler.CameraControlsEnabled;
-            uiEnabled = PlayerHandler.UIControlsEnabled;
+            SetCursor(active);
         }
 
         public void SetCursor(bool visible)

@@ -1254,6 +1254,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hudParent: {fileID: 2142527941}
   graphicsParent: {fileID: 464044059}
+  holeGenerator: {fileID: 189819109}
 --- !u!1 &385317419
 GameObject:
   m_ObjectHideFlags: 0
