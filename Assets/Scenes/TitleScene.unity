@@ -1485,8 +1485,8 @@ GameObject:
   m_Component:
   - component: {fileID: 418750048}
   - component: {fileID: 418750051}
-  - component: {fileID: 418750052}
   - component: {fileID: 418750050}
+  - component: {fileID: 418750052}
   m_Layer: 5
   m_Name: Play
   m_TagString: Untagged
@@ -1561,7 +1561,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 418750047}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: b72d67c578c92e94ebbf9fc859d71109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -1595,19 +1595,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 418750050}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 952901528}
-        m_TargetAssemblyTypeName: MiniGolf.Overlay.UI.RoomSetupUI, Assembly-CSharp
-        m_MethodName: HostRoom
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  scene: 2
 --- !u!1 &433627998 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7575622081207761905, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
@@ -5766,6 +5755,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1328530582}
+  - component: {fileID: 1328530583}
   - component: {fileID: 1328530581}
   - component: {fileID: 1328530580}
   m_Layer: 0
@@ -5819,14 +5809,14 @@ MonoBehaviour:
   autoStartServerBuild: 0
   autoConnectClientBuild: 0
   offlineScene: Assets/Scenes/TitleScene.unity
-  onlineScene: Assets/Scenes/OnlineScene.unity
+  onlineScene: Assets/Scenes/RoomScene.unity
   transport: {fileID: 1328530580}
   networkAddress: localhost
   maxConnections: 4
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 3108000758023829372, guid: 12624b99b3cb76242878f16ad25a915c, type: 3}
+  playerPrefab: {fileID: 2559326405564396763, guid: 64820694ebfac30458637d9f179bab28, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
   spawnPrefabs:
@@ -5849,8 +5839,8 @@ MonoBehaviour:
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 5205167191080443900, guid: 376bd837e366ba04793a1af294cbaca4, type: 3}
-  RoomScene: Assets/Scenes/OnlineScene.unity
-  GameplayScene: Assets/Scenes/MultiplayerGameScene.unity
+  RoomScene: Assets/Scenes/RoomScene.unity
+  GameplayScene: Assets/Scenes/GameScene.unity
   _allPlayersReady: 0
   roomSlots: []
   clientIndex: 0
@@ -5870,6 +5860,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1328530583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328530579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c915b501b085247bdaed340ffb6238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  platform: 17
 --- !u!1 &1336111868
 GameObject:
   m_ObjectHideFlags: 0

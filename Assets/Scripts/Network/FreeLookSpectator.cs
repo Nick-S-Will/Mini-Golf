@@ -12,7 +12,7 @@ namespace MiniGolf.Network
 {
     public class FreeLookSpectator : MonoBehaviour
     {
-        [SerializeField] private HoleGenerator holeGenerator;
+        [SerializeField] private ProgressHandler progressHandler;
         [SerializeField] private CinemachineFreeLook freelookCamera;
         [Space]
         [SerializeField] private PlayerInput spectateInput;
@@ -25,28 +25,28 @@ namespace MiniGolf.Network
 
         [HideInInspector] public UnityEvent OnStartSpectating, OnTargetChanged, OnStopSpectating;
 
-        public PlayerScore Target => targetPlayer ? targetPlayer.GetComponent<PlayerScore>() : null;
+        public NetworkScore Target => targetPlayer ? targetPlayer.GetComponent<NetworkScore>() : null;
         public int TargetCount => playersNotInHole != null ? playersNotInHole.Length : 0;
         public bool IsSpectating => spectateRoutine != null;
 
         private void Awake()
         {
-            if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
+            if (progressHandler == null) Debug.LogError($"{nameof(progressHandler)} not assigned");
             if (freelookCamera == null) Debug.LogError($"{nameof(freelookCamera)} not assigned");
             if (spectateInput == null) Debug.LogError($"{nameof(spectateInput)} not assigned");
         }
 
         private void Start()
         {
-            ProgressHandler.singleton.OnPlayerWaiting.AddListener(Spectate);
-            ProgressHandler.singleton.OnCompleteHole.AddListener(StopSpectating);
+            progressHandler.OnPlayerWaiting.AddListener(Spectate);
+            progressHandler.OnCompleteHole.AddListener(StopSpectating);
         }
 
         private void Spectate() => spectateRoutine ??= StartCoroutine(SpectateRoutine());
         private IEnumerator SpectateRoutine()
         {
             var players = FindObjectsOfType<SwingController>();
-            var holeTile = holeGenerator.CurrentHoleTile;
+            var holeTile = progressHandler.HoleGenerator.CurrentHoleTile;
 
             OnStartSpectating.Invoke();
 

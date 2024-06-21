@@ -4,6 +4,8 @@ using UnityEngine.Events;
 
 namespace MiniGolf.Managers.Game
 {
+    public enum NetPlayMode { None, Singleplayer, Multiplayer }
+
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] private Course[] courseOptions;
@@ -28,6 +30,9 @@ namespace MiniGolf.Managers.Game
                 OnSelectedCourseChange.Invoke();
             }
         }
+        public NetPlayMode NetPlayMode { get; set; }
+        public bool IsSingleplayer => NetPlayMode == NetPlayMode.Singleplayer;
+        public bool IsMultiplayer => NetPlayMode == NetPlayMode.Multiplayer;
 
         protected override void Awake()
         {
@@ -38,8 +43,6 @@ namespace MiniGolf.Managers.Game
                 Debug.LogError($"{nameof(courseOptions)} is empty");
                 return;
             }
-
-            DontDestroyOnLoad(singleton.gameObject);
         }
 
         protected override void OnDestroy() => base.OnDestroy();

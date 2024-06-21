@@ -2,7 +2,7 @@ using Displayable;
 using TMPro;
 using UnityEngine;
 
-namespace MiniGolf.Network.UI
+namespace MiniGolf.Progress.UI
 {
     public class PlayerScoreDisplay : ArrayDisplay<PlayerScore, int>
     {

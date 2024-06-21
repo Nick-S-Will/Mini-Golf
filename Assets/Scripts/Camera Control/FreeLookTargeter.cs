@@ -20,13 +20,10 @@ namespace MiniGolf.CameraControl
         {
             base.Awake();
 
-            PlayerHandler.OnSetPlayer.AddListener(AssignPlayer);
-        }
-
-        private void Start()
-        {
             freeLookCamera = GetComponent<CinemachineFreeLook>();
             inputProvider = GetComponent<CinemachineInputProvider>();
+
+            PlayerHandler.OnSetPlayer.AddListener(AssignPlayer);
         }
 
         public void AssignPlayer(SwingController oldPlayer, SwingController newPlayer)

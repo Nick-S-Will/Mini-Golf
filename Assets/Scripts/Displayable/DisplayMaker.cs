@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Displayable
 {
-    public abstract class DisplayMaker<DisplayType, ObjectType> : MonoBehaviour where DisplayType : Display<ObjectType> where ObjectType : class, IComparable<ObjectType>
+    public abstract class DisplayMaker<DisplayType, ObjectType> : MonoBehaviour where DisplayType : Display<ObjectType> where ObjectType : class
     {
         private static Action<UnityEngine.Object> ContextDestroy => Application.isPlaying ? Destroy : DestroyImmediate;
 
@@ -12,6 +12,8 @@ namespace Displayable
         [SerializeField] protected DisplayType displayPrefab;
 
         protected readonly List<DisplayType> displayInstances = new();
+
+        protected abstract Comparison<DisplayType> DisplayComparer { get; }
 
         public DisplayType[] Displays => displayInstances.ToArray();
 
@@ -54,7 +56,7 @@ namespace Displayable
         {
             DestroyDisplaysWithNullObjects();
 
-            displayInstances.Sort((display1, display2) => display1.DisplayObject.CompareTo(display2.DisplayObject));
+            displayInstances.Sort(DisplayComparer);
             int extraChildCount = displayParent.childCount - displayInstances.Count;
             for (int i = 0; i < displayInstances.Count; i++) displayInstances[i].transform.SetSiblingIndex(extraChildCount + i);
 

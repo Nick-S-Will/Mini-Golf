@@ -8,11 +8,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using MiniGolf.Network;
-using Mirror;
 
 namespace MiniGolf.Progress
 {
-    public class ProgressHandler : Singleton<ProgressHandler> // TODO: Check if singleton is necessary
+    public class ProgressHandler : MonoBehaviour // TODO: Remove network dependency
     {
         [Space]
         [SerializeField] private HoleGenerator holeGenerator;
@@ -23,7 +22,7 @@ namespace MiniGolf.Progress
         [SerializeField][Min(0f)] private float courseEndTime = 5f;
         [Space]
         public UnityEvent OnStartCourse, OnStartHole;
-        public UnityEvent OnStroke, OnFallOff, OnPlayerWaiting;
+        public UnityEvent OnStrokeAdded, OnFallOff, OnPlayerWaiting;
         public UnityEvent OnCompleteHole, OnCompleteCourse;
 
         private SwingController player;
@@ -31,19 +30,17 @@ namespace MiniGolf.Progress
         private Course course;
         private Coroutine completeHoleRoutine;
         /// <summary>Array of position lists for each hole</summary>
-        private List<Vector3>[] holePositions;
+        private List<Vector3>[] holePositions = new List<Vector3>[0];
         private int holeIndex;
 
+        public HoleGenerator HoleGenerator => holeGenerator;
         public int[] Scores => holePositions.Select(positions => positions.Count()).ToArray();
         public int CurrentScore => holeIndex < holePositions.Length ? CurrentPositions.Count : 0;
         private List<Vector3> CurrentPositions => holePositions[holeIndex];
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
-
             if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
-            if (course == null && holeGenerator == null && GameManager.singleton == null) Debug.LogError($"{nameof(course)} is empty");
 
             PlayerHandler.OnSetPlayer.AddListener(ChangePlayer);
             PlayerHandler.OnPlayerReady.AddListener(BeginCourse);
@@ -52,18 +49,11 @@ namespace MiniGolf.Progress
 
         private void Start()
         {
-            if (GameManager.singleton == null) Debug.LogWarning($"No {nameof(GameManager)} loaded");
-            course = GameManager.singleton ? GameManager.singleton.SelectedCourse : new Course();
-            holePositions = new List<Vector3>[course.Length];
-            for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
-
-            GolfRoomManager.singleton.OnPlayerListChanged.AddListener(TryCompleteHole);
+            if (GameManager.singleton.IsMultiplayer) GolfRoomManager.singleton.OnPlayerListChanged.AddListener(TryCompleteHole);
         }
 
-        protected override void OnDestroy()
+        private void OnDestroy()
         {
-            base.OnDestroy();
-
             if (PlayerHandler.singleton) PlayerHandler.OnSetPlayer.RemoveListener(ChangePlayer);
             if (PlayerHandler.Player) PlayerHandler.Player.OnSwing.RemoveListener(AddStroke);
             if (holeGenerator) holeGenerator.OnGenerate.RemoveListener(UpdateHoleTile);
@@ -94,7 +84,13 @@ namespace MiniGolf.Progress
 
         private void BeginCourse()
         {
+            if (GameManager.singleton == null) Debug.LogWarning($"No {nameof(GameManager)} loaded");
+            course = GameManager.singleton ? GameManager.singleton.SelectedCourse : new Course();
+            holePositions = new List<Vector3>[course.Length];
+            for (int i = 0; i < holePositions.Length; i++) holePositions[i] = new();
+
             if (TryBeginHole()) OnStartCourse.Invoke();
+            else Debug.LogWarning("Course couldn't be started");
 
             PlayerHandler.OnPlayerReady.RemoveListener(BeginCourse);
         }
@@ -106,7 +102,8 @@ namespace MiniGolf.Progress
             holeGenerator.Generate(course.HoleData[holeIndex]);
             if (holeIndex > 0)
             {
-                player.transform.SetPositionAndRotation(GolfRoomManager.singleton.GetHoleStartPosition(), Quaternion.identity);
+                var position = GameManager.singleton.IsMultiplayer ? GolfRoomManager.singleton.GetHoleStartPosition() : Vector3.zero;
+                player.transform.SetPositionAndRotation(position, Quaternion.identity);
                 player.SetPhysicsEnabled(true);
                 PlayerHandler.SwingControlsEnabled = true;
             }
@@ -118,7 +115,7 @@ namespace MiniGolf.Progress
         private void AddStroke()
         {
             holePositions[holeIndex].Add(player.transform.position);
-            OnStroke.Invoke();
+            OnStrokeAdded.Invoke();
         }
 
         private void CheckFall()
@@ -150,7 +147,13 @@ namespace MiniGolf.Progress
             if (CanChangeHoles()) CompleteHole();
         }
 
-        private bool CanChangeHoles() => holeTile && holeTile.BallCount == GolfRoomManager.singleton.roomSlots.Count;
+        private bool CanChangeHoles()
+        {
+            if (holeTile == null) return false;
+            
+            if (GameManager.singleton.IsSingleplayer) return holeTile.BallCount == 1; 
+            else return holeTile.BallCount == GolfRoomManager.singleton.roomSlots.Count;
+        }
 
         private void CompleteHole() => completeHoleRoutine ??= StartCoroutine(CompleteHoleRoutine());
         private IEnumerator CompleteHoleRoutine()
@@ -170,7 +173,7 @@ namespace MiniGolf.Progress
             OnCompleteCourse.Invoke();
             yield return new WaitForSeconds(Mathf.Max(courseEndTime - holeEndTime, 0f));
 
-            GolfRoomManager.singleton.EndGame();
+            GolfRoomManager.singleton.EndRound();
         }
     }
 }

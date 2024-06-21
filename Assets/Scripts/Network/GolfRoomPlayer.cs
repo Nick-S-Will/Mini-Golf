@@ -1,7 +1,7 @@
 using UnityEngine;
 using Mirror;
 using UnityEngine.Events;
-using System;
+using System.Linq;
 
 namespace MiniGolf.Network
 {
@@ -9,7 +9,7 @@ namespace MiniGolf.Network
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SphereCollider))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class GolfRoomPlayer : NetworkRoomPlayer, IComparable<GolfRoomPlayer>
+    public class GolfRoomPlayer : NetworkRoomPlayer
     {
         public const string PLAYER_NAME_KEY = "Player Name";
 
@@ -41,6 +41,23 @@ namespace MiniGolf.Network
             SetName(PlayerPrefs.GetString(PLAYER_NAME_KEY, $"Player {index + 1}"));
         }
 
+        public override void IndexChanged(int oldIndex, int newIndex)
+        {
+            if (!Utils.IsSceneActive(GolfRoomManager.singleton.GameplayScene)) return;
+
+            GetGamePlayer(oldIndex).index = newIndex;
+        }
+
+        private GolfGamePlayer GetGamePlayer(int index)
+        {
+            var gamePlayers = FindObjectsOfType<GolfGamePlayer>();
+            var correctIndexGamePlayers = gamePlayers.Where(player => player.index == index);
+            if (correctIndexGamePlayers.Count() == 1) return correctIndexGamePlayers.First();
+            else Debug.LogError($"Found {correctIndexGamePlayers.Count()} {nameof(GolfGamePlayer)}s with index '{index}'.");
+
+            return null;
+        }
+
         public override void ReadyStateChanged(bool oldReadyState, bool newReadyState)
         {
             OnReadyChanged.Invoke();
@@ -58,7 +75,7 @@ namespace MiniGolf.Network
             isVisible = visible;
         }
 
-        private void OnVisibilityChanged(bool oldValue, bool newValue)
+        public void OnVisibilityChanged(bool oldValue, bool newValue)
         {
             if (oldValue == newValue) return;
 
@@ -66,13 +83,6 @@ namespace MiniGolf.Network
             displayRigidbody.isKinematic = !newValue;
             sphereCollider.enabled = newValue;
             meshRenderer.enabled = newValue;
-        }
-
-        public int CompareTo(GolfRoomPlayer other) => playerName.CompareTo(other.playerName);
-
-        public override void OnGUI()
-        {
-            base.OnGUI();
         }
     }
 }

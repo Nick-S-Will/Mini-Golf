@@ -367,8 +367,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPersistent: 0
   logIfMultiple: 0
-  playerInput: {fileID: 1719953744}
+  playerPrefab: {fileID: 8051305866240679837, guid: d54c31e339477a941971b61ca8491ef7, type: 3}
+  progressHandler: {fileID: 910688505}
+  golfInput: {fileID: 1719953744}
   uiInput: {fileID: 781763173}
+  cameraBehaviours:
+  - {fileID: 1374732143}
+  - {fileID: 1374732145}
 --- !u!4 &144523032
 Transform:
   m_ObjectHideFlags: 0
@@ -632,6 +637,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1411443204}
   - {fileID: 247634990}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -666,7 +672,7 @@ Transform:
   m_Children:
   - {fileID: 549863422}
   - {fileID: 1574194445}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1392832330}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &215470286
 GameObject:
@@ -1432,7 +1438,7 @@ GameObject:
   - component: {fileID: 460289105}
   - component: {fileID: 460289104}
   m_Layer: 5
-  m_Name: Overlay
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1517,7 +1523,7 @@ RectTransform:
   - {fileID: 1393941117}
   - {fileID: 1812318782}
   - {fileID: 1787346515}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1392832330}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1997,6 +2003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayParent: {fileID: 1967448386}
   displayPrefab: {fileID: 960987590103124703, guid: d8b874316c5816b419ed1e2da93c3dd6, type: 3}
+  progressHandler: {fileID: 910688505}
   courseDisplay: {fileID: 8078183668598609391}
   graphicParent: {fileID: 1148276697}
 --- !u!1 &781763172
@@ -2219,8 +2226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f1eed1cf17a0a4ba977bdf2a0d780b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPersistent: 0
-  logIfMultiple: 0
   holeGenerator: {fileID: 189819109}
   ballMinY: -5
   holeEndTime: 2
@@ -2231,7 +2236,7 @@ MonoBehaviour:
   OnStartHole:
     m_PersistentCalls:
       m_Calls: []
-  OnStroke:
+  OnStrokeAdded:
     m_PersistentCalls:
       m_Calls: []
   OnFallOff:
@@ -2370,9 +2375,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eaa69ca127e288408442950bcff0eac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holeGenerator: {fileID: 189819109}
+  progressHandler: {fileID: 910688505}
   holeBoundsCenter: {fileID: 247634990}
-  cameraBoundsMargin: 3
+  cameraBoundsMargin: 1
   viewDelay: 2
   viewTime: 5
 --- !u!1 &1044999721
@@ -2426,8 +2431,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spectator: {fileID: 1374732146}
   graphicsParent: {fileID: 1513722180}
-  targetText: {fileID: 1096424531}
-  noTargetText: ...
 --- !u!1 &1096424529
 GameObject:
   m_ObjectHideFlags: 0
@@ -2485,7 +2488,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Spectating: '
+  m_text: Spectating
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3292,7 +3295,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1374732138}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 319d2fe34a804e245819465c9505ea59, type: 3}
   m_Name: 
@@ -3436,7 +3439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e087de4933b781f459ba785b1164a400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holeGenerator: {fileID: 189819109}
+  progressHandler: {fileID: 910688505}
   freelookCamera: {fileID: 1374732143}
   spectateInput: {fileID: 215470288}
   spectateStartDelay: 1
@@ -3449,6 +3452,39 @@ MonoBehaviour:
   OnStopSpectating:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1392832329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1392832330}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1392832330
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392832329}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 460289107}
+  - {fileID: 203860702}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1393941116
 GameObject:
   m_ObjectHideFlags: 0
@@ -3654,7 +3690,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411443203}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3663,7 +3699,7 @@ Transform:
   - {fileID: 1205598648}
   - {fileID: 157555739}
   - {fileID: 1364804232}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 189819110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1447490184
 GameObject:
@@ -4328,7 +4364,7 @@ GameObject:
   - component: {fileID: 1719953745}
   - component: {fileID: 1719953744}
   m_Layer: 0
-  m_Name: Player Input
+  m_Name: Golf Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5480,6 +5516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936ac4c5a1265ae4eb34defda4caadd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progressHandler: {fileID: 910688505}
   scoreText: {fileID: 2138794878}
 --- !u!1 &1957679810
 GameObject:
@@ -6060,9 +6097,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1554414939}
-  - {fileID: 1944798228}
   - {fileID: 1044999722}
   - {fileID: 770165097}
+  - {fileID: 1944798228}
   m_Father: {fileID: 460289107}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -6372,9 +6409,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1456850927}
   - {fileID: 1586835365}
-  - {fileID: 460289107}
-  - {fileID: 203860702}
+  - {fileID: 1392832330}
   - {fileID: 189819110}
-  - {fileID: 1411443204}
   - {fileID: 144523032}
   - {fileID: 910688506}

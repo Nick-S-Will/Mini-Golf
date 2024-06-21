@@ -1,4 +1,5 @@
-using System.Net.Sockets;
+using MiniGolf.Managers.Game;
+using System;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -66,10 +67,10 @@ namespace MiniGolf.Network.UI
         #region Manager Wrappers (for UI events to access static manager singleton)
         public void SetSingleplayer(bool isSingleplayer)
         {
-            GolfRoomManager.singleton.PlayMode = isSingleplayer ? Network.PlayMode.Singleplayer : Network.PlayMode.Multiplayer;
+            GameManager.singleton.NetPlayMode = isSingleplayer ? NetPlayMode.Singleplayer : NetPlayMode.Multiplayer;
         }
 
-        public void ResetPlayMode() => GolfRoomManager.singleton.PlayMode = Network.PlayMode.None;
+        public void ResetPlayMode() => GameManager.singleton.NetPlayMode = NetPlayMode.None;
 
         public void HostRoom()
         {
@@ -78,9 +79,9 @@ namespace MiniGolf.Network.UI
                 hostButton.interactable = false;
                 GolfRoomManager.singleton.StartHost();
             }
-            catch (SocketException e)
+            catch (Exception e)
             {
-                Debug.Log($"{nameof(SocketException)} occured.\n\n{e.StackTrace}");
+                Debug.Log($"{e.GetType().Name} occured.\n\n{e.StackTrace}");
                 hostButton.interactable = true;
             }
         }

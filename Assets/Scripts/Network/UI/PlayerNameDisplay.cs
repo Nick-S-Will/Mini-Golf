@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MiniGolf.Network.UI
 {
-    public class PlayerNameDisplay : Display<PlayerScore>
+    public class PlayerNameDisplay : Display<GolfGamePlayer>
     {
         [SerializeField] private TMP_Text nameText;
 
@@ -26,7 +26,7 @@ namespace MiniGolf.Network.UI
         {
             if (displayObject == null) return;
 
-            nameText.text = displayObject.Name;
+            nameText.text = displayObject.RoomPlayer.Name;
         }
     }
 }

@@ -1,12 +1,13 @@
 using Displayable;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace MiniGolf.Terrain.Data
 {
     [Serializable]
-    public class Course : IArrayDisplayable<int>, IComparable<Course>
+    public class Course : IListDisplayable<int>
     {
         [SerializeField] private string name;
         [SerializeField] private Hole[] holeData;
@@ -17,7 +18,7 @@ namespace MiniGolf.Terrain.Data
         public int Par => holeData.Sum(hole => hole.TileCount);
         public int[] Pars => holeData.Select(hole => hole.TileCount).ToArray();
 
-        int[] IArrayDisplayable<int>.Values => Pars;
+        IList<int> IListDisplayable<int>.Values => Pars;
 
         public Course()
         {
@@ -31,7 +32,5 @@ namespace MiniGolf.Terrain.Data
             this.name = name;
             this.holeData = holeData;
         }
-
-        public int CompareTo(Course other) => Math.Sign(Par - other.Par);
     }
 }

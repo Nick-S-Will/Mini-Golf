@@ -1,5 +1,6 @@
-using Cinemachine;
+using MiniGolf.Managers.Game;
 using MiniGolf.Network;
+using MiniGolf.Progress;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,8 +22,8 @@ namespace MiniGolf.Player
 
         public static bool SwingControlsEnabled
         {
-            get => singleton.playerInput.enabled;
-            set => singleton.playerInput.enabled = value;
+            get => singleton.golfInput.enabled;
+            set => singleton.golfInput.enabled = value;
         }
 
         public static bool UIControlsEnabled
@@ -33,35 +34,75 @@ namespace MiniGolf.Player
 
         public static bool CameraControlsEnabled
         {
-            get => singleton.cameraInputs.Any(input => input.enabled);
+            get => singleton.cameraBehaviours.Any(input => input.enabled);
             set
             {
-                foreach (var cameraInput in singleton.cameraInputs) cameraInput.enabled = value;
+                foreach (var cameraInput in singleton.cameraBehaviours) cameraInput.enabled = value;
             }
         }
 
-        [SerializeField] private PlayerInput playerInput, uiInput;
+        [Space]
+        [SerializeField] private SwingController playerPrefab;
+        [SerializeField] private ProgressHandler progressHandler;
+        [Space]
+        [SerializeField] private PlayerInput golfInput;
+        [SerializeField] private PlayerInput uiInput;
+        [SerializeField] private MonoBehaviour[] cameraBehaviours;
 
-        private CinemachineInputProvider[] cameraInputs;
         private SwingController player;
 
         protected override void Awake()
         {
             base.Awake();
 
-            cameraInputs = FindObjectsOfType<CinemachineInputProvider>();
+            if (playerPrefab == null) Debug.LogError($"{nameof(playerPrefab)} not assigned");
+            if (progressHandler == null) Debug.LogError($"{nameof(progressHandler)} not assigned");
+            if (golfInput == null) Debug.LogError($"{nameof(golfInput)} not assigned");
+            if (uiInput == null) Debug.LogError($"{nameof(uiInput)} not assigned");
 
-            if (GolfRoomManager.singleton) SwingController.OnSetLocalPlayer.AddListener(SetPlayer);
-            else Debug.LogWarning($"No {nameof(GolfRoomManager)} loaded");
+            if (GameManager.singleton.IsMultiplayer) GolfGamePlayer.OnSetLocalPlayer.AddListener(SetLocalPlayer);
         }
 
-        private void SetPlayer(SwingController player)
+        private void Start()
         {
-            this.player = player;
-            SetControls(player);
+            if (GameManager.singleton.IsSingleplayer) SpawnPlayer();
+        }
 
-            OnSetPlayer.Invoke(Player, player);
-            if (player) OnPlayerReady.Invoke();
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            GolfGamePlayer.OnSetLocalPlayer.RemoveListener(SetLocalPlayer);
+        }
+
+        private void SetLocalPlayer(GolfGamePlayer netPlayer)
+        {
+            if (netPlayer == null)
+            {
+                Debug.LogError($"{nameof(GolfGamePlayer)} was null");
+                return;
+            }
+
+            AssignPlayer(netPlayer.Player);
+        }
+
+        private void SpawnPlayer()
+        {
+            var player = Instantiate(playerPrefab);
+
+            AssignPlayer(player);
+        }
+
+        private void AssignPlayer(SwingController newPlayer)
+        {
+            var oldPlayer = player;
+            player = newPlayer;
+
+            SetControls(newPlayer);
+            newPlayer.GetComponent<PlayerScore>().ListenToProgressHandler(progressHandler);
+
+            OnSetPlayer.Invoke(oldPlayer, newPlayer);
+            OnPlayerReady.Invoke();
         }
 
         public static void SetControls(bool allEnabled) => SetControls(allEnabled, allEnabled, allEnabled);
@@ -75,12 +116,5 @@ namespace MiniGolf.Player
 
         public void ToggleBackSwing(InputAction.CallbackContext context) => Player.ToggleBackswing(context);
         public void BackSwinging(InputAction.CallbackContext context) => Player.Backswinging(context);
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            SwingController.OnSetLocalPlayer.RemoveListener(SetPlayer);
-        }
     }
 }

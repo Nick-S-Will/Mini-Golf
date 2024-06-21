@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Displayable
 {
-    public class ArrayDisplay<DisplayObject, ArrayType> : Display<DisplayObject> where DisplayObject : IArrayDisplayable<ArrayType>
+    public class ArrayDisplay<DisplayObject, ArrayType> : Display<DisplayObject> where DisplayObject : IListDisplayable<ArrayType>
     {
         [SerializeField] private TMP_Text textPrefab;
 

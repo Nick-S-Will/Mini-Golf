@@ -1,7 +1,6 @@
 using Cinemachine;
 using MiniGolf.Player;
 using MiniGolf.Progress;
-using MiniGolf.Terrain;
 using System.Collections;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace MiniGolf.CameraControl
     [RequireComponent(typeof(CinemachineVirtualCamera))]
     public class HoleViewer : MonoBehaviour
     {
-        [SerializeField] private HoleGenerator holeGenerator;
+        [SerializeField] private ProgressHandler progressHandler;
         [SerializeField] private Transform holeBoundsCenter;
         [Space]
         [SerializeField][Min(0f)] private float cameraBoundsMargin = 3f;
@@ -30,9 +29,17 @@ namespace MiniGolf.CameraControl
             virtualCamera = GetComponent<CinemachineVirtualCamera>();
             virtualCamera.enabled = false;
 
-            if (holeGenerator == null) Debug.LogError($"{nameof(holeGenerator)} not assigned");
+            if (progressHandler == null) Debug.LogError($"{nameof(progressHandler)} not assigned");
+        }
 
-            ProgressHandler.singleton.OnStartHole.AddListener(ViewHole);
+        private void OnEnable()
+        {
+            progressHandler.OnStartHole.AddListener(ViewHole);
+        }
+
+        private void OnDisable()
+        {
+            if (progressHandler) progressHandler.OnStartHole.RemoveListener(ViewHole);
         }
 
         [ContextMenu("View Hole")]
@@ -47,7 +54,7 @@ namespace MiniGolf.CameraControl
         {
             if (Application.isPlaying) PlayerHandler.SetControls(false);
 
-            var bounds = holeGenerator.HoleBounds;
+            var bounds = progressHandler.HoleGenerator.HoleBounds;
             var camZOffset = bounds.size.z + cameraBoundsMargin;
             holeBoundsCenter.position = bounds.center;
             virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z = -camZOffset;

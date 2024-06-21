@@ -1,37 +1,47 @@
+using MiniGolf.Managers.Game;
 using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace MiniGolf.Network
 {
-    public enum PlayMode { None, Singleplayer, Multiplayer }
+    public enum NetScene { Offline, Room, Game }
 
     public class GolfRoomManager : NetworkRoomManager
     {
         public static new GolfRoomManager singleton { get; private set; }
+        public static Dictionary<NetScene, string> NetSceneToName { get; private set; }
 
         [SerializeField] private RoomDataSync roomDataSyncPrefab;
 
-        private PlayMode playMode;
-
         public UnityEvent OnPlayerListChanged { get; private set; } = new();
-        public PlayMode PlayMode
-        {
-            get => playMode;
-            set
-            {
-                playMode = value;
-                NetworkServer.dontListen = playMode == PlayMode.Singleplayer;
-            }
-        }
         public bool ReadyToStart { get; private set; }
 
         public override void Awake()
         {
             base.Awake();
+
+            if (NetworkManager.singleton != this) return;
+
             singleton = this;
+
+            NetSceneToName ??= new() { { NetScene.Offline, offlineScene }, { NetScene.Room, RoomScene }, { NetScene.Game, GameplayScene } };
         }
 
+        public override void OnRoomStartClient()
+        {
+            NetworkClient.RegisterHandler<PlayerListChangedMessage>(NotifyPlayerListChanged);
+        }
+
+        public override void OnRoomStopClient()
+        {
+            NetworkClient.UnregisterHandler<PlayerListChangedMessage>();
+        }
+
+        private void NotifyPlayerListChanged(PlayerListChangedMessage playerListChangedMessage) => OnPlayerListChanged.Invoke();
+        
         public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
         {
             if (RoomDataSync.singleton && roomSlots.Count > 0)
@@ -91,12 +101,6 @@ namespace MiniGolf.Network
 
         public override void OnRoomServerPlayersReady()
         {
-            if (PlayMode == PlayMode.Singleplayer)
-            {
-                StartGame();
-                return;
-            }
-
             if (Utils.IsHeadless()) base.OnRoomServerPlayersReady();
             else ReadyToStart = true;
         }
@@ -116,23 +120,11 @@ namespace MiniGolf.Network
         {
             SetGolfRoomPlayerVisible(roomPlayer, false);
 
-            var playerScore = gamePlayer.GetComponent<PlayerScore>();
-            if (playerScore) playerScore.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
-            else Debug.LogError($"{nameof(gamePlayer)} object must have {nameof(PlayerScore)} component");
+            if (!roomPlayer.TryGetComponent(out GolfRoomPlayer golfRoomPlayer)) Debug.LogError($"{nameof(roomPlayer)} object's {nameof(NetworkRoomPlayer)} must descend from {nameof(GolfRoomPlayer)}");
+            if (!gamePlayer.TryGetComponent(out GolfGamePlayer golfGamePlayer)) Debug.LogError($"{nameof(gamePlayer)} must have {nameof(GolfGamePlayer)} component");
+            golfGamePlayer.index = golfRoomPlayer.index;
 
             return true;
-        }
-
-        public override void OnRoomClientSceneChanged()
-        {
-            if (!Utils.IsSceneActive(GameplayScene)) return;
-
-            NetworkClient.RegisterHandler<PlayerListChangedMessage>(NotifyPlayerListChanged);
-        }
-
-        private void NotifyPlayerListChanged(PlayerListChangedMessage playerListChangedMessage)
-        {
-            OnPlayerListChanged.Invoke();
         }
 
         public Vector3 GetHoleStartPosition()
@@ -145,29 +137,39 @@ namespace MiniGolf.Network
                 return Vector3.zero;
             }
 
-            var playerScore = NetworkClient.localPlayer.GetComponent<PlayerScore>();
-            var playerIndex = playerScore.index;
+            var playerIndex = NetworkClient.localPlayer.GetComponent<GolfGamePlayer>().index;
             var position = startPositions[playerIndex].position;
 
             return position;
         }
 
-        public void QuitGame()
+        public void Quit()
         {
-            switch (singleton.mode)
+            if (GameManager.singleton.IsSingleplayer)
+            {
+                SceneManager.LoadScene(offlineScene);
+                return;
+            }
+
+            switch (mode)
             {
                 case NetworkManagerMode.ServerOnly: singleton.StopServer(); break;
                 case NetworkManagerMode.ClientOnly: singleton.StopClient(); break;
-                case NetworkManagerMode.Host: EndGame(); break;
+                case NetworkManagerMode.Host: EndRound(); break;
             }
         }
 
-        public void EndGame()
+        public void EndRound()
         {
-            if (singleton.mode == NetworkManagerMode.ClientOnly) return;
+            if (GameManager.singleton.IsSingleplayer)
+            {
+                SceneManager.LoadScene(offlineScene);
+                return;
+            }
 
-            if (PlayMode == PlayMode.Singleplayer) singleton.StopHost();
-            else ServerChangeScene(RoomScene);
+            if (mode == NetworkManagerMode.ClientOnly) return;
+
+            ServerChangeScene(RoomScene);
         }
         #endregion
 

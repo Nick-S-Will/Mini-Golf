@@ -1,4 +1,3 @@
-using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -6,10 +5,9 @@ using UnityEngine.InputSystem;
 namespace MiniGolf.Player
 {
     [RequireComponent(typeof(Rigidbody))]
-    public abstract class SwingController : NetworkBehaviour
+    public abstract class SwingController : MonoBehaviour
     {
         public static UnityEvent<SwingController> OnStartPlayer = new();
-        public static UnityEvent<SwingController> OnSetLocalPlayer = new();
 
         [Header("Move Detection")]
         [SerializeField] private SphereCollider sphereCollider;
@@ -30,7 +28,6 @@ namespace MiniGolf.Player
         public UnityEvent OnStopMoving;
 
         private Vector3 lastVelocity;
-        private bool physicsEnabled;
 
         protected Transform CameraTransform { get; private set; }
         protected float SwingInputSensitivity => swingInputSensitivity;
@@ -45,13 +42,6 @@ namespace MiniGolf.Player
         {
             CameraTransform = Camera.main.transform;
             Rigidbody = GetComponent<Rigidbody>();
-        }
-
-        public override void OnStartLocalPlayer()
-        {
-            base.OnStartLocalPlayer();
-
-            OnSetLocalPlayer.Invoke(this);
         }
 
         protected virtual void Start()

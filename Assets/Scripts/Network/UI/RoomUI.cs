@@ -2,6 +2,7 @@ using UnityEngine;
 using Displayable;
 using Mirror;
 using UnityEngine.UI;
+using System;
 
 namespace MiniGolf.Network.UI
 {
@@ -15,6 +16,8 @@ namespace MiniGolf.Network.UI
 
         private GolfRoomPlayer localPlayer;
 
+        protected override Comparison<GolfRoomPlayerDisplay> DisplayComparer => (display1, display2) => display1.DisplayObject.Name.CompareTo(display2.DisplayObject.Name);
+
         protected override void Awake()
         {
             base.Awake();
@@ -22,27 +25,19 @@ namespace MiniGolf.Network.UI
             if (readyToggle == null) Debug.LogError($"{nameof(readyToggle)} not assigned");
             if (startButton == null) Debug.LogError($"{nameof(startButton)} not assigned");
 
-            NetworkClient.RegisterHandler<PlayerListChangedMessage>(UpdatePlayerList);
+            GolfRoomManager.singleton.OnPlayerListChanged.AddListener(UpdatePlayerList);
         }
 
         private void OnDestroy()
         {
-            NetworkClient.UnregisterHandler<PlayerListChangedMessage>();
+            GolfRoomManager.singleton.OnPlayerListChanged.RemoveListener(UpdatePlayerList);
         }
 
         private void Update()
         {
-            if (NetworkClient.ready && GolfRoomManager.singleton.PlayMode == MiniGolf.Network.PlayMode.Singleplayer)
-            {
-                if (localPlayer) SetReady(true);
-                return;
-            }
-
             UpdateDisplays();
             UpdateLeaderUI();
         }
-
-        private void UpdatePlayerList(PlayerListChangedMessage _) => UpdatePlayerList();
 
         private void UpdatePlayerList()
         {

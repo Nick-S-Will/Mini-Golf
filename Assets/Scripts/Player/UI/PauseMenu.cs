@@ -44,7 +44,7 @@ namespace MiniGolf.Player.UI
             SetCursor(active);
         }
 
-        private void UpdateControlEnabledStatus()
+        private void UpdateControlEnabledStatus() // TODO: Replace this system since it causes problems when pausing in the hole
         {
             swingEnabled = PlayerHandler.SwingControlsEnabled;
             cameraEnabled = PlayerHandler.CameraControlsEnabled;
@@ -57,6 +57,6 @@ namespace MiniGolf.Player.UI
             Cursor.visible = visible;
         }
 
-        public void Quit() => GolfRoomManager.singleton.QuitGame();
+        public void Quit() => GolfRoomManager.singleton.Quit();
     }
 }
