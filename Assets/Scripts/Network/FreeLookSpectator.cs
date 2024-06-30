@@ -1,7 +1,6 @@
 using Cinemachine;
 using MiniGolf.Player;
 using MiniGolf.Progress;
-using MiniGolf.Terrain;
 using System.Collections;
 using System.Linq;
 using UnityEngine;

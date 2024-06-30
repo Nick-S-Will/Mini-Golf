@@ -14,6 +14,8 @@ namespace MiniGolf.Network
 
         [SyncVar]
         public int index;
+        [SyncVar(hook = nameof(OnPhysicsChanged))]
+        public bool physicsEnabled = true;
 
         public GolfRoomPlayer RoomPlayer
         {
@@ -41,9 +43,27 @@ namespace MiniGolf.Network
 
         public override void OnStartLocalPlayer()
         {
-            base.OnStartLocalPlayer();
+            PlayerHandler.singleton.ProgressHandler.OnStartHole.AddListener(EnablePhysics);
+            PlayerHandler.singleton.ProgressHandler.OnPlayerWaiting.AddListener(DisablePhysics);
 
             OnSetLocalPlayer.Invoke(this);
+        }
+
+        private void EnablePhysics() => SetPhysics(true);
+
+        private void DisablePhysics() => SetPhysics(false);
+
+        [Command]
+        private void SetPhysics(bool enabled)
+        {
+            physicsEnabled = enabled;
+        }
+
+        private void OnPhysicsChanged(bool oldEnabled, bool newEnabled)
+        {
+            if (oldEnabled == newEnabled) return;
+
+            Player.Rigidbody.isKinematic = !newEnabled;
         }
     }
 }

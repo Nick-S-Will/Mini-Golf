@@ -6,7 +6,7 @@ namespace MiniGolf.Player.UI
     public class SwingIndicator : MonoBehaviour
     {
         [SerializeField] private LayerMask groundCheckMask;
-        [SerializeField] private float groundOffset = 0.01f;
+        [SerializeField] [Min(0.0001f)] private float groundOffset = 0.01f;
 
         private SpriteRenderer spriteRenderer;
 
@@ -22,11 +22,13 @@ namespace MiniGolf.Player.UI
             if (oldPlayer)
             {
                 oldPlayer.OnSwing.RemoveListener(ShowCannotSwing);
+                oldPlayer.OnStartMoving.RemoveListener(ShowCannotSwing);
                 oldPlayer.OnStopMoving.RemoveListener(ShowCanSwing);
             }
             if (newPlayer)
             {
                 newPlayer.OnSwing.AddListener(ShowCannotSwing);
+                newPlayer.OnStartMoving.AddListener(ShowCannotSwing);
                 newPlayer.OnStopMoving.AddListener(ShowCanSwing);
 
                 if (!newPlayer.IsMoving) ShowCanSwing();
@@ -46,8 +48,8 @@ namespace MiniGolf.Player.UI
             }
 
             var playerPosition = PlayerHandler.Player.transform.position;
-            var ballRadius = PlayerHandler.Player.GetComponent<SphereCollider>().radius;
-            Physics.SphereCast(playerPosition, ballRadius - groundOffset, Vector3.down, out RaycastHit hitInfo, ballRadius, groundCheckMask);
+            var ballRadius = PlayerHandler.Player.SphereCollider.radius;
+            Physics.SphereCast(playerPosition, 0.5f * ballRadius, Vector3.down, out RaycastHit hitInfo, ballRadius, groundCheckMask);
 
             spriteRenderer.enabled = hitInfo.collider;
             if (hitInfo.collider == null) return;

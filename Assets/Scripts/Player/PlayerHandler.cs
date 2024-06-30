@@ -51,6 +51,8 @@ namespace MiniGolf.Player
 
         private SwingController player;
 
+        public ProgressHandler ProgressHandler => progressHandler;
+
         protected override void Awake()
         {
             base.Awake();
@@ -60,12 +62,12 @@ namespace MiniGolf.Player
             if (golfInput == null) Debug.LogError($"{nameof(golfInput)} not assigned");
             if (uiInput == null) Debug.LogError($"{nameof(uiInput)} not assigned");
 
-            if (GameManager.singleton.IsMultiplayer) GolfGamePlayer.OnSetLocalPlayer.AddListener(SetLocalPlayer);
+            if (GameManager.IsMultiplayer) GolfGamePlayer.OnSetLocalPlayer.AddListener(SetLocalPlayer);
         }
 
         private void Start()
         {
-            if (GameManager.singleton.IsSingleplayer) SpawnPlayer();
+            if (GameManager.IsSingleplayer) SpawnPlayer();
         }
 
         protected override void OnDestroy()

@@ -16,6 +16,7 @@ namespace MiniGolf.Progress
         [Space]
         [SerializeField] private HoleGenerator holeGenerator;
         [Space]
+        [SerializeField] private Vector3 spawnPosition = Vector3.up;
         [SerializeField] private float ballMinY = -10f;
         [Space]
         [SerializeField][Min(0f)] private float holeEndTime = 2f;
@@ -25,7 +26,6 @@ namespace MiniGolf.Progress
         public UnityEvent OnStrokeAdded, OnFallOff, OnPlayerWaiting;
         public UnityEvent OnCompleteHole, OnCompleteCourse;
 
-        private SwingController player;
         private HoleTile holeTile;
         private Course course;
         private Coroutine completeHoleRoutine;
@@ -49,7 +49,7 @@ namespace MiniGolf.Progress
 
         private void Start()
         {
-            if (GameManager.singleton.IsMultiplayer) GolfRoomManager.singleton.OnPlayerListChanged.AddListener(TryCompleteHole);
+            if (GameManager.IsMultiplayer) GolfRoomManager.singleton.OnPlayerListChanged.AddListener(TryCompleteHole);
         }
 
         private void OnDestroy()
@@ -68,8 +68,6 @@ namespace MiniGolf.Progress
 
         private void ChangePlayer(SwingController oldPlayer, SwingController newPlayer)
         {
-            player = newPlayer;
-
             if (oldPlayer) oldPlayer.OnSwing.RemoveListener(AddStroke);
             if (newPlayer) newPlayer.OnSwing.AddListener(AddStroke);
         }
@@ -100,44 +98,37 @@ namespace MiniGolf.Progress
             if (holeIndex >= course.Length) return false;
 
             holeGenerator.Generate(course.HoleData[holeIndex]);
-            if (holeIndex > 0)
-            {
-                var position = GameManager.singleton.IsMultiplayer ? GolfRoomManager.singleton.GetHoleStartPosition() : Vector3.zero;
-                player.transform.SetPositionAndRotation(position, Quaternion.identity);
-                player.SetPhysicsEnabled(true);
-                PlayerHandler.SwingControlsEnabled = true;
-            }
 
+            var position = GameManager.IsMultiplayer ? GolfRoomManager.singleton.GetHoleStartPosition() : spawnPosition;
+            PlayerHandler.Player.transform.SetPositionAndRotation(position, Quaternion.identity);
+            if (holeIndex > 0) PlayerHandler.SwingControlsEnabled = true;
+            
             OnStartHole.Invoke();
             return true;
         }
 
         private void AddStroke()
         {
-            holePositions[holeIndex].Add(player.transform.position);
+            holePositions[holeIndex].Add(PlayerHandler.Player.transform.position);
             OnStrokeAdded.Invoke();
         }
 
         private void CheckFall()
         {
-            if (player == null || player.Rigidbody.transform.position.y > ballMinY) return;
+            if (PlayerHandler.Player == null || PlayerHandler.Player.Rigidbody.transform.position.y > ballMinY) return;
 
-            player.transform.position = CurrentPositions[^1];
-            player.Rigidbody.velocity = Vector3.zero;
-            player.Rigidbody.angularVelocity = Vector3.zero;
+            PlayerHandler.Player.transform.position = CurrentPositions[^1];
+            PlayerHandler.Player.Rigidbody.velocity = Vector3.zero;
+            PlayerHandler.Player.Rigidbody.angularVelocity = Vector3.zero;
 
             OnFallOff.Invoke();
         }
 
         private void HoleBall(SwingController ball)
         {
-            var isPlayer = player == ball;
-            if (isPlayer)
-            {
-                PlayerHandler.SwingControlsEnabled = false;
-                ball.SetPhysicsEnabled(false);
-            }
-
+            var isPlayer = PlayerHandler.Player == ball;
+            if (isPlayer) PlayerHandler.SwingControlsEnabled = false;
+            
             if (CanChangeHoles()) CompleteHole();
             else if (isPlayer) OnPlayerWaiting.Invoke();
         }
@@ -151,7 +142,7 @@ namespace MiniGolf.Progress
         {
             if (holeTile == null) return false;
             
-            if (GameManager.singleton.IsSingleplayer) return holeTile.BallCount == 1; 
+            if (GameManager.IsSingleplayer) return holeTile.BallCount == 1; 
             else return holeTile.BallCount == GolfRoomManager.singleton.roomSlots.Count;
         }
 
@@ -173,7 +164,7 @@ namespace MiniGolf.Progress
             OnCompleteCourse.Invoke();
             yield return new WaitForSeconds(Mathf.Max(courseEndTime - holeEndTime, 0f));
 
-            GolfRoomManager.singleton.EndRound();
+            GameManager.EndRound();
         }
     }
 }

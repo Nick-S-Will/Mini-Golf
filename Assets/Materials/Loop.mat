@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5018822452295284482
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 0
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Course Ground
-  m_Shader: {fileID: -6465566751694194690, guid: 9d0f9bdd4290c8d4c8576bb96beeaaad, type: 3}
+  m_Name: Loop
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -57,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 1d05f8485741f4d4ca94e613ba38db65, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -72,40 +59,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _accentNormal:
-        m_Texture: {fileID: 2800000, guid: a877ce1d4a2d16943a5e2ccd7fbb9ae4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _accentTexture:
-        m_Texture: {fileID: 2800000, guid: 5150749976832d444ad83a938e545074, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _mainNormal:
-        m_Texture: {fileID: 2800000, guid: 18ed094109550844291e0fdd806c72cf, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _mainTexture:
-        m_Texture: {fileID: 2800000, guid: d721ac4062a0af8488ff58848b8c6173, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _wallNormal:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _wallTexture:
-        m_Texture: {fileID: 2800000, guid: 1d05f8485741f4d4ca94e613ba38db65, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BUILTIN_QueueControl: 0
-    - _BUILTIN_QueueOffset: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0
+    - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
@@ -116,13 +77,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _minWallAngle: 60
-    - _tileScale: 2
     m_Colors:
-    - _Color: {r: 0.15354209, g: 0.85660374, b: 0.3149005, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _accentColor: {r: 0.41699937, g: 0.7433963, b: 0.36889285, a: 1}
-    - _mainColor: {r: 0.5113207, g: 1, b: 0.55696774, a: 1}
-    - _upDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _wallColor: {r: 0.7056604, g: 0.51912457, b: 0.28093266, a: 1}
   m_BuildTextureStacks: []

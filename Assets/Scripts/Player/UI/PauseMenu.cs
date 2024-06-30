@@ -1,4 +1,4 @@
-using MiniGolf.Network;
+using MiniGolf.Managers.Game;
 using MiniGolf.Terrain;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -44,6 +44,6 @@ namespace MiniGolf.Player.UI
             Cursor.visible = visible;
         }
 
-        public void Quit() => GolfRoomManager.singleton.Quit();
+        public void Quit() => GameManager.Quit();
     }
 }

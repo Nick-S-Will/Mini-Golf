@@ -145,28 +145,16 @@ namespace MiniGolf.Network
 
         public void Quit()
         {
-            if (GameManager.singleton.IsSingleplayer)
-            {
-                SceneManager.LoadScene(offlineScene);
-                return;
-            }
-
             switch (mode)
             {
                 case NetworkManagerMode.ServerOnly: singleton.StopServer(); break;
                 case NetworkManagerMode.ClientOnly: singleton.StopClient(); break;
-                case NetworkManagerMode.Host: EndRound(); break;
+                case NetworkManagerMode.Host: ServerChangeScene(RoomScene); break;
             }
         }
 
         public void EndRound()
         {
-            if (GameManager.singleton.IsSingleplayer)
-            {
-                SceneManager.LoadScene(offlineScene);
-                return;
-            }
-
             if (mode == NetworkManagerMode.ClientOnly) return;
 
             ServerChangeScene(RoomScene);

@@ -1184,26 +1184,49 @@ MonoBehaviour:
   courseOptions:
   - name: Beginner
     holeData:
-    - seed: 1
-      tileCount: 3
     - seed: 2
       tileCount: 3
-    - seed: 0
+    - seed: 4
       tileCount: 3
+    - seed: 8
+      tileCount: 3
+    - seed: 0
+      tileCount: 4
+    - seed: 9
+      tileCount: 4
+    - seed: 3
+      tileCount: 4
   - name: Intermediate
     holeData:
-    - seed: 1
-      tileCount: 3
-    - seed: 2
-      tileCount: 3
     - seed: 0
+      tileCount: 4
+    - seed: 9
       tileCount: 3
-    - seed: 0
+    - seed: 8
+      tileCount: 4
+    - seed: 4
+      tileCount: 5
+    - seed: 5
       tileCount: 5
     - seed: 2
-      tileCount: 6
+      tileCount: 5
+  - name: Advanced
+    holeData:
+    - seed: 4
+      tileCount: 5
+    - seed: 5
+      tileCount: 5
+    - seed: 2
+      tileCount: 5
+    - seed: 2
+      tileCount: 7
     - seed: 3
-      tileCount: 6
+      tileCount: 7
+    - seed: 6
+      tileCount: 7
+    - seed: 7
+      tileCount: 7
+  titleScene: Assets/Scenes/TitleScene.unity
   OnSelectedCourseChange:
     m_PersistentCalls:
       m_Calls: []
@@ -1214,7 +1237,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 263799697}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -3147770090849230524, guid: c7753a5eeeebe1e4b9efbff0486f396c, type: 2}
   m_audioClip: {fileID: 8300000, guid: 78e4da32070226543a11f0bb76e189ce, type: 3}
@@ -1904,6 +1927,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1122156182}
     m_Modifications:
+    - target: {fileID: 1951533471442381288, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6191364426763635771, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3051,6 +3078,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 951369302}
     m_Modifications:
+    - target: {fileID: 1951533471442381288, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6191364426763635771, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2
@@ -3630,6 +3661,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 784322111}
     m_Modifications:
+    - target: {fileID: 1249576507891343217, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1636862240224563677, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
       propertyPath: m_LocalScale.z
       value: 1
@@ -4911,7 +4946,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnSelect:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 952901528}
+        m_TargetAssemblyTypeName: MiniGolf.Network.UI.RoomSetupUI, Assembly-CSharp
+        m_MethodName: UpdateIP
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnDeselect:
     m_PersistentCalls:
       m_Calls: []
@@ -5145,6 +5192,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1092777654}
     m_Modifications:
+    - target: {fileID: 1951533471442381288, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6191364426763635771, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2
@@ -5188,6 +5239,10 @@ PrefabInstance:
     - target: {fileID: 7575622081207761905, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
       propertyPath: m_Name
       value: Plain Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204367843772245912, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69bd96bf95fd8cd46886a2db681716d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progressHandler: {fileID: 0}
   OnScoreChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -243,7 +244,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!135 &5052038201588157047
 SphereCollider:
   m_ObjectHideFlags: 0

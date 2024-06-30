@@ -12,11 +12,11 @@ namespace MiniGolf.Terrain
 
         private readonly HashSet<SwingController> heldBalls = new();
 
-        public int BallCount 
+        public int BallCount
         {
             get
             {
-                heldBalls.RemoveWhere(ball => ball == null);
+                heldBalls.RemoveWhere(player => player == null);
                 return heldBalls.Count;
             }
         }
@@ -25,18 +25,17 @@ namespace MiniGolf.Terrain
 
         private void OnTriggerEnter(Collider other)
         {
-            var swingController = other.GetComponent<SwingController>();
-            if (swingController)
-            {
-                heldBalls.Add(swingController);
-                OnBallEnter.Invoke(swingController);
-            }
+            if (!other.TryGetComponent(out SwingController player)) return;
+
+            _ = heldBalls.Add(player);
+            OnBallEnter.Invoke(player);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            var swingController = other.GetComponent<SwingController>();
-            if (swingController) _ = heldBalls.Remove(swingController);
+            if (!other.TryGetComponent(out SwingController player)) return;
+
+            _ = heldBalls.Remove(player);
         }
     }
 }

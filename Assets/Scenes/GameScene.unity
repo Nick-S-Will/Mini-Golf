@@ -20,13 +20,13 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.3137255, g: 0.39215687, b: 0.39215687, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_AmbientMode: 3
+  m_SubtractiveShadowColor: {r: 0.42745098, g: 0.7764706, b: 1, a: 1}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -37,8 +37,8 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_Sun: {fileID: 1456850926}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 299066a0efd31d948a72b4f15f0f7f87, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -566,30 +566,37 @@ MonoBehaviour:
   startTilePrefabs:
   - {fileID: 8878881304746720016, guid: 9ba0b25a8c240ff41887066dacd579b3, type: 3}
   tilePrefabs:
-  - {fileID: -372694278852461617, guid: 519609bf43e77dd48b9eaf9c7de31819, type: 3}
+  - {fileID: 1437823596838743736, guid: b0167597193c2b0428238d40b4949f49, type: 3}
+  - {fileID: 1437823596838743736, guid: 4b1900d7e6f648d4e982c14d1580d4c0, type: 3}
+  - {fileID: 7549696354995593335, guid: bc0a4e9b9569b754a92006afa1b250fa, type: 3}
+  - {fileID: 9069101236897917837, guid: 4c44c6c561db5484cbb76076a8e307b0, type: 3}
+  - {fileID: 5589527610746605730, guid: a3611fc2a614c3a4b8af4ea9ff6e2d83, type: 3}
+  - {fileID: 8128682831663951915, guid: 66440b88e0d47334b9fce842ace7aa24, type: 3}
+  - {fileID: 5380159455501335970, guid: d5123802094b36f49abdc6b35613b6bc, type: 3}
   - {fileID: 8669192486944295857, guid: 34c3f7f4b10abfd488d4fac0ce9f4200, type: 3}
   - {fileID: 3483026065000080780, guid: 8f5cc9cc160726842bbee6f2752f6ab1, type: 3}
-  - {fileID: 6220431792190485081, guid: eae8615792ea3bd46aeacf9ade98fe4d, type: 3}
+  - {fileID: 4460909166163357985, guid: 7c1271b9f75639f46b926895aba91ddc, type: 3}
   holeTilePrefabs:
   - {fileID: 4458691756320286204, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
-  settings:
-    seed: 0
-    tileCount: 3
+  hole:
+    seed: 7
+    tileCount: 7
   spawnInterval: 0
+  usingWalls: 1
   cellGizmoColorGradient:
     serializedVersion: 2
-    key0: {r: 0, g: 0, b: 0, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 0, b: 0, a: 1}
+    key2: {r: 0, g: 1, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 1, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
+    ctime1: 1002
+    ctime2: 32768
+    ctime3: 65535
     ctime4: 0
     ctime5: 0
     ctime6: 0
@@ -602,12 +609,46 @@ MonoBehaviour:
     atime5: 0
     atime6: 0
     atime7: 0
-    m_Mode: 0
+    m_Mode: 2
     m_ColorSpace: 0
-    m_NumColorKeys: 2
+    m_NumColorKeys: 4
     m_NumAlphaKeys: 2
-  boundsGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showUsedCells: 0
+  maxMergeDistance: 0.0001
+  maxMergeAngle: 0
+  mergedVertexGizmoColorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 0, g: 1, b: 0, a: 1}
+    key2: {r: 0, g: 0, b: 1, a: 0}
+    key3: {r: 0, g: 0, b: 1, a: 0}
+    key4: {r: 0, g: 0, b: 1, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 8096
+    ctime2: 15651
+    ctime3: 15651
+    ctime4: 46954
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 2
+    m_ColorSpace: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  mergedNormalGizmoLength: 0.241
+  showMergedVertices: 0
+  boundsGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showBounds: 0
   OnGenerate:
     m_PersistentCalls:
@@ -1117,7 +1158,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 247634989}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.010717339, z: -0, w: -0.9999426}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1336,7 +1377,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.42745098, g: 0.7764706, b: 1, a: 0}
+  m_BackGroundColor: {r: 0.42745098, g: 0.7764706, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1385,13 +1426,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 436228452}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04173402, y: 0.0000000037220451, z: -1.5547136e-10, w: 0.99912876}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1586835365}
-  m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &436228456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2228,7 +2269,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holeGenerator: {fileID: 189819109}
-  ballMinY: -5
+  spawnPosition: {x: 0, y: 0.5, z: 0}
+  ballMinY: -2
   holeEndTime: 2
   courseEndTime: 8
   OnStartCourse:
@@ -2371,7 +2413,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 997393558}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5eaa69ca127e288408442950bcff0eac, type: 3}
   m_Name: 
@@ -3894,7 +3936,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -3946,13 +3988,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1456850925}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
 --- !u!1 &1513722180
 GameObject:
   m_ObjectHideFlags: 0
@@ -4319,7 +4361,7 @@ MonoBehaviour:
   groundCheckMask:
     serializedVersion: 2
     m_Bits: 1
-  groundOffset: 0.005
+  groundOffset: 0.0025
 --- !u!1 &1586835364
 GameObject:
   m_ObjectHideFlags: 0
@@ -6412,5 +6454,5 @@ SceneRoots:
   - {fileID: 1586835365}
   - {fileID: 1392832330}
   - {fileID: 189819110}
-  - {fileID: 144523032}
   - {fileID: 910688506}
+  - {fileID: 144523032}
