@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MiniGolf.Progress.UI
 {
-    public class PlayerScoreDisplay : ArrayDisplay<PlayerScore, int>
+    public class PlayerScoreDisplay : ListDisplay<PlayerScore, int>
     {
         [SerializeField] private TMP_Text playerNameText;
         [SerializeField] private TMP_Text totalScoreText;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MiniGolf.Terrain.Data.UI
 {
-    public class CourseParDisplay : ArrayDisplay<Course, int>
+    public class CourseParDisplay : ListDisplay<Course, int>
     {
         [SerializeField] private TMP_Text courseNameText;
         [SerializeField] private TMP_Text courseParText;

@@ -97,7 +97,8 @@ namespace MiniGolf.Progress
         {
             if (holeIndex >= course.Length) return false;
 
-            holeGenerator.Generate(course.HoleData[holeIndex]);
+            var usingWalls = GameManager.singleton ? GameManager.singleton.UsingWalls : true;
+            holeGenerator.Generate(course.HoleData[holeIndex], usingWalls);
 
             var position = GameManager.IsMultiplayer ? GolfRoomManager.singleton.GetHoleStartPosition() : spawnPosition;
             PlayerHandler.Player.transform.SetPositionAndRotation(position, Quaternion.identity);

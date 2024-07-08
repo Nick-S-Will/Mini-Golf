@@ -10,6 +10,8 @@ namespace MiniGolf.Network
 
         [SyncVar(hook = nameof(SelectedCourseIndexChanged))]
         private int selectedCourseIndex;
+        [SyncVar(hook = nameof(UsingWallsChanged))]
+        private bool usingWalls;
 
         private void Awake()
         {
@@ -31,10 +33,21 @@ namespace MiniGolf.Network
         {
             selectedCourseIndex = courseIndex;
         }
+
+        [Command]
+        public void SetUsingWalls(bool usingWalls)
+        {
+            this.usingWalls = usingWalls;
+        }
         
         private void SelectedCourseIndexChanged(int _, int newIndex)
         {
             GameManager.singleton.SelectedCourseIndex = newIndex;
+        }
+
+        private void UsingWallsChanged(bool _, bool newUsingWalls)
+        {
+            GameManager.singleton.UsingWalls = newUsingWalls;
         }
     }
 }

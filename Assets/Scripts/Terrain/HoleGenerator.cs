@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEngine.Events;
 
 using MiniGolf.Terrain.Data;
-using MiniGolf.Managers.Game;
 
 namespace MiniGolf.Terrain
 {
@@ -73,7 +72,7 @@ namespace MiniGolf.Terrain
         #region Generate
         public void Generate() => Generate(hole);
 
-        public void Generate(Hole hole)
+        public void Generate(Hole hole, bool withWalls = true)
         {
             if (startTilePrefabs.Length == 0 || tilePrefabs.Length == 0 || holeTilePrefabs.Length == 0)
             {
@@ -84,26 +83,26 @@ namespace MiniGolf.Terrain
             if (generationRoutine != null) StopCoroutine(generationRoutine);
             Clear();
 
-            generationRoutine = StartCoroutine(GenerationRoutine(hole));
+            if (!Application.isPlaying) withWalls = usingWalls;
+            generationRoutine = StartCoroutine(GenerationRoutine(hole, withWalls));
         }
 
-        private IEnumerator GenerationRoutine(Hole hole)
+        private IEnumerator GenerationRoutine(Hole hole, bool withWalls)
         {
             System.Random rng = new(hole.Seed);
-            var usingWalls = GameManager.singleton ? GameManager.singleton.UsingWalls : this.usingWalls;
 
             for (int tileIndex = 0; tileIndex < hole.TileCount; tileIndex++)
             {
                 Tile[] tilePrefabOptions = GetTileOptionsFor(hole, tileIndex);
                 var randomIndex = rng.Next(tilePrefabOptions.Length);
-                var tile = SpawnTile(tilePrefabOptions[randomIndex], usingWalls);
+                var tile = SpawnTile(tilePrefabOptions[randomIndex], withWalls);
 
                 if (tile is HoleTile holeTile) CurrentHoleTile = holeTile;
 
                 if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }
 
-            MeshCollider.sharedMesh = CalculateHoleMesh(usingWalls);
+            MeshCollider.sharedMesh = CalculateHoleMesh(withWalls);
             OnGenerate.Invoke(CurrentHoleTile);
 
             generationRoutine = null;
@@ -187,7 +186,6 @@ namespace MiniGolf.Terrain
 
             var holeMesh = new Mesh();
             holeMesh.CombineMeshes(combines, true);
-            MeshUtility.Optimize(holeMesh);
 
             return holeMesh;
         }
