@@ -8,11 +8,22 @@ namespace MiniGolf.Terrain
         [SerializeField] private Vector3 angularVelocity;
 
         private new Rigidbody rigidbody;
+        private Quaternion lastRotation;
 
         private void Awake()
         {
             rigidbody = GetComponent<Rigidbody>();
-            rigidbody.AddTorque(Mathf.Deg2Rad * angularVelocity, ForceMode.VelocityChange);
+            rigidbody.isKinematic = true;
+            lastRotation = transform.rotation;
+            angularVelocity = lastRotation * angularVelocity;
+        }
+
+        private void FixedUpdate()
+        {
+            var rotation = (lastRotation * Quaternion.Euler(Time.fixedDeltaTime * angularVelocity)).normalized;
+            rigidbody.MoveRotation(rotation);
+
+            lastRotation = rotation;
         }
     }
 }

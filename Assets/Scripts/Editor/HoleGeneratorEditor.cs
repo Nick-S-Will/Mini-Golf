@@ -19,12 +19,12 @@ namespace MiniGolf.Editor
             if (GUILayout.Button("Generate Hole"))
             {
                 holeGenerator.Generate();
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+                if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
             if (GUILayout.Button("Clear"))
             {
                 holeGenerator.Clear();
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+                if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
         }
     }
