@@ -536,7 +536,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189819107}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: aa3240c550b641b4cb4811d874b01b24, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -580,10 +580,10 @@ MonoBehaviour:
   holeTilePrefabs:
   - {fileID: 4458691756320286204, guid: cca9152e4f9bdbb4fb460c5621697acd, type: 3}
   hole:
-    seed: 20
-    tileCount: 9
+    seed: 7
+    tileCount: 5
   spawnInterval: 0
-  usingWalls: 1
+  usingWalls: 0
   cellGizmoColorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
@@ -628,8 +628,8 @@ MonoBehaviour:
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 8096
-    ctime2: 15651
+    ctime1: 32768
+    ctime2: 65535
     ctime3: 15651
     ctime4: 46954
     ctime5: 0
@@ -648,7 +648,7 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   mergedNormalGizmoLength: 0.241
-  showMergedVertices: 0
+  showMergedVertices: 1
   boundsGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showBounds: 0
   OnGenerate:
@@ -948,7 +948,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.9032567, z: -2.04895}
+  m_FollowOffset: {x: 0, y: 2.350159, z: -3.127643}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -4107,7 +4107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.9032567, z: -2.04895}
+  m_FollowOffset: {x: 0, y: 2.350159, z: -3.127643}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -4569,7 +4569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.9032567, z: -2.04895}
+  m_FollowOffset: {x: 0, y: 2.350159, z: -3.127643}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1

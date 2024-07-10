@@ -53,22 +53,6 @@ namespace MiniGolf.Terrain
         public HoleTile CurrentHoleTile { get; private set; }
         public Bounds HoleBounds => MeshCollider.bounds;
 
-        public void Clear()
-        {
-            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
-            var children = transform.Cast<Transform>().ToArray();
-            foreach (var child in children)
-            {
-                var tile = child.GetComponent<Tile>();
-                if (tile) contextDestroy(tile.gameObject);
-            }
-            tileInstances.Clear();
-            usedCells.Clear();
-            mergedVertices.Clear();
-            CurrentHoleTile = null;
-            MeshCollider.sharedMesh = null;
-        }
-
         #region Generate
         public void Generate() => Generate(hole);
 
@@ -85,6 +69,22 @@ namespace MiniGolf.Terrain
 
             if (!Application.isPlaying) withWalls = usingWalls;
             generationRoutine = StartCoroutine(GenerationRoutine(hole, withWalls));
+        }
+
+        public void Clear()
+        {
+            Action<UnityEngine.Object> contextDestroy = Application.isPlaying ? Destroy : DestroyImmediate;
+            var children = transform.Cast<Transform>().ToArray();
+            foreach (var child in children)
+            {
+                var tile = child.GetComponent<Tile>();
+                if (tile) contextDestroy(tile.gameObject);
+            }
+            tileInstances.Clear();
+            usedCells.Clear();
+            mergedVertices.Clear();
+            CurrentHoleTile = null;
+            MeshCollider.sharedMesh = null;
         }
 
         private IEnumerator GenerationRoutine(Hole hole, bool withWalls)
@@ -168,6 +168,7 @@ namespace MiniGolf.Terrain
         }
         #endregion
 
+        #region Mesh Calculation
         private Mesh CalculateHoleMesh(bool includeWalls)
         {
             var meshCount = tileInstances.Sum(tile => tile.GroundMeshFilters.Length + (includeWalls ? tile.WallMeshFilters.Length : 0));
@@ -185,10 +186,64 @@ namespace MiniGolf.Terrain
             }
 
             var holeMesh = new Mesh();
+            holeMesh.name = "Hole Collision Mesh";
             holeMesh.CombineMeshes(combines, true);
+            MergeVertices(holeMesh);
 
             return holeMesh;
         }
+
+        private void MergeVertices(Mesh mesh)
+        {
+            Dictionary<int, int> vertexIndexMap = new();
+            List<Vector3> newVertices = new(), newNormals = new();
+
+            var vertices = mesh.vertices;
+            var normals = mesh.normals;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                if (vertexIndexMap.ContainsKey(i)) continue;
+                if (i != newVertices.Count) vertexIndexMap.Add(i, newVertices.Count);
+
+                for (int j = i + 1; j < vertices.Length; j++)
+                {
+                    if (vertexIndexMap.ContainsKey(j)) continue;
+                    if (Vector3.Distance(vertices[i], vertices[j]) > maxMergeDistance) continue;
+                    if (Vector3.Angle(normals[i], normals[j]) > maxMergeAngle) continue;
+                    if (VertexIsCentral(vertices[i])) continue;
+
+                    vertexIndexMap.Add(j, newVertices.Count);
+
+                    mergedVertices.Add(vertices[i]);
+                    mergedVertices.Add(normals[i]);
+                }
+
+                newVertices.Add(vertices[i]);
+                newNormals.Add(normals[i]);
+            }
+
+            var triangles = mesh.triangles;
+            for (int i = 0; i < triangles.Length; i++)
+            {
+                if (vertexIndexMap.TryGetValue(triangles[i], out int newIndex)) triangles[i] = newIndex;
+            }
+
+            mesh.triangles = triangles;
+            mesh.vertices = newVertices.ToArray();
+            mesh.normals = newNormals.ToArray();
+        }
+
+        private bool VertexIsCentral(Vector3 vertex)
+        {
+            var xTiles = vertex.x / Tile.SCALE.x;
+            var zTiles = vertex.z / Tile.SCALE.z;
+
+            var xIsCentral = Mathf.Abs(Mathf.Round(xTiles) - xTiles) < .5f - maxMergeDistance;
+            var zIsCentral = Mathf.Abs(Mathf.Round(zTiles) - zTiles) < .5f - maxMergeDistance;
+
+            return xIsCentral && zIsCentral;
+        }
+        #endregion
 
         private Vector3Int LocalCellToCell(Vector3Int baseCell, Quaternion baseRotation, Vector3Int localCell)
         {

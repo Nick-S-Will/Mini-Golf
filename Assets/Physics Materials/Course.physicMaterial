@@ -9,6 +9,6 @@ PhysicMaterial:
   m_Name: Course
   dynamicFriction: 0.45
   staticFriction: 0.5
-  bounciness: 0.15
+  bounciness: 0.7
   frictionCombine: 0
   bounceCombine: 0

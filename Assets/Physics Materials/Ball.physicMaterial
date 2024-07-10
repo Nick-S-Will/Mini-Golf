@@ -9,6 +9,6 @@ PhysicMaterial:
   m_Name: Ball
   dynamicFriction: 0.26
   staticFriction: 0.3
-  bounciness: 0.25
+  bounciness: 0.3
   frictionCombine: 0
   bounceCombine: 0
