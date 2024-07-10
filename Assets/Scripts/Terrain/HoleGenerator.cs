@@ -23,6 +23,7 @@ namespace MiniGolf.Terrain
         [Space]
         [SerializeField] private Hole hole;
         [SerializeField][Min(0f)] private float spawnInterval;
+        [SerializeField] private MeshCollider wallCollider;
         [SerializeField] private bool usingWalls;
         [Space]
         [SerializeField] private Gradient cellGizmoColorGradient;
@@ -52,6 +53,11 @@ namespace MiniGolf.Terrain
         public Hole HoleData => hole;
         public HoleTile CurrentHoleTile { get; private set; }
         public Bounds HoleBounds => MeshCollider.bounds;
+
+        private void Awake()
+        {
+            if (wallCollider == null) Debug.LogError($"{nameof(wallCollider)} not assigned");
+        }
 
         #region Generate
         public void Generate() => Generate(hole);
@@ -85,6 +91,7 @@ namespace MiniGolf.Terrain
             mergedVertices.Clear();
             CurrentHoleTile = null;
             MeshCollider.sharedMesh = null;
+            wallCollider.sharedMesh = null;
         }
 
         private IEnumerator GenerationRoutine(Hole hole, bool withWalls)
@@ -102,7 +109,8 @@ namespace MiniGolf.Terrain
                 if (Application.isPlaying && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
             }
 
-            MeshCollider.sharedMesh = CalculateHoleMesh(withWalls);
+            MeshCollider.sharedMesh = CalculateGroundMesh();
+            wallCollider.sharedMesh = withWalls ? CalculateWallMesh() : null;
             OnGenerate.Invoke(CurrentHoleTile);
 
             generationRoutine = null;
@@ -169,14 +177,18 @@ namespace MiniGolf.Terrain
         #endregion
 
         #region Mesh Calculation
-        private Mesh CalculateHoleMesh(bool includeWalls)
+        private Mesh CalculateGroundMesh() => CalculateCombinedMesh("Ground Collision Mesh", tile => tile.GroundMeshFilters);
+
+        private Mesh CalculateWallMesh() => CalculateCombinedMesh("Wall Collision Mesh", tile => tile.WallMeshFilters);
+
+        private Mesh CalculateCombinedMesh(string meshName, Func<Tile, MeshFilter[]> GetMeshes)
         {
-            var meshCount = tileInstances.Sum(tile => tile.GroundMeshFilters.Length + (includeWalls ? tile.WallMeshFilters.Length : 0));
+            var meshCount = tileInstances.Sum(tile => GetMeshes(tile).Length);
             var combines = new CombineInstance[meshCount];
             int combineIndex = 0;
             foreach (var tile in tileInstances)
             {
-                var meshfilters = includeWalls ? tile.GroundMeshFilters.Concat(tile.WallMeshFilters) : tile.GroundMeshFilters;
+                var meshfilters = GetMeshes(tile);
                 foreach (var meshFilter in meshfilters)
                 {
                     combines[combineIndex].transform = transform.localToWorldMatrix.inverse * meshFilter.transform.localToWorldMatrix;
@@ -185,12 +197,12 @@ namespace MiniGolf.Terrain
                 }
             }
 
-            var holeMesh = new Mesh();
-            holeMesh.name = "Hole Collision Mesh";
-            holeMesh.CombineMeshes(combines, true);
-            MergeVertices(holeMesh);
+            var combinedMesh = new Mesh();
+            combinedMesh.name = meshName;
+            combinedMesh.CombineMeshes(combines, true);
+            MergeVertices(combinedMesh);
 
-            return holeMesh;
+            return combinedMesh;
         }
 
         private void MergeVertices(Mesh mesh)

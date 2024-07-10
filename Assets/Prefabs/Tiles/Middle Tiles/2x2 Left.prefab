@@ -419,7 +419,7 @@ GameObject:
   - component: {fileID: 3439023462001447129}
   m_Layer: 0
   m_Name: Blades
-  m_TagString: Untagged
+  m_TagString: Camera Ignore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -486,7 +486,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3124096793796871166}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c6a126364bd2d9d43a47f617ba9599ed, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -507,7 +507,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3124096793796871166}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c6a126364bd2d9d43a47f617ba9599ed, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
