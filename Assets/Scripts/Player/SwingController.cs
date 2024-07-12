@@ -35,6 +35,9 @@ namespace MiniGolf.Player
 
         public Rigidbody Rigidbody { get; private set; }
         public SphereCollider SphereCollider => sphereCollider;
+        /// <summary>
+        /// Percentage of the max power to be used in swing. Range [0, 1]
+        /// </summary>
         public float BackswingScaler { get; private set; }
         public bool IsBackswinging { get; private set; }
         public bool IsMoving => Rigidbody.velocity.magnitude > ballVelocityTolerance;

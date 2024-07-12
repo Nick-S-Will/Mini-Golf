@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 4501236908176230234}
   m_Layer: 0
   m_Name: Flag Pole
-  m_TagString: Untagged
+  m_TagString: Camera Ignore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
