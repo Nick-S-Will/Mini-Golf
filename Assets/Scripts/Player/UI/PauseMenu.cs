@@ -27,7 +27,7 @@ namespace MiniGolf.Player.UI
             if (context.started) SetActive(!IsPaused);
         }
 
-        public void SetActive(bool active)
+        public void SetActive(bool active) // TODO: Consider pausing time in singleplayer
         {
             hudParent.SetActive(!active);
             graphicsParent.SetActive(active);
