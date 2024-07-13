@@ -55,7 +55,8 @@ namespace MiniGolf.CameraControl
             if (Application.isPlaying) PlayerHandler.SetControls(false);
 
             var bounds = progressHandler.HoleGenerator.HoleBounds;
-            var camZOffset = bounds.size.z + cameraBoundsMargin;
+            var boundsMaxExtent = Mathf.Max(bounds.extents.x, bounds.extents.z);
+            var camZOffset = boundsMaxExtent + cameraBoundsMargin;
             holeBoundsCenter.position = bounds.center;
             virtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset.z = -camZOffset;
             virtualCamera.enabled = true;

@@ -649,7 +649,7 @@ MonoBehaviour:
     m_ColorSpace: 0
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
-  mergedNormalGizmoLength: 0.241
+  mergedNormalGizmoLength: 0.2
   showMergedVertices: 1
   boundsGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showBounds: 0
@@ -966,7 +966,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.4, z: -1.3}
+  m_FollowOffset: {x: 0, y: 0.5120314, z: -1.485452}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -2600,7 +2600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   progressHandler: {fileID: 910688505}
   holeBoundsCenter: {fileID: 247634990}
-  cameraBoundsMargin: 1
+  cameraBoundsMargin: 2.5
   viewDelay: 1.5
   viewTime: 3.5
 --- !u!1 &1044999721
@@ -4286,7 +4286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.4, z: -1.3}
+  m_FollowOffset: {x: 0, y: 0.5120314, z: -1.485452}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -4946,7 +4946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 0.4, z: -1.3}
+  m_FollowOffset: {x: 0, y: 0.5120314, z: -1.485452}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -6075,7 +6075,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 3, z: -7}
+  m_FollowOffset: {x: 0, y: 3, z: -5}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
