@@ -90,15 +90,6 @@ namespace MiniGolf.Network
             if (!RoomDataSync.singleton.netIdentity.isOwned) RoomDataSync.singleton.netIdentity.AssignClientAuthority(conn);
         }
 
-        public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
-        {
-            var startTransform = GetStartPosition();
-            var position = startTransform ? startTransform.position : Vector3.zero;
-            var roomPlayer = Instantiate(roomPlayerPrefab, position, Quaternion.identity);
-
-            return roomPlayer.gameObject;
-        }
-
         public override void OnRoomServerPlayersReady()
         {
             if (Utils.IsHeadless()) base.OnRoomServerPlayersReady();

@@ -37,11 +37,25 @@ namespace MiniGolf.Network
             displayRigidbody = GetComponent<Rigidbody>();
             sphereCollider = GetComponent<SphereCollider>();
             meshRenderer = GetComponent<MeshRenderer>();
+
+            GolfRoomManager.singleton.OnPlayerListChanged.AddListener(GoToStartPosition);
+        }
+
+        private void OnDestroy()
+        {
+            if (GolfRoomManager.singleton == null) return;
+
+            GolfRoomManager.singleton.OnPlayerListChanged.RemoveListener(GoToStartPosition);
         }
 
         public override void OnStartAuthority()
         {
             SetName(PlayerPrefs.GetString(PLAYER_NAME_KEY, $"Player {index + 1}"));
+        }
+
+        private void GoToStartPosition()
+        {
+            transform.position = NetworkManager.startPositions[index].position;
         }
 
         public override void IndexChanged(int oldIndex, int newIndex)
