@@ -15,6 +15,8 @@ namespace MiniGolf.Network
 
         [SyncVar]
         [SerializeField] private string playerName = "Loading...";
+        [SyncVar(hook = nameof(OnColorChanged))]
+        [SerializeField] private Color color = Color.white;
         [SyncVar(hook = nameof(OnVisibilityChanged))]
         [SerializeField] private bool isVisible = true;
 
@@ -26,6 +28,7 @@ namespace MiniGolf.Network
         private MeshRenderer meshRenderer;
 
         public string Name => playerName;
+        public Color Color => color;
         public bool IsLeader => index == 0;
 
         private void Awake()
@@ -69,13 +72,26 @@ namespace MiniGolf.Network
             playerName = name;
         }
 
+        [Command]
+        public void SetColor(Color color)
+        {
+            this.color = color;
+        }
+
+        private void OnColorChanged(Color oldColor, Color newColor)
+        {
+            if (oldColor == newColor) return;
+
+            meshRenderer.material.color = newColor;
+        }
+
         [Server]
         public void SetVisible(bool visible)
         {
             isVisible = visible;
         }
 
-        public void OnVisibilityChanged(bool oldValue, bool newValue)
+        private void OnVisibilityChanged(bool oldValue, bool newValue)
         {
             if (oldValue == newValue) return;
 

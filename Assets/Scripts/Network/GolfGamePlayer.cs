@@ -12,33 +12,43 @@ namespace MiniGolf.Network
         public static UnityEvent<GolfGamePlayer> OnStartPlayer = new();
         public static UnityEvent<GolfGamePlayer> OnSetLocalPlayer = new();
 
+        [SerializeField] private MeshRenderer ballRenderer;
+        [Space]
         [SyncVar]
         public int index;
         [SyncVar(hook = nameof(OnPhysicsChanged))]
         public bool physicsEnabled = true;
 
+        private GolfRoomPlayer roomPlayer;
+
         public GolfRoomPlayer RoomPlayer
         {
             get
             {
+                if (roomPlayer) return roomPlayer;
+
                 var roomPlayers = FindObjectsOfType<GolfRoomPlayer>();
                 var correctIndexRoomPlayers = roomPlayers.Where(player => index == player.index);
-                if (correctIndexRoomPlayers.Count() == 1) return correctIndexRoomPlayers.First();
+                if (correctIndexRoomPlayers.Count() == 1) roomPlayer = correctIndexRoomPlayers.First();
                 else Debug.LogError($"Found {correctIndexRoomPlayers.Count()} {nameof(GolfRoomPlayer)}s with index '{index}'.");
 
-                return null;
+                return roomPlayer;
             }
         }
         public SwingController Player { get; private set; }
 
         private void Awake()
         {
+            if (ballRenderer == null) Debug.LogError($"{nameof(ballRenderer)} not assigned");
+
             Player = GetComponent<SwingController>();
         }
 
         private void Start()
         {
             OnStartPlayer.Invoke(this);
+
+            ballRenderer.material.color = RoomPlayer.Color;
         }
 
         public override void OnStartLocalPlayer()
