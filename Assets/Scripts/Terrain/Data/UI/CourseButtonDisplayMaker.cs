@@ -11,7 +11,7 @@ namespace MiniGolf.Terrain.Data.UI
         [Space]
         [SerializeField] private CourseNameDisplay selectedCourseDisplay;
 
-        protected override Comparison<ButtonDisplay<Course>> DisplayComparer => (display1, display2) => display1.DisplayObject.Par - display2.DisplayObject.Par;
+        protected override Comparison<ButtonDisplay<Course>> DisplayComparison => (display1, display2) => display1.DisplayObject.Par - display2.DisplayObject.Par;
 
         private void Start()
         {

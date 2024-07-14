@@ -13,7 +13,7 @@ namespace Displayable
 
         protected readonly List<DisplayType> displayInstances = new();
 
-        protected abstract Comparison<DisplayType> DisplayComparer { get; }
+        protected abstract Comparison<DisplayType> DisplayComparison { get; }
 
         public DisplayType[] Displays => displayInstances.ToArray();
 
@@ -56,7 +56,7 @@ namespace Displayable
         {
             DestroyDisplaysWithNullObjects();
 
-            displayInstances.Sort(DisplayComparer);
+            displayInstances.Sort(DisplayComparison);
             int extraChildCount = displayParent.childCount - displayInstances.Count;
             for (int i = 0; i < displayInstances.Count; i++) displayInstances[i].transform.SetSiblingIndex(extraChildCount + i);
 

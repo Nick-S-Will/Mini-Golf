@@ -156,7 +156,7 @@ RectTransform:
   m_Father: {fileID: 2138751428}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -616,7 +616,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 111387358}
-  - component: {fileID: 111387359}
   - component: {fileID: 111387362}
   - component: {fileID: 111387361}
   - component: {fileID: 111387360}
@@ -643,26 +642,13 @@ RectTransform:
   - {fileID: 1882288409}
   - {fileID: 1803718977}
   - {fileID: 1853453173}
-  m_Father: {fileID: 524115469}
+  m_Father: {fileID: 1298222109}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -31.332489}
   m_SizeDelta: {x: -34.000004, y: 337.33496}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &111387359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 111387357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64f410599bd5a9e4785c8c3f28436e9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorDisplayImage: {fileID: 1853453174}
 --- !u!114 &111387360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -995,7 +981,7 @@ RectTransform:
   m_Father: {fileID: 885983924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1518,13 +1504,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 524115469}
+  - component: {fileID: 524115470}
   m_Layer: 5
   m_Name: Color Select
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &524115469
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1537,8 +1524,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1904810968}
-  - {fileID: 111387358}
+  - {fileID: 1298222109}
   m_Father: {fileID: 906794059}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
@@ -1546,6 +1532,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 365, y: 450}
   m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &524115470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524115468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64f410599bd5a9e4785c8c3f28436e9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redSlider: {fileID: 846771388}
+  greenSlider: {fileID: 868965399}
+  blueSlider: {fileID: 2001027913}
+  colorDisplayImage: {fileID: 1853453174}
 --- !u!1 &659852683
 GameObject:
   m_ObjectHideFlags: 0
@@ -2759,7 +2761,7 @@ GameObject:
   - component: {fileID: 846771387}
   - component: {fileID: 846771388}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Slider R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2837,19 +2839,7 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 111387359}
-        m_TargetAssemblyTypeName: MiniGolf.Network.UI.PlayerColorPicker, Assembly-CSharp
-        m_MethodName: SetRed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &862321843
 GameObject:
   m_ObjectHideFlags: 0
@@ -2924,7 +2914,7 @@ GameObject:
   - component: {fileID: 868965398}
   - component: {fileID: 868965399}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Slider G
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3002,19 +2992,7 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 111387359}
-        m_TargetAssemblyTypeName: MiniGolf.Network.UI.PlayerColorPicker, Assembly-CSharp
-        m_MethodName: SetGreen
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &869685349
 GameObject:
   m_ObjectHideFlags: 0
@@ -3454,7 +3432,7 @@ RectTransform:
   m_Father: {fileID: 1306140181}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4312,7 +4290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   subMenus:
-  - {fileID: 524115468}
+  - {fileID: 1298222108}
   - {fileID: 332022824}
   - {fileID: 1685186957}
 --- !u!114 &1210824299
@@ -4576,7 +4554,7 @@ MonoBehaviour:
         m_MethodName: ToggleSubMenu
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 524115468}
+          m_ObjectArgument: {fileID: 1298222108}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -4715,6 +4693,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269731958}
   m_CullTransparentMesh: 1
+--- !u!1 &1298222108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1298222109}
+  m_Layer: 5
+  m_Name: Color Select Menu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1298222109
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298222108}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1904810968}
+  - {fileID: 111387358}
+  m_Father: {fileID: 524115469}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1306140180
 GameObject:
   m_ObjectHideFlags: 0
@@ -5547,8 +5562,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 62305580}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5622,8 +5637,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 166914897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5830,8 +5845,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1465778709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6350,7 +6365,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 524115469}
+  m_Father: {fileID: 1298222109}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -6824,7 +6839,7 @@ GameObject:
   - component: {fileID: 2001027912}
   - component: {fileID: 2001027913}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Slider B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6902,19 +6917,7 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 111387359}
-        m_TargetAssemblyTypeName: MiniGolf.Network.UI.PlayerColorPicker, Assembly-CSharp
-        m_MethodName: SetBlue
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &2018820757
 GameObject:
   m_ObjectHideFlags: 0

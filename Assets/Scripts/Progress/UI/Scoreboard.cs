@@ -18,7 +18,7 @@ namespace MiniGolf.Progress.UI
 
         private bool visibilityLocked;
 
-        protected override Comparison<Display<PlayerScore>> DisplayComparer => (display1, display2) => display1.DisplayObject.Total - display2.DisplayObject.Total;
+        protected override Comparison<Display<PlayerScore>> DisplayComparison => (display1, display2) => display1.DisplayObject.Total - display2.DisplayObject.Total;
 
         protected override void Awake()
         {

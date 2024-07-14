@@ -58,7 +58,7 @@ namespace MiniGolf.Audio
         [SerializeField] private string mixerVolumeFloatName = "MasterVolume";
         [SerializeField][Range(-80f, 20f)] private float minDecibel = -30f, maxDecibel = 10f;
         [Space]
-        public readonly UnityEvent<float> OnVolumeChange;
+        public UnityEvent<float> OnVolumeChange;
 
         private float volumePercent = 0.8f;
 

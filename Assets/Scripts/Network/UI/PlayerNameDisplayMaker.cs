@@ -5,7 +5,7 @@ namespace MiniGolf.Network.UI
 {
     public class PlayerNameDisplayMaker : DisplayMaker<PlayerNameDisplay, GolfGamePlayer>
     {
-        protected override Comparison<PlayerNameDisplay> DisplayComparer => (display1, display2) => display1.DisplayObject.index - display2.DisplayObject.index;
+        protected override Comparison<PlayerNameDisplay> DisplayComparison => (display1, display2) => display1.DisplayObject.index - display2.DisplayObject.index;
 
         protected override void Awake()
         {

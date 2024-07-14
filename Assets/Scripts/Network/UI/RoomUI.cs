@@ -16,7 +16,7 @@ namespace MiniGolf.Network.UI
 
         private GolfRoomPlayer localPlayer;
 
-        protected override Comparison<GolfRoomPlayerDisplay> DisplayComparer => (display1, display2) => display1.DisplayObject.Name.CompareTo(display2.DisplayObject.Name);
+        protected override Comparison<GolfRoomPlayerDisplay> DisplayComparison => (display1, display2) => display1.DisplayObject.Name.CompareTo(display2.DisplayObject.Name);
 
         protected override void Awake()
         {

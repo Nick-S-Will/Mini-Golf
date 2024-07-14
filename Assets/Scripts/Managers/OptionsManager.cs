@@ -17,6 +17,7 @@ namespace MiniGolf.Managers.Options
         protected override void Awake()
         {
             base.Awake();
+            if (singleton != this) return;
 
             foreach (Channel channel in Enum.GetValues(typeof(Channel))) channel.Initialize();
         }
