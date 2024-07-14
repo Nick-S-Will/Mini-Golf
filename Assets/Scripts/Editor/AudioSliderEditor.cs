@@ -1,3 +1,4 @@
+using MiniGolf.Audio;
 using MiniGolf.Audio.UI;
 using UnityEditor;
 using UnityEditor.UI;
@@ -20,7 +21,9 @@ namespace MiniGolf.Editor
             EditorGUILayout.Space();
 
             AudioSlider slider = (AudioSlider)target;
-            slider.audioChannel = (AudioChannel)EditorGUILayout.EnumPopup("Channel", slider.audioChannel);
+            var oldChannel = slider.channel;
+            slider.channel = (Channel)EditorGUILayout.EnumPopup("Channel", slider.channel);
+            if (oldChannel != slider.channel) EditorUtility.SetDirty(slider);
         }
     }
 }

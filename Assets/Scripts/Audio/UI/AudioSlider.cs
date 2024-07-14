@@ -1,44 +1,29 @@
-using MiniGolf.Managers.Options;
-using System;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace MiniGolf.Audio.UI
 {
-    public enum AudioChannel { Master, Sound, Music }
-
     public class AudioSlider : Slider
     {
-        public AudioChannel audioChannel;
+        public Channel channel;
 
         protected override void Awake()
         {
             base.Awake();
-            
+
+            channel.GetMixerChannel().OnVolumeChange.AddListener(SetValueWithoutNotify);
             onValueChanged.AddListener(SetVolumePercent);
-
-            var channel = GetChannel();
-            if (channel != null) SetValueWithoutNotify(channel.VolumePercent);
-            else Debug.LogWarning($"'{audioChannel}' channel not found");
         }
 
-        private void SetVolumePercent(float volume) => GetChannel().VolumePercent = volume;
-        
-        private Channel GetChannel()
+        protected override void Start()
         {
-            if (OptionsManager.singleton == null)
-            {
-                Debug.LogWarning($"No {nameof(OptionsManager)} loaded");
-                return null;
-            }
-
-            return audioChannel switch
-            {
-                AudioChannel.Master => OptionsManager.singleton.Master,
-                AudioChannel.Sound => OptionsManager.singleton.Sound,
-                AudioChannel.Music => OptionsManager.singleton.Music,
-                _ => throw new NotImplementedException()
-            };
+            SetValueWithoutNotify(channel.GetMixerChannel().VolumePercent);
         }
+
+        protected override void OnDestroy()
+        {
+            if (channel.GetMixerChannel() != null) channel.GetMixerChannel().OnVolumeChange.RemoveListener(SetValueWithoutNotify);
+        }
+
+        private void SetVolumePercent(float volume) => channel.GetMixerChannel().VolumePercent = volume;
     }
 }

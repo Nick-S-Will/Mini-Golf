@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace MiniGolf.Player
 {
-    public class PlayerHandler : Singleton<PlayerHandler>
+    public class PlayerHandler : Singleton<PlayerHandler> // TODO: Remove singleton
     {
         /// <summary>
         /// Passes old player and new player as <see cref="SwingController"/>s. For updating observers etc.

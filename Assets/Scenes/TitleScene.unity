@@ -1490,25 +1490,16 @@ MonoBehaviour:
     mixerVolumeFloatName: MasterVolume
     minDecibel: -40
     maxDecibel: 5
-    OnVolumeChange:
-      m_PersistentCalls:
-        m_Calls: []
   sound:
     audioMixer: {fileID: 24100000, guid: c7753a5eeeebe1e4b9efbff0486f396c, type: 2}
     mixerVolumeFloatName: SoundVolume
     minDecibel: -40
     maxDecibel: 5
-    OnVolumeChange:
-      m_PersistentCalls:
-        m_Calls: []
   music:
     audioMixer: {fileID: 24100000, guid: c7753a5eeeebe1e4b9efbff0486f396c, type: 2}
     mixerVolumeFloatName: MusicVolume
     minDecibel: -40
     maxDecibel: 5
-    OnVolumeChange:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!1 &413309223
 GameObject:
   m_ObjectHideFlags: 0

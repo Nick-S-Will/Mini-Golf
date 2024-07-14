@@ -1,3 +1,4 @@
+using MiniGolf.Managers.Options;
 using System;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -5,19 +6,64 @@ using UnityEngine.Events;
 
 namespace MiniGolf.Audio
 {
+    public enum Channel { Master, Sound, Music }
+
+    public static class ChannelExtensions
+    {
+        private const string MASTER_VOLUME_KEY = "Master Volume", SOUND_VOLUME_KEY = "Sound Volume", MUSIC_VOLUME_KEY = "Music Volume";
+
+        private static string GetPrefKey(this Channel mixerChannel)
+        {
+            return mixerChannel switch
+            {
+                Channel.Master => MASTER_VOLUME_KEY,
+                Channel.Sound => SOUND_VOLUME_KEY,
+                Channel.Music => MUSIC_VOLUME_KEY,
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        public static void Initialize(this Channel channel)
+        {
+            var defaultValue = -1f;
+            var volume = PlayerPrefs.GetFloat(channel.GetPrefKey(), defaultValue);
+            if (volume == defaultValue) channel.GetMixerChannel().ReadFromAudioMixer();
+            else channel.GetMixerChannel().VolumePercent = volume;
+
+            channel.GetMixerChannel().OnVolumeChange.AddListener(volume => PlayerPrefs.SetFloat(channel.GetPrefKey(), volume));
+        }
+
+        public static MixerChannel GetMixerChannel(this Channel mixerChannel)
+        {
+            if (OptionsManager.singleton == null)
+            {
+                Debug.LogWarning($"No {nameof(OptionsManager)} loaded");
+                return null;
+            }
+
+            return mixerChannel switch
+            {
+                Channel.Master => OptionsManager.singleton.Master,
+                Channel.Sound => OptionsManager.singleton.Sound,
+                Channel.Music => OptionsManager.singleton.Music,
+                _ => throw new NotImplementedException()
+            };
+        }
+    }
+
     [Serializable]
-    public class Channel
+    public class MixerChannel
     {
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private string mixerVolumeFloatName = "MasterVolume";
         [SerializeField][Range(-80f, 20f)] private float minDecibel = -30f, maxDecibel = 10f;
         [Space]
-        public UnityEvent<float> OnVolumeChange;
+        public readonly UnityEvent<float> OnVolumeChange;
 
         private float volumePercent = 0.8f;
 
         public string MixerVolumeFloatName => mixerVolumeFloatName;
-        public float VolumePercent 
+        public float VolumePercent
         {
             get => volumePercent;
             set
@@ -28,7 +74,7 @@ namespace MiniGolf.Audio
             }
         }
 
-        public Channel(string mixerVolumeFloatName)
+        public MixerChannel(string mixerVolumeFloatName)
         {
             this.mixerVolumeFloatName = mixerVolumeFloatName;
         }
@@ -47,11 +93,7 @@ namespace MiniGolf.Audio
         private void WriteToAudioMixer()
         {
             var decibel = volumePercent == 0f ? -80f : PercentToDecibel(volumePercent);
-            if (!audioMixer.SetFloat(mixerVolumeFloatName, decibel))
-            {
-                PrintMissingName();
-                return;
-            }
+            if (!audioMixer.SetFloat(mixerVolumeFloatName, decibel)) PrintMissingName();
         }
 
         private float PercentToDecibel(float percent) => Mathf.Lerp(minDecibel, maxDecibel, percent);

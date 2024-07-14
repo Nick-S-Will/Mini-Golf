@@ -3053,7 +3053,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  audioChannel: 2
+  channel: 2
 --- !u!1 &6813236102901151675
 GameObject:
   m_ObjectHideFlags: 0
@@ -3345,7 +3345,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  audioChannel: 1
+  channel: 1
 --- !u!1 &7338919379300045974
 GameObject:
   m_ObjectHideFlags: 0
@@ -3766,7 +3766,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  audioChannel: 0
+  channel: 0
 --- !u!1 &7906890647650861371
 GameObject:
   m_ObjectHideFlags: 0
