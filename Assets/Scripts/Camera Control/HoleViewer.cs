@@ -10,6 +10,7 @@ namespace MiniGolf.CameraControl
     public class HoleViewer : MonoBehaviour
     {
         [SerializeField] private ProgressHandler progressHandler;
+        [SerializeField] private FreeLookTargeter freeLookTargeter;
         [SerializeField] private Transform holeBoundsCenter;
         [Space]
         [SerializeField][Min(0f)] private float cameraBoundsMargin = 3f;
@@ -18,18 +19,14 @@ namespace MiniGolf.CameraControl
         private CinemachineVirtualCamera virtualCamera;
         private Coroutine viewHoleRoutine;
 
-        public float ViewTime
-        {
-            get => viewTime;
-            set => viewTime = value;
-        }
-
         private void Awake()
         {
+            if (progressHandler == null) Debug.LogError($"{nameof(progressHandler)} not assigned");
+            if (freeLookTargeter == null) Debug.LogError($"{nameof(freeLookTargeter)} not assigned");
+            if (holeBoundsCenter == null) Debug.LogError($"{nameof(holeBoundsCenter)} not assigned");
+
             virtualCamera = GetComponent<CinemachineVirtualCamera>();
             virtualCamera.enabled = false;
-
-            if (progressHandler == null) Debug.LogError($"{nameof(progressHandler)} not assigned");
         }
 
         private void OnEnable()
@@ -42,17 +39,15 @@ namespace MiniGolf.CameraControl
             if (progressHandler) progressHandler.OnStartHole.RemoveListener(ViewHole);
         }
 
-        [ContextMenu("View Hole")]
         private void ViewHole()
         {
-            if (ViewTime == 0f) return;
+            if (viewTime == 0f) return;
 
-            virtualCamera ??= GetComponent<CinemachineVirtualCamera>();
             viewHoleRoutine ??= StartCoroutine(ViewHoleRoutine());
         }
         private IEnumerator ViewHoleRoutine()
         {
-            if (Application.isPlaying) PlayerHandler.SetControls(false);
+            PlayerHandler.SetControls(false);
 
             var bounds = progressHandler.HoleGenerator.HoleBounds;
             var boundsMaxExtent = Mathf.Max(bounds.extents.x, bounds.extents.z);
@@ -63,7 +58,7 @@ namespace MiniGolf.CameraControl
 
             yield return new WaitForSeconds(viewDelay);
 
-            float animationCompletion = 0f, animateSpeed = 1f / ViewTime;
+            float animationCompletion = 0f, animateSpeed = 1f / viewTime;
             while (animationCompletion < 1f)
             {
                 var angle = Mathf.Lerp(0f, 360f, animationCompletion);
@@ -76,8 +71,9 @@ namespace MiniGolf.CameraControl
 
             holeBoundsCenter.position = Vector3.zero;
             virtualCamera.enabled = false;
+            PlayerHandler.SetControls(true);
 
-            if (Application.isPlaying) PlayerHandler.SetControls(true);
+            freeLookTargeter.LookAtNewTarget(progressHandler.HoleGenerator.CurrentHoleTile);
 
             viewHoleRoutine = null;
         }

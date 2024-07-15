@@ -217,17 +217,19 @@ namespace MiniGolf.Terrain
                 if (vertexIndexMap.ContainsKey(i)) continue;
                 if (i != newVertices.Count) vertexIndexMap.Add(i, newVertices.Count);
 
-                for (int j = i + 1; j < vertices.Length; j++)
+                if (!VertexIsCentral(vertices[i]))
                 {
-                    if (vertexIndexMap.ContainsKey(j)) continue;
-                    if (Vector3.Distance(vertices[i], vertices[j]) > maxMergeDistance) continue;
-                    if (Vector3.Angle(normals[i], normals[j]) > maxMergeAngle) continue;
-                    if (VertexIsCentral(vertices[i])) continue;
+                    for (int j = i + 1; j < vertices.Length; j++)
+                    {
+                        if (vertexIndexMap.ContainsKey(j)) continue;
+                        if (Vector3.Distance(vertices[i], vertices[j]) > maxMergeDistance) continue;
+                        if (Vector3.Angle(normals[i], normals[j]) > maxMergeAngle) continue;
 
-                    vertexIndexMap.Add(j, newVertices.Count);
+                        vertexIndexMap.Add(j, newVertices.Count);
 
-                    mergedVertices.Add(vertices[i]);
-                    mergedVertices.Add(normals[i]);
+                        mergedVertices.Add(vertices[i]);
+                        mergedVertices.Add(normals[i]);
+                    }
                 }
 
                 newVertices.Add(vertices[i]);

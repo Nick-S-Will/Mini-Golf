@@ -585,7 +585,7 @@ MonoBehaviour:
     tileCount: 5
   spawnInterval: 0
   wallCollider: {fileID: 1556483016}
-  usingWalls: 1
+  usingWalls: 0
   cellGizmoColorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 1}
@@ -655,19 +655,7 @@ MonoBehaviour:
   showBounds: 0
   OnGenerate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1374732140}
-        m_TargetAssemblyTypeName: MiniGolf.CameraControl.FreeLookTargeter, Assembly-CSharp
-        m_MethodName: LookAtNewTarget
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!4 &189819110
 Transform:
   m_ObjectHideFlags: 0
@@ -2599,8 +2587,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressHandler: {fileID: 910688505}
+  freeLookTargeter: {fileID: 1374732140}
   holeBoundsCenter: {fileID: 247634990}
-  cameraBoundsMargin: 2.5
+  cameraBoundsMargin: 4
   viewDelay: 1.5
   viewTime: 3.5
 --- !u!1 &1044999721
@@ -4116,7 +4105,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -6075,7 +6064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 3, z: -5}
+  m_FollowOffset: {x: 0, y: 3, z: -5.5}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
