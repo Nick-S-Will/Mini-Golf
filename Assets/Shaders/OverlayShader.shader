@@ -39,16 +39,15 @@ Shader "Custom/OverlayShader"
         {
             float screenDepth = IN.screenPos.z / IN.screenPos.w;
             float currentDepth = UNITY_SAMPLE_DEPTH(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(IN.screenPos)));
-            bool isVisible = currentDepth < screenDepth;
+            bool isVisible = currentDepth <= screenDepth;
 
-            fixed4 color = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = isVisible ? color.rgb : _ObstructedColor;
-            if (isVisible) o.Normal = UnpackNormal(tex2D(_NormalTex, IN.uv_NormalTex));
+            fixed4 color = isVisible ? tex2D (_MainTex, IN.uv_MainTex) * _Color : _ObstructedColor;
+            o.Albedo = color.rgb;
             o.Alpha = color.a;
+            if (isVisible) o.Normal = UnpackNormal(tex2D(_NormalTex, IN.uv_NormalTex));
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
         }
         ENDCG
     }
-    FallBack "Diffuse"
 }
